@@ -101,7 +101,6 @@ export default {
 
 .network-icon {
   height: 2rem;
-  width: 2rem;
 }
 
 @media screen and (max-width: 1023px) {

@@ -1,39 +1,38 @@
 export default {
-  id: 'cosmos-hub-mainnet',
-  name: 'Cosmos Mainnet',
-  description:
-    'Cosmos is a network of independent parallel blockchains, powered by BFT consensus algorithms like Tendermint.',
+  id: 'bitsong-2-devnet-2',
+  name: 'BitSong Devnet',
+  description: 'BitSong devnet test',
   logo: `logo.svg`,
   website: 'https://cosmos.network',
   // apiURL: 'http://localhost:8010/proxy',
-  apiURL: 'https://api.cosmos.network',
-  rpcURL: 'https://rpc.cosmos.network',
-  minBlockHeight: 5200792, // actually 5200791, but it has the wrong block time.
-  stakingDenom: 'ATOM',
+  apiURL: 'https://lcd.devnet.bitsong.network',
+  rpcURL: 'https://rpc.devnet.bitsong.network',
+  minBlockHeight: 2, // actually 5200791, but it has the wrong block time.
+  stakingDenom: 'BTSG',
   coinLookup: [
     {
-      viewDenom: 'ATOM',
-      chainDenom: 'uatom',
+      viewDenom: 'BTSG',
+      chainDenom: 'ubtsg',
       chainToViewConversionFactor: 1e-6,
-      icon: `currencies/atom.png`,
+      icon: `currencies/bitsong.png`,
     },
   ],
-  addressPrefix: 'cosmos',
-  validatorAddressPrefix: 'cosmosvaloper',
-  validatorConsensusaddressPrefix: 'cosmosvalcons', // needed to map validators from staking queries to the validator set
-  HDPath: `m/44'/118'/0'/0/0`,
+  addressPrefix: 'bitsong',
+  validatorAddressPrefix: 'bitsongvaloper',
+  validatorConsensusaddressPrefix: 'bitsongvalcons', // needed to map validators from staking queries to the validator set
+  HDPath: `m/44'/639'/0'/0/0`,
   lockUpPeriod: `3 days`,
   fees: {
     default: {
       gasEstimate: 350000,
       feeOptions: [
         {
-          denom: 'ATOM',
+          denom: 'BTSG',
           amount: 0.001,
         },
       ],
     },
   },
-  icon: `https://lunie.fra1.digitaloceanspaces.com/network-icons/cosmos.png`,
+  icon: `https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png`,
   localSigning: true, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
 }
