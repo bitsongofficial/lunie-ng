@@ -1,14 +1,15 @@
 import BigNumber from 'bignumber.js'
+import { MsgDelegate } from 'cosmjs-types/cosmos/staking/v1beta1/tx'
 
 // Bank
 
 /* istanbul ignore next */
 export function SendTx(senderAddress, { to, amounts }, network) {
   return {
-    type: `cosmos-sdk/MsgSend`,
+    typeUrl: `/cosmos.bank.v1beta1.MsgSend`,
     value: {
-      from_address: senderAddress,
-      to_address: to[0],
+      fromAddress: senderAddress,
+      toAddress: to[0],
       amount: amounts.map((amount) => Coin(amount, network.coinLookup)),
     },
   }
@@ -16,14 +17,13 @@ export function SendTx(senderAddress, { to, amounts }, network) {
 
 // Staking
 export function StakeTx(senderAddress, { to, amount }, network) {
-  /* istanbul ignore next */
   return {
-    type: `cosmos-sdk/MsgDelegate`,
-    value: {
-      delegator_address: senderAddress,
-      validator_address: to[0],
+    typeUrl: '/cosmos.staking.v1beta1.MsgDelegate',
+    value: MsgDelegate.fromPartial({
+      delegatorAddress: senderAddress,
+      validatorAddress: to[0],
       amount: Coin(amount, network.coinLookup),
-    },
+    }),
   }
 }
 

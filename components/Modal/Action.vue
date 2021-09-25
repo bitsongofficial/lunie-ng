@@ -393,16 +393,8 @@ export default {
     async submit() {
       this.submissionError = null
 
-      // TODO is this check really needed?
-      if (
-        Object.entries(this.transactionData).length === 0 &&
-        this.transactionData.constructor === Object
-      ) {
-        this.onSendingFailed(new Error(`Error in transaction data`))
-        return
-      }
-
       const { type, memo, ...message } = this.transactionData
+      console.log(message)
 
       try {
         // Lazy import as a bunch of big libraries are imported here

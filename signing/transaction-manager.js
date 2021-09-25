@@ -1,11 +1,13 @@
 import BigNumber from 'bignumber.js'
-import { makeStdTx, makeSignDoc } from '@cosmjs/launchpad'
-import axios from 'axios'
+import { coins } from '@cosmjs/amino'
+import {
+  SigningStargateClient,
+  assertIsBroadcastTxSuccess,
+} from '@cosmjs/stargate'
 import { getSigner } from './signer'
 import messageCreators from './messages.js'
 import fees from '~/common/fees'
 import network from '~/common/network'
-import { signWithExtension } from '~/common/extension-utils'
 
 export function getFees(transactionType, feeDenom) {
   const { gasEstimate, feeOptions } = fees.getFees(transactionType)
@@ -49,89 +51,42 @@ export async function createSignBroadcast({
     accountSequence: accountInfo.sequence,
   }
 
-  let signedTx
+  const signer = await getSigner(
+    signingType,
+    {
+      address: senderAddress,
+      password,
+    },
+    chainId,
+    ledgerTransport
+  )
 
-  if (signingType === 'extension') {
-    signedTx = await signWithExtension(
-      messageType,
-      message,
-      transactionData,
-      senderAddress,
-      network
-    )
-  } else {
-    const signer = await getSigner(
-      signingType,
-      {
-        address: senderAddress,
-        password,
-      },
-      chainId,
-      ledgerTransport
-    )
+  const messages = messageCreators[messageType](senderAddress, message, network)
 
-    const messages = messageCreators[messageType](
-      senderAddress,
-      message,
-      network
-    )
-
-    const signDoc = makeSignDoc(
-      [].concat(messages),
-      {
-        amount: transactionData.fee,
-        gas: transactionData.gasEstimate,
-      },
-      chainId,
-      memo || '',
-      accountInfo.accountNumber,
-      accountInfo.sequence
-    )
-
-    const { signed, signature } = await signer.sign(senderAddress, signDoc)
-    signedTx = makeStdTx(signed, signature)
+  const stdFee = {
+    amount: coins(
+      Number(transactionData.fee[0].amount),
+      transactionData.fee[0].denom
+    ),
+    gas: transactionData.gasEstimate,
   }
 
-  const broadcastBody = {
-    tx: signedTx,
-    mode: 'sync', // if we use async we don't wait for checks on the tx to have passed so we don't get errors
-  }
-  const broadcastResult = await axios
-    .post(`${network.apiURL}/txs`, broadcastBody)
-    .then((res) => res.data)
-  assertIsBroadcastTxSuccess(broadcastResult)
+  const client = await SigningStargateClient.connectWithSigner(
+    network.rpcURL,
+    signer
+  )
+  const txResult = await client.signAndBroadcast(
+    senderAddress,
+    [messages],
+    stdFee,
+    memo || ''
+  )
+  assertIsBroadcastTxSuccess(txResult)
+  console.log(txResult)
 
   return {
-    hash: broadcastResult.txhash,
+    hash: txResult.transactionHash,
   }
-}
-
-export function assertIsBroadcastTxSuccess(res) {
-  if (!res) throw new Error(`Error sending transaction`)
-  if (Array.isArray(res)) {
-    if (res.length === 0) throw new Error(`Error sending transaction`)
-
-    res.forEach(assertIsBroadcastTxSuccess)
-  }
-
-  if (res.error) {
-    throw new Error(res.error)
-  }
-
-  // Sometimes we get back failed transactions, which shows only by them having a `code` property
-  if (res.code) {
-    const message = res.raw_log.message
-      ? JSON.parse(res.raw_log).message
-      : res.raw_log
-    throw new Error(message)
-  }
-
-  if (!res.txhash) {
-    const message = res.message
-    throw new Error(message)
-  }
-
-  return res
 }
 
 export async function pollTxInclusion(txHash, iteration = 0) {
