@@ -61,7 +61,11 @@ export async function createSignBroadcast({
     ledgerTransport
   )
 
-  const messages = messageCreators[messageType](senderAddress, message, network)
+  let messages = messageCreators[messageType](senderAddress, message, network)
+
+  if (messages.length === undefined) {
+    messages = [messages]
+  }
 
   const stdFee = {
     amount: coins(
@@ -77,7 +81,7 @@ export async function createSignBroadcast({
   )
   const txResult = await client.signAndBroadcast(
     senderAddress,
-    [messages],
+    messages,
     stdFee,
     memo || ''
   )

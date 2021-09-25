@@ -1,5 +1,10 @@
 import BigNumber from 'bignumber.js'
-import { MsgDelegate } from 'cosmjs-types/cosmos/staking/v1beta1/tx'
+import {
+  MsgDelegate,
+  MsgUndelegate,
+} from 'cosmjs-types/cosmos/staking/v1beta1/tx'
+import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx'
+import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx'
 
 // Bank
 
@@ -28,14 +33,13 @@ export function StakeTx(senderAddress, { to, amount }, network) {
 }
 
 export function UnstakeTx(senderAddress, { from, amount }, network) {
-  /* istanbul ignore next */
   return {
-    type: `cosmos-sdk/MsgUndelegate`,
-    value: {
-      validator_address: from[0],
-      delegator_address: senderAddress,
+    typeUrl: '/cosmos.staking.v1beta1.MsgUndelegate',
+    value: MsgUndelegate.fromPartial({
+      delegatorAddress: senderAddress,
+      validatorAddress: from[0],
       amount: Coin(amount, network.coinLookup),
-    },
+    }),
   }
 }
 
@@ -47,12 +51,12 @@ export function ClaimRewardsTx(
   }
 ) {
   /* istanbul ignore next */
-  return from.map((validatorAddress) => ({
-    type: `cosmos-sdk/MsgWithdrawDelegationReward`,
-    value: {
-      delegator_address: senderAddress,
-      validator_address: validatorAddress,
-    },
+  return from.map((valAddr) => ({
+    typeUrl: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+    value: MsgWithdrawDelegatorReward.fromPartial({
+      delegatorAddress: senderAddress,
+      validatorAddress: valAddr,
+    }),
   }))
 }
 
@@ -65,24 +69,24 @@ export function VoteTx(senderAddress, { proposalId, voteOption }) {
   }[voteOption]
   /* istanbul ignore next */
   return {
-    type: `cosmos-sdk/MsgVote`,
-    value: {
+    typeUrl: '/cosmos.gov.v1beta1.MsgVote',
+    value: MsgVote.fromPartial({
       voter: senderAddress,
-      proposal_id: proposalId,
+      proposalId,
       option: chainVoteOption,
-    },
+    }),
   }
 }
 
 export function DepositTx(senderAddress, { proposalId, amount }, network) {
   /* istanbul ignore next */
   return {
-    type: `cosmos-sdk/MsgDeposit`,
-    value: {
+    typeUrl: '/cosmos.gov.v1beta1.MsgDeposit',
+    value: MsgDeposit.fromPartial({
       depositor: senderAddress,
-      proposal_id: proposalId,
+      proposalId,
       amount: [Coin(amount, network.coinLookup)],
-    },
+    }),
   }
 }
 

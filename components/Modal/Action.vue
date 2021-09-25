@@ -394,7 +394,6 @@ export default {
       this.submissionError = null
 
       const { type, memo, ...message } = this.transactionData
-      console.log(message)
 
       try {
         // Lazy import as a bunch of big libraries are imported here
