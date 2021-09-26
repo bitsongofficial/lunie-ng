@@ -22,9 +22,11 @@
     }
   },
   "dependencies": {
+    "@bitsongjs/sdk": "1.0.0-dev-9",
     "@cosmjs/amino": "^0.26.0",
     "@cosmjs/launchpad": "^0.23.1",
     "@cosmjs/launchpad-ledger": "^0.23.1",
+    "@cosmjs/ledger-amino": "^0.26.0",
     "@cosmjs/proto-signing": "^0.26.0",
     "@cosmjs/stargate": "^0.26.0",
     "@ledgerhq/hw-transport-webhid": "^5.30.0",
