@@ -5,7 +5,7 @@ export default {
   logo: `logo.svg`,
   website: 'https://bitsong.io',
   // apiURL: 'http://localhost:8010/proxy',
-  apiURL: 'https://lcd.testnet.bitsong.network',
+  apiURL: 'https://api.testnet.bitsong.network',
   rpcURL: 'https://rpc.testnet.bitsong.network',
   minBlockHeight: 2, // actually 5200791, but it has the wrong block time.
   stakingDenom: 'BTSG',
