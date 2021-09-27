@@ -1,5 +1,7 @@
 module.exports.getProposalSummary = function getProposalSummary(type) {
   switch (type) {
+    case `SOFTWARE_UPGRADE`:
+      return `This is a software upgrade proposal`
     case `TEXT`:
       return `This is a text proposal. Text proposals can be proposed by anyone and are used as a signalling mechanism for this community. If this proposal is accepted, nothing will change without community coordination.`
     case `PARAMETER_CHANGE`:

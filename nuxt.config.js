@@ -11,7 +11,7 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: 'Lunie 3',
+    title: 'BitSong Testnet Wallet',
     htmlAttrs: {
       lang: 'en',
     },
@@ -22,7 +22,7 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Lunie 3 is a simple staking and governance interface for proof-of-stake blockchains',
+          'BitSong Testnet Wallet is a simple staking and governance interface for the bitsong blockchain',
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],

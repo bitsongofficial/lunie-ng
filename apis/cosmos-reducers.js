@@ -251,6 +251,7 @@ const proposalTypeEnumDictionary = {
   TextProposal: 'TEXT',
   CommunityPoolSpendProposal: 'TREASURY',
   ParameterChangeProposal: 'PARAMETER_CHANGE',
+  SoftwareUpgradeProposal: 'SOFTWARE_UPGRADE',
 }
 
 // map Cosmos SDK message types to Lunie message types

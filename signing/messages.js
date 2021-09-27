@@ -5,6 +5,7 @@ import {
 } from 'cosmjs-types/cosmos/staking/v1beta1/tx'
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx'
 import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx'
+import Long from 'long'
 
 // Bank
 
@@ -72,7 +73,7 @@ export function VoteTx(senderAddress, { proposalId, voteOption }) {
     typeUrl: '/cosmos.gov.v1beta1.MsgVote',
     value: MsgVote.fromPartial({
       voter: senderAddress,
-      proposalId,
+      proposalId: Long.fromNumber(proposalId),
       option: chainVoteOption,
     }),
   }
@@ -84,7 +85,7 @@ export function DepositTx(senderAddress, { proposalId, amount }, network) {
     typeUrl: '/cosmos.gov.v1beta1.MsgDeposit',
     value: MsgDeposit.fromPartial({
       depositor: senderAddress,
-      proposalId,
+      proposalId: Long.fromNumber(proposalId),
       amount: [Coin(amount, network.coinLookup)],
     }),
   }
