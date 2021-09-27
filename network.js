@@ -21,6 +21,7 @@ export default {
   validatorAddressPrefix: 'bitsongvaloper',
   validatorConsensusaddressPrefix: 'bitsongvalcons', // needed to map validators from staking queries to the validator set
   HDPath: `m/44'/639'/0'/0/0`,
+  coinType: 639,
   lockUpPeriod: `3 days`,
   fees: {
     default: {
