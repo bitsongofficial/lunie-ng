@@ -244,7 +244,7 @@ export default class CosmosAPI {
 
     const votes = dataAvailable ? await this.queryAutoPaginate(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/votes`) : []
     const deposits = dataAvailable ? await this.queryAutoPaginate(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/deposits`) : []
-    const tally = votingComplete ? proposal.final_tally_result : await this.query(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`)
+    const tally = votingComplete ? proposal.final_tally_result : (await this.query(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`)).tally
 
     const totalVotingParticipation = BigNumber(tally.yes)
       .plus(tally.abstain)
@@ -268,7 +268,7 @@ export default class CosmosAPI {
       percentageDepositsNeeded: deposits
         ? percentage(
           depositsSum,
-          BigNumber(depositParams.deposit_params.min_deposit[0].amount)
+          BigNumber(depositParams.min_deposit[0].amount)
         )
         : [],
       votes: votes.length
@@ -337,9 +337,9 @@ export default class CosmosAPI {
     await this.dataReady
     const [
       proposalsResponse,
-      pool,
-      tallyParams,
-      depositParams,
+      { pool },
+      { tally_params: tallyParams },
+      { deposit_params: depositParams },
     ] = await Promise.all([
       this.queryAutoPaginate('cosmos/gov/v1beta1/proposals'),
       this.query('cosmos/staking/v1beta1/pool'),

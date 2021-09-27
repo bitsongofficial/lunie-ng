@@ -28,34 +28,34 @@
         type="number"
         placeholder="0"
       />
-      <FormMessage
+      <CommonFormMessage
         v-if="balance.amount === 0"
         :msg="`doesn't have any ${denom}s`"
         name="Wallet"
         type="custom"
       />
-      <FormMessage
+      <CommonFormMessage
         v-else-if="$v.amount.$error && (!$v.amount.required || amount === 0)"
         name="Amount"
         type="required"
       />
-      <FormMessage
+      <CommonFormMessage
         v-else-if="$v.amount.$error && !$v.amount.decimal"
         name="Amount"
         type="numeric"
       />
-      <FormMessage
+      <CommonFormMessage
         v-else-if="$v.amount.$error && !$v.amount.max"
         type="custom"
         :msg="`You don't have enough ${denom}s to proceed.`"
       />
-      <FormMessage
+      <CommonFormMessage
         v-else-if="$v.amount.$error && !$v.amount.min"
         :min="smallestAmount"
         name="Amount"
         type="min"
       />
-      <FormMessage
+      <CommonFormMessage
         v-else-if="$v.amount.$error && !$v.amount.maxDecimals"
         name="Amount"
         type="maxDecimals"
@@ -65,7 +65,9 @@
 </template>
 
 <script>
-import { SMALLEST, decimal } from '~/common/numbers'
+import { mapState } from 'vuex'
+import { decimal } from 'vuelidate/lib/validators'
+import { SMALLEST } from '~/common/numbers'
 import { lunieMessageTypes } from '~/common/lunie-message-types'
 import network from '~/common/network'
 
@@ -91,22 +93,27 @@ export default {
   },
   data: () => ({
     amount: null,
-    balance: {
-      amount: null,
-      denom: ``,
-    },
     lunieMessageTypes,
     smallestAmount: SMALLEST,
     network,
   }),
   computed: {
+    ...mapState(`data`, [`balances`]),
+    balance() {
+      return (
+        this.balances.find(({ denom }) => denom === network.stakingDenom) || {
+          available: 0,
+          denom: network.stakingDenom,
+        }
+      )
+    },
     transactionData() {
       if (isNaN(this.amount) || !this.proposalId || !this.denom) {
         return {}
       }
       return {
         type: lunieMessageTypes.DEPOSIT,
-        proposalId: this.proposalId,
+        proposalId: String(this.proposalId),
         amount: {
           amount: this.amount,
           denom: this.denom,
@@ -126,7 +133,7 @@ export default {
       amount: {
         required: (x) => !!x && x !== `0`,
         decimal,
-        max: (x) => Number(x) <= this.balance.amount,
+        max: (x) => Number(x) <= this.balance.available,
         min: (x) => Number(x) >= SMALLEST,
         maxDecimals: (x) => {
           if (x) {
