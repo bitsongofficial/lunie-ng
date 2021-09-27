@@ -1,12 +1,12 @@
 export default {
-  id: 'bitsong-2-devnet-2',
-  name: 'BitSong Devnet 2',
-  description: 'BitSong devnet test',
+  id: 'bitsong-testnet-6',
+  name: 'BitSong Testnet 6',
+  description: 'BitSong testnet 6',
   logo: `logo.svg`,
-  website: 'https://cosmos.network',
+  website: 'https://bitsong.io',
   // apiURL: 'http://localhost:8010/proxy',
-  apiURL: 'https://lcd.devnet.bitsong.network',
-  rpcURL: 'https://rpc.devnet.bitsong.network',
+  apiURL: 'https://lcd.testnet.bitsong.network',
+  rpcURL: 'https://rpc.testnet.bitsong.network',
   minBlockHeight: 2, // actually 5200791, but it has the wrong block time.
   stakingDenom: 'BTSG',
   coinLookup: [
