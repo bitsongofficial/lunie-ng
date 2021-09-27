@@ -1,6 +1,6 @@
 export default {
   id: 'bitsong-2-devnet-2',
-  name: 'BitSong Devnet',
+  name: 'BitSong Devnet 2',
   description: 'BitSong devnet test',
   logo: `logo.svg`,
   website: 'https://cosmos.network',
@@ -22,6 +22,7 @@ export default {
   validatorConsensusaddressPrefix: 'bitsongvalcons', // needed to map validators from staking queries to the validator set
   HDPath: `m/44'/639'/0'/0/0`,
   coinType: 639,
+  coinGeckoId: 'bitsong',
   lockUpPeriod: `3 days`,
   fees: {
     default: {

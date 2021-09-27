@@ -60,7 +60,7 @@ export const actions = {
           bip44: {
             // You can only set the coin type of BIP44.
             // 'Purpose' is fixed to 44.
-            coinType: network.coinType,
+            coinType: 639,
           },
           // Bech32 configuration to show the address to user.
           // This field is the interface of
@@ -93,16 +93,17 @@ export const actions = {
           // Ideally, it is recommended to be the same with BIP44 path's coin type.
           // However, some early chains may choose to use the Cosmos Hub BIP44 path of '118'.
           // So, this is separated to support such chains.
-          coinType: network.coinType,
+          coinType: 639,
           // (Optional) This is used to set the fee of the transaction.
           // If this field is not provided, Keplr extension will set the default gas price as (low: 0.01, average: 0.025, high: 0.04).
           // Currently, Keplr doesn't support dynamic calculation of the gas prices based on on-chain data.
           // Make sure that the gas prices are higher than the minimum gas prices accepted by chain validators and RPC/REST endpoint.
-          // gasPriceStep: {
-          //     low: 0.01,
-          //     average: 0.025,
-          //     high: 0.04
-          // }
+          gasPriceStep: {
+            low: 0.01,
+            average: 0.025,
+            high: 0.04,
+          },
+          features: [],
         })
         await window.keplr.enable(block.chainId)
 
@@ -113,6 +114,7 @@ export const actions = {
         // But, currently, Keplr extension manages only one address/public key pair.
         // XXX: This line is needed to set the sender address for SigningCosmosClient.
         const accounts = await offlineSigner.getAccounts()
+        console.log(accounts)
         commit('setAccounts', accounts)
 
         commit('setInitialized')
@@ -140,6 +142,6 @@ function lunieCoinToKeplrCoin(denom) {
       .split('.')[1].length,
     // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
     // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-    // coinGeckoId: ""
+    coinGeckoId: network.coinGeckoId,
   }
 }
