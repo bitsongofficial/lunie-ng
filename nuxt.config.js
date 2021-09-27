@@ -33,6 +33,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    '@/plugins/keplr.client.js',
     '@/plugins/copy.client.js',
     '@/plugins/focus.client.js',
     '@/plugins/infinite-scroll.client.js',
