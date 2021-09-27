@@ -86,7 +86,6 @@ export async function createSignBroadcast({
     memo || ''
   )
   assertIsBroadcastTxSuccess(txResult)
-  console.log(txResult)
 
   return {
     hash: txResult.transactionHash,
