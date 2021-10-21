@@ -7,6 +7,7 @@ export default {
   // apiURL: 'http://localhost:8010/proxy',
   apiURL: 'https://lcd.explorebitsong.com',
   rpcURL: 'https://rpc.explorebitsong.com',
+  explorerURL: 'https://bitsong.bigdipper.live/',
   minBlockHeight: 2966151,
   stakingDenom: 'BTSG',
   coinLookup: [
