@@ -85,7 +85,7 @@ export default {
 }
 
 .app-header .header-item.open {
-  background: var(--app-nav);
+  background: #14142e !important;
 }
 
 .mobile-menu-action {
@@ -97,6 +97,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   padding-top: 1.4rem;
+  background: #14142e !important;
 }
 
 .network-icon {

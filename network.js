@@ -1,13 +1,13 @@
 export default {
-  id: 'bitsong-testnet-6',
-  name: 'BitSong Testnet 6',
-  description: 'BitSong testnet 6',
+  id: 'bitsong-2b',
+  name: 'BitSong Mainnet',
+  description: 'BitSong Mainnet',
   logo: `logo.svg`,
   website: 'https://bitsong.io',
   // apiURL: 'http://localhost:8010/proxy',
-  apiURL: 'https://api.testnet.bitsong.network',
-  rpcURL: 'https://rpc.testnet.bitsong.network',
-  minBlockHeight: 2, // actually 5200791, but it has the wrong block time.
+  apiURL: 'https://lcd.explorebitsong.com',
+  rpcURL: 'https://rpc.explorebitsong.com',
+  minBlockHeight: 2966151,
   stakingDenom: 'BTSG',
   coinLookup: [
     {
