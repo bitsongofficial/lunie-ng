@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import {
   MsgDelegate,
   MsgUndelegate,
+  MsgBeginRedelegate,
 } from 'cosmjs-types/cosmos/staking/v1beta1/tx'
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx'
 import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx'
@@ -36,13 +37,13 @@ export function StakeTx(senderAddress, { to, amount }, network) {
 export function RestakeTx(senderAddress, { from, to, amount }, network) {
   /* istanbul ignore next */
   return {
-    type: `/cosmos.staking.v1beta1.MsgBeginRedelegate`,
-    value: {
+    typeUrl: '/cosmos.staking.v1beta1.MsgBeginRedelegate',
+    value: MsgBeginRedelegate.fromPartial({
       delegatorAddress: senderAddress,
       validatorSrcAddress: from[0],
       validatorDstAddress: to[0],
       amount: Coin(amount, network.coinLookup),
-    },
+    }),
   }
 }
 
