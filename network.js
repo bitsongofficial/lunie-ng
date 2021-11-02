@@ -24,7 +24,7 @@ export default {
   HDPath: `m/44'/639'/0'/0/0`,
   coinType: 639,
   coinGeckoId: 'bitsong',
-  lockUpPeriod: `3 days`,
+  lockUpPeriod: `21 days`,
   fees: {
     default: {
       gasEstimate: 350000,
@@ -37,5 +37,5 @@ export default {
     },
   },
   icon: `https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png`,
-  localSigning: true, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
 }
