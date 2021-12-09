@@ -19,6 +19,7 @@ export async function getSigner(
     const { ledger } = await getLedger(ledgerTransport)
     return ledger
   } else if (signingType === `keplr`) {
+    console.log('chainId', chainId)
     return window.getOfflineSigner(chainId)
   }
 
