@@ -4,6 +4,7 @@ import {
   SigningStargateClient,
   assertIsBroadcastTxSuccess,
 } from '@cosmjs/stargate'
+import { isOfflineDirectSigner } from '@cosmjs/proto-signing'
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
 import { getSigner } from './signer'
 import messageCreators from './messages.js'
@@ -64,6 +65,8 @@ export async function createSignBroadcast({
     ledgerTransport
   )
 
+  console.log('isOfflineDirectSigner', isOfflineDirectSigner(signer))
+
   let messages = messageCreators[messageType](senderAddress, message, network)
   console.log('messages', messages)
 
@@ -103,7 +106,7 @@ export async function createSignBroadcast({
   const txBytes = TxRaw.encode(txRaw).finish()
   console.log('txBytes', txBytes)
 
-  const txResult = await client.broadcastTx(txBytes)
+  const txResult = await client.broadcastTx(Uint8Array.from(txBytes))
   console.log('txResult', txResult)
 
   /* const txResult = await client.signAndBroadcast(
