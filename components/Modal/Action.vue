@@ -410,6 +410,8 @@ export default {
           this.session.address
         )
 
+        console.log('accountInfo', accountInfo)
+
         const hashResult = await createSignBroadcast({
           messageType: type,
           message,
