@@ -4,6 +4,7 @@ import {
   SigningStargateClient,
   assertIsBroadcastTxSuccess,
 } from '@cosmjs/stargate'
+import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
 import { getSigner } from './signer'
 import messageCreators from './messages.js'
 import fees from '~/common/fees'
@@ -51,6 +52,8 @@ export async function createSignBroadcast({
     accountSequence: accountInfo.sequence,
   }
 
+  console.log('transactionData', transactionData)
+
   const signer = await getSigner(
     signingType,
     {
@@ -62,6 +65,7 @@ export async function createSignBroadcast({
   )
 
   let messages = messageCreators[messageType](senderAddress, message, network)
+  console.log('messages', messages)
 
   if (messages.length === undefined) {
     messages = [messages]
@@ -79,12 +83,35 @@ export async function createSignBroadcast({
     network.rpcURL,
     signer
   )
-  const txResult = await client.signAndBroadcast(
+
+  const signerData = {
+    accountNumber: transactionData.accountNumber,
+    sequence: transactionData.accountSequence,
+    chainId,
+  }
+  console.log('signerData', signerData)
+
+  const txRaw = await client.sign(
+    senderAddress,
+    messages,
+    stdFee,
+    memo || '',
+    signerData
+  )
+  console.log('txRaw', txRaw)
+
+  const txBytes = TxRaw.encode(txRaw).finish()
+  console.log('txBytes', txBytes)
+
+  const txResult = await client.broadcastTx(txBytes)
+  console.log('txResult', txResult)
+
+  /* const txResult = await client.signAndBroadcast(
     senderAddress,
     messages,
     stdFee,
     memo || ''
-  )
+  ) */
   assertIsBroadcastTxSuccess(txResult)
 
   return {
