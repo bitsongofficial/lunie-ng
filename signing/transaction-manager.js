@@ -85,8 +85,8 @@ export async function createSignBroadcast({
   )
 
   const signerData = {
-    accountNumber: transactionData.accountNumber,
-    sequence: transactionData.accountSequence,
+    accountNumber: Number(transactionData.accountNumber),
+    sequence: Number(transactionData.accountSequence),
     chainId,
   }
   console.log('signerData', signerData)
