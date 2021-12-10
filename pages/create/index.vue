@@ -79,20 +79,22 @@ export default {
       this.loading = true
       this.errorMessage = undefined
       try {
-        const { Secp256k1HdWallet } = await import('@cosmjs/launchpad')
-        const wallet = await Secp256k1HdWallet.fromMnemonic(
-          this.seed,
-          await getHDPath(network.HDPath),
-          network.addressPrefix
+        const { DirectSecp256k1HdWallet } = await import(
+          '@cosmjs/proto-signing'
         )
+        const wallet = await DirectSecp256k1HdWallet.fromMnemonic(this.seed, {
+          hdPaths: [await getHDPath(network.HDPath)],
+          prefix: network.addressPrefix,
+        })
+        const [{ address }] = await wallet.getAccounts()
         storeWallet(
           await wallet.serialize(this.password),
-          wallet.address,
+          address,
           this.name,
           network.HDPath
         )
         this.$store.dispatch('signIn', {
-          address: wallet.address,
+          address,
           sessionType: 'local',
         })
         this.$router.push({

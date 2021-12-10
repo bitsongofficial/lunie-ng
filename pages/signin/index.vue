@@ -83,9 +83,11 @@ export default {
       this.loading = true
 
       try {
-        const { Secp256k1HdWallet } = await import('@cosmjs/launchpad')
+        const { DirectSecp256k1HdWallet } = await import(
+          '@cosmjs/proto-signing'
+        )
         const { wallet } = getWallet(this.signInAddress)
-        await Secp256k1HdWallet.deserialize(wallet, this.signInPassword)
+        await DirectSecp256k1HdWallet.deserialize(wallet, this.signInPassword)
         this.$store.dispatch('signIn', {
           address: this.signInAddress,
           sessionType: 'local',
