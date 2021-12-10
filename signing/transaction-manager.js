@@ -1,11 +1,19 @@
 import BigNumber from 'bignumber.js'
-import { coins } from '@cosmjs/amino'
+import { coins, encodeSecp256k1Pubkey } from '@cosmjs/amino'
 import {
   SigningStargateClient,
   assertIsBroadcastTxSuccess,
+  defaultRegistryTypes,
 } from '@cosmjs/stargate'
-import { isOfflineDirectSigner } from '@cosmjs/proto-signing'
-import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
+import {
+  isOfflineDirectSigner,
+  encodePubkey,
+  Registry,
+  makeAuthInfoBytes,
+} from '@cosmjs/proto-signing'
+import { fromBase64 } from '@cosmjs/encoding'
+import { Int53 } from '@cosmjs/math'
+import { TxRaw, TxBody, SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
 import { getSigner } from './signer'
 import messageCreators from './messages.js'
 import fees from '~/common/fees'
@@ -55,6 +63,13 @@ export async function createSignBroadcast({
 
   console.log('transactionData', transactionData)
 
+  let messages = messageCreators[messageType](senderAddress, message, network)
+  console.log('messages', messages)
+
+  if (messages.length === undefined) {
+    messages = [messages]
+  }
+
   const signer = await getSigner(
     signingType,
     {
@@ -67,12 +82,28 @@ export async function createSignBroadcast({
 
   console.log('isOfflineDirectSigner', isOfflineDirectSigner(signer))
 
-  let messages = messageCreators[messageType](senderAddress, message, network)
-  console.log('messages', messages)
+  const accountFromSigner = (await signer.getAccounts()).find(
+    (account) => account.address === senderAddress
+  )
+  console.log('accountFromSigner', accountFromSigner)
 
-  if (messages.length === undefined) {
-    messages = [messages]
+  if (!accountFromSigner) {
+    throw new Error('Failed to retrieve account from signer')
   }
+
+  const pubkey = encodePubkey(encodeSecp256k1Pubkey(accountFromSigner.pubkey))
+
+  const txBodyEncodeObject = {
+    typeUrl: '/cosmos.tx.v1beta1.TxBody',
+    value: {
+      messages,
+      memo,
+    },
+  }
+
+  const registry = new Registry(defaultRegistryTypes)
+
+  const txBodyBytes = registry.encode(txBodyEncodeObject)
 
   const stdFee = {
     amount: coins(
@@ -94,19 +125,43 @@ export async function createSignBroadcast({
   }
   console.log('signerData', signerData)
 
-  const txRaw = await client.sign(
-    senderAddress,
-    messages,
-    stdFee,
-    memo || '',
-    signerData
+  const gasLimit = Int53.fromString(stdFee.gas).toNumber()
+  const authInfoBytes = makeAuthInfoBytes(
+    [{ pubkey, sequence: signerData.sequence }],
+    stdFee.amount,
+    gasLimit
   )
+
+  const signDocRaw = SignDoc.fromPartial({
+    accountNumber: Number(transactionData.accountNumber),
+    bodyBytes: txBodyBytes,
+    authInfoBytes,
+    chainId,
+  })
+
+  // const signDocBytes = SignDoc.encode(signDocRaw).finish()
+
+  const { signature, signed } = await signer.signDirect(
+    senderAddress,
+    signDocRaw
+  )
+
+  const txRaw = TxRaw.fromPartial({
+    bodyBytes: signed.bodyBytes,
+    authInfoBytes: signed.authInfoBytes,
+    signatures: [fromBase64(signature.signature)],
+  })
+
   console.log('txRaw', txRaw)
 
-  const txBytes = TxRaw.encode(txRaw).finish()
+  console.log('body', TxBody.decode(txRaw.bodyBytes))
+  console.log('authInfo', TxBody.decode(txRaw.authInfoBytes))
+  // console.log('signatures', TxBody.decode(txRaw.signatures))
+
+  const txBytes = Uint8Array.from(TxRaw.encode(txRaw).finish())
   console.log('txBytes', txBytes)
 
-  const txResult = await client.broadcastTx(Uint8Array.from(txBytes))
+  const txResult = await client.broadcastTx(txBytes)
   console.log('txResult', txResult)
 
   /* const txResult = await client.signAndBroadcast(
