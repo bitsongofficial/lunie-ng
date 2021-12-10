@@ -8,12 +8,14 @@ export async function getSigner(
   ledgerTransport
 ) {
   if (signingType === `local`) {
-    const { Secp256k1HdWallet } = await import('@cosmjs/launchpad')
     const { wallet: serializedWallet } = getWallet(address)
-    const wallet = await Secp256k1HdWallet.deserialize(
+
+    const { DirectSecp256k1HdWallet } = await import('@cosmjs/proto-signing')
+    const wallet = await DirectSecp256k1HdWallet.deserialize(
       serializedWallet,
       password
     )
+
     return wallet
   } else if (signingType === `ledger`) {
     const { ledger } = await getLedger(ledgerTransport)
