@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="anchor" width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <path d="M11 7C12.6569 7 14 5.65685 14 4C14 2.34315 12.6569 1 11 1C9.34315 1 8 2.34315 8 4C8 5.65685 9.34315 7 11 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11 21V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4 11H1C1 13.6522 2.05357 16.1957 3.92893 18.0711C5.8043 19.9464 8.34784 21 11 21C13.6522 21 16.1957 19.9464 18.0711 18.0711C19.9464 16.1957 21 13.6522 21 11H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="battery" width="24" height="14" viewBox="0 0 24 14" fill="none">
+    <path d="M17 1H3C1.89543 1 1 1.89543 1 3V11C1 12.1046 1.89543 13 3 13H17C18.1046 13 19 12.1046 19 11V3C19 1.89543 18.1046 1 17 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 8V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="chrome" width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <path d="M11 21C16.5228 21 21 16.5228 21 11C21 5.47715 16.5228 1 11 1C5.47715 1 1 5.47715 1 11C1 16.5228 5.47715 21 11 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11 15C13.2091 15 15 13.2091 15 11C15 8.79086 13.2091 7 11 7C8.79086 7 7 8.79086 7 11C7 13.2091 8.79086 15 11 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.17 7H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2.95312 5.05957L7.54313 12.9996" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9.88281 20.94L14.4628 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="arrow-right" width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M1 7L13 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 1L13 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="warning" width="22" height="19" viewBox="0 0 22 19" fill="none">
+    <path d="M9.65273 2.53158L2.16657 15.0291C2.01223 15.2964 1.93056 15.5995 1.92969 15.9081C1.92883 16.2168 2.0088 16.5203 2.16165 16.7884C2.3145 17.0566 2.53489 17.2801 2.80092 17.4366C3.06694 17.5931 3.36931 17.6773 3.67795 17.6807H18.6503C18.9589 17.6773 19.2613 17.5931 19.5273 17.4366C19.7933 17.2801 20.0137 17.0566 20.1666 16.7884C20.3194 16.5203 20.3994 16.2168 20.3985 15.9081C20.3977 15.5995 20.316 15.2964 20.1616 15.0291L12.6755 2.53158C12.5179 2.27182 12.2961 2.05706 12.0313 1.90801C11.7666 1.75897 11.4679 1.68066 11.1641 1.68066C10.8603 1.68066 10.5616 1.75897 10.2969 1.90801C10.0321 2.05706 9.8103 2.27182 9.65273 2.53158V2.53158Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.1641 7.07422V10.6096" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.1641 14.145H11.1729" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="close" width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M11 1L1 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 1L11 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svsymbolg>
+</svg>

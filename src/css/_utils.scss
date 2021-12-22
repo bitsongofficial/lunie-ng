@@ -1,0 +1,82 @@
+.container {
+  max-width: $container;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.bg-none {
+  background: none;
+}
+
+.bg-transparent-white {
+  background: $transparent-white !important;
+}
+
+.bg-half-transparent-white {
+  background: $half-transparent-white !important;
+}
+
+.text-half-transparent-white {
+  color: $half-transparent-white !important;
+}
+
+.bg-quart-transparent-white {
+  background: $quart-transparent-white !important;
+}
+
+.bg-full-transparent-white {
+  background: $full-transparent-white !important;
+}
+
+.bg-transparent-gray {
+  background: $transparent-gray !important;
+}
+
+.bg-quart-transparent-gray {
+  background: $quart-transparent-white !important;
+}
+
+.bg-alternative {
+  background: $alternative !important;
+}
+
+.bg-accent-2 {
+  background: $accent-2 !important;
+}
+
+.bg-alternative-linear-gradient {
+  background: $alternative-linear-gradient !important;
+}
+
+.text-half-transparent-white {
+  color: $half-transparent-white !important;
+}
+
+.text-accent-2 {
+  color: $accent-2 !important;
+}
+
+.text-accent-3 {
+  color: $accent-3 !important;
+}
+
+.text-gray3 {
+  color: $gray3 !important;
+}
+
+.bg-blur {
+  backdrop-filter: blur(20px);
+}
+
+.bg-gradient {
+  background: radial-gradient(59.94% 60.98% at 27.46% 2.76%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 64.03%), rgba(255, 255, 255, 0.04);
+}
+
+.bg-blur-extra {
+  backdrop-filter: blur(40px);
+}
+
+.bg-tertiary {
+  background: $tertiary;
+}

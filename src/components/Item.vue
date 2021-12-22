@@ -1,0 +1,97 @@
+<template>
+  <q-item class="item bg-transparent-gray rounded-borders" v-bind="$props" @click="click">
+    <q-item-section avatar v-if="hasLeftContent || leftIcon">
+      <slot name="left">
+        <q-icon class="icon" :name="leftIcon" color="gray3" :size="leftIconSize" v-if="leftIcon" />
+      </slot>
+    </q-item-section>
+
+    <q-item-section v-if="hasDefaultContent || title">
+      <slot>
+        <label class="text-subtitle2 text-white text-weight-medium cursor-pointer" v-if="title">{{ title }}</label>
+      </slot>
+    </q-item-section>
+
+    <q-item-section side v-if="hasRightContent || details || rightIcon">
+      <slot name="right">
+        <q-btn class="details-btn" rounded unelevated color="secondary" text-color="white" :disable="disable" size="18px" padding="17px 26px" v-if="details">
+          <q-icon class="small-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
+        </q-btn>
+        <q-icon class="small-icon" :name="rightIcon" color="gray3" v-else-if="rightIcon" />
+      </slot>
+    </q-item-section>
+  </q-item>
+</template>
+
+<script lang="ts">
+import { QItem } from 'quasar';
+import { defineComponent, computed } from 'vue';
+
+export default defineComponent({
+  name: 'Item',
+  extends: QItem,
+  emits: ['click'],
+  props: {
+    title: {
+      type: String,
+    },
+    leftIcon: {
+      type: String,
+    },
+    leftIconSize: {
+      type: String,
+      default: '20px',
+    },
+    rightIcon: {
+      type: String,
+    },
+    details: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props, { slots, emit }) {
+    const hasLeftContent = computed(() => !!slots.left);
+    const hasRightContent = computed(() => !!slots.right);
+    const hasDefaultContent = computed(() => !!slots.default);
+
+    return {
+      hasLeftContent,
+      hasRightContent,
+      hasDefaultContent,
+      click(e: Event) {
+        emit('click', e);
+      }
+    }
+  }
+});
+</script>
+
+<style lang="scss" scoped>
+.item {
+  padding: 25px 28px 24px 42px;
+  min-height: 95px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  &::v-deep(.q-item__section--avatar) {
+    min-width: unset;
+    padding-right: 37px;
+  }
+
+  &:hover {
+    & .details-btn {
+      background-color: $accent-2 !important;
+    }
+  }
+}
+
+.details-btn {
+  transition: all 250ms ease-in-out;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+</style>

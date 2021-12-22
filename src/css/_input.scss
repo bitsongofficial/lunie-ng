@@ -1,0 +1,27 @@
+.q-select .q-field__control,
+.q-input .q-field__control,
+.q-textarea .q-field__control {
+  height: 70px;
+  padding-left: 33px;
+  padding-right: 31px;
+
+  & .q-field__marginal {
+    height: 100%;
+  }
+}
+
+.q-textarea .q-field__native {
+  resize: none;
+}
+
+.q-field--standout.q-field--highlighted .q-field__control {
+  box-shadow: none;
+}
+
+.q-field--standout.q-field--highlighted .q-field__native {
+  color: $half-transparent-white;
+}
+
+.q-field--standout .q-field__native {
+  color: $half-transparent-white;
+}
