@@ -1,4 +1,6 @@
 .container {
+  --offset-left: 15px;
+  --offset-right: 15px;
   max-width: $container;
   width: 100%;
   margin: 0 auto;
@@ -79,4 +81,8 @@
 
 .bg-tertiary {
   background: $tertiary;
+}
+
+.position-relative {
+  position: relative;
 }

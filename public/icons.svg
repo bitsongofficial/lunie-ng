@@ -27,5 +27,23 @@
   <symbol id="close" width="12" height="12" viewBox="0 0 12 12" fill="none">
     <path d="M11 1L1 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M1 1L11 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svsymbolg>
+  </symbol>
+  <symbol id="suitcase" width="18" height="16" viewBox="0 0 18 16" fill="none">
+    <path d="M15 4.11133H2.55556C1.69645 4.11133 1 4.80777 1 5.66688V13.4447C1 14.3038 1.69645 15.0002 2.55556 15.0002H15C15.8591 15.0002 16.5556 14.3038 16.5556 13.4447V5.66688C16.5556 4.80777 15.8591 4.11133 15 4.11133Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.8902 15V2.55556C11.8902 2.143 11.7263 1.74733 11.4346 1.45561C11.1429 1.16389 10.7472 1 10.3346 1H7.22352C6.81097 1 6.4153 1.16389 6.12358 1.45561C5.83186 1.74733 5.66797 2.143 5.66797 2.55556V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="stack" width="17" height="17" viewBox="0 0 17 17" fill="none">
+    <path d="M8.5 1L1 4.75L8.5 8.5L16 4.75L8.5 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 12.25L8.5 16L16 12.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 8.5L8.5 12.25L16 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="like" width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <path d="M4.99997 16.9999H2.59999C2.17565 16.9999 1.76868 16.8313 1.46863 16.5313C1.16857 16.2312 1 15.8243 1 15.3999V9.79994C1 9.3756 1.16857 8.96864 1.46863 8.66858C1.76868 8.36852 2.17565 8.19995 2.59999 8.19995H4.99997M10.5999 6.59996V3.39998C10.5999 2.76347 10.3471 2.15302 9.897 1.70294C9.44692 1.25285 8.83647 1 8.19995 1L4.99997 8.19995V16.9999H14.0239C14.4098 17.0043 14.7842 16.869 15.0782 16.6191C15.3723 16.3692 15.566 16.0214 15.6239 15.6399L16.7279 8.43995C16.7627 8.21064 16.7472 7.9765 16.6826 7.75376C16.6179 7.53102 16.5056 7.325 16.3534 7.14997C16.2012 6.97495 16.0128 6.83511 15.8012 6.74014C15.5896 6.64517 15.3598 6.59734 15.1279 6.59996H10.5999Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="swap" width="21" height="16" viewBox="0 0 21 16" fill="none">
+    <path d="M10.8008 6.07715L15.0434 1.83451L19.2861 6.07715" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10.3564 10.749L6.11373 14.9917L1.87109 10.749" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6.11381 14.9917L6.11381 5.09224" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15.0435 11.7339L15.0435 1.83443" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

@@ -1,4 +1,3 @@
-
 <template>
   <q-layout class="bg-secondary" view="hHh lpR fff">
     <q-header class="header bg-transparent text-white">

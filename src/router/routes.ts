@@ -4,7 +4,7 @@ import { routes as moduleRoutes } from 'src/modules';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/authentication'
+    redirect: '/portfolio'
   },
   ...moduleRoutes,
 ];
