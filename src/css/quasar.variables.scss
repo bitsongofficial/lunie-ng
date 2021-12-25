@@ -18,6 +18,7 @@ $tertiary: #ED2977;
 $accent: #6B6B84;
 $accent-2: #7C4496;
 $accent-3: #898997;
+$accent-4: #9797A9;
 $alternative: #313150;
 $alternative-2: #23223B;
 $alternative-3: #303046;
@@ -76,12 +77,13 @@ $body2: (size: 14px, line-height: 18px, letter-spacing: normal, weight: 400) !de
 $body3: (size: 9px, line-height: 11px, letter-spacing: normal, weight: 400) !default;
 $body4: (size: 10px, line-height: 12px, letter-spacing: normal, weight: 400) !default;
 $body5: (size: 32px, line-height: 40px, letter-spacing: normal, weight: 400) !default;
+$body6: (size: 8px, line-height: 10px, letter-spacing: normal, weight: 400) !default;
 $subtitle1: (size: 21px, line-height: 27px, letter-spacing: normal, weight: 400) !default;
 $subtitle2: (size: 16px, line-height: 20px, letter-spacing: normal, weight: 400) !default;
 $overline: (size: 13px, line-height: 16px, letter-spacing: normal, weight: 400) !default;
 $overline-2: (size: 13px, line-height: 24px, letter-spacing: normal, weight: 400) !default;
 $caption: (size: 11px, line-height: 12px, letter-spacing: normal, weight: 400) !default;
 
-$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body-large': $body-large, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption) !default;
+$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body6': $body6, 'body-large': $body-large, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption) !default;
 
 $typography-font-family: Circular Std, 'Roboto', '-apple-system', 'Helvetica Neue', Helvetica, Arial, sans-serif !default

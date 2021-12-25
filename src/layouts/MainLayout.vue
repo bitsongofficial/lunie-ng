@@ -9,15 +9,38 @@
 
           <p class="text-body-large text-weight-medium text-white q-my-none">wallet</p>
         </q-toolbar-title>
+
+        <q-item class="profile-item" clickable>
+          <q-item-section class="column">
+            <label class="text-half-transparent-white text-body6 no-pointer-events">ADDRESS</label>
+            <label class="text-white text-body4 no-pointer-events">bitsong17dmxq...u085</label>
+          </q-item-section>
+
+          <q-item-section side>
+            <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="14px" />
+          </q-item-section>
+        </q-item>
       </q-toolbar>
     </q-header>
 
     <div class="container position-relative">
-      <q-drawer class="drawer-menu bg-transparent" persistent v-model="leftDrawer" :width="270" side="left">
-        <q-list>
-          <menu-link title="Portfolio" link="portfolio" />
-          <menu-link title="Login" link="authentication" />
+      <q-drawer class="drawer-menu bg-transparent column" persistent v-model="leftDrawer" :width="270" side="left">
+        <q-list class="menu-links">
+          <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="portfolio" />
+          <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Stacking" link="stacking" />
+          <menu-link icon="svguse:icons.svg#like|0 0 18 18" title="Proposal" link="proposal" />
+          <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" link="transactions" />
         </q-list>
+
+        <q-item class="connection-item q-mt-auto">
+          <q-item-section>
+            <q-item-label class="text-white text-h6">Bitsong-2b</q-item-label>
+          </q-item-section>
+
+          <q-item-section side>
+            <q-item-label class="text-accent-4 text-h6">connected</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-drawer>
 
       <q-page-container>
@@ -65,5 +88,26 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   margin-right: 24px;
+}
+
+.menu-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 8px;
+}
+
+.profile-item {
+  background: $secondary;
+  border-radius: 50px;
+  padding: 12px 24px 12px 26px;
+  border: 2px solid $accent-3;
+}
+
+.connection-item {
+  margin-bottom: 40px;
+  background: $alternative-2;
+  border-radius: 20px;
+  padding: 12px 32px;
+  min-height: 40px;
 }
 </style>
