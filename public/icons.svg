@@ -50,4 +50,13 @@
     <path d="M14 15.625V14C14 13.138 13.6576 12.3114 13.0481 11.7019C12.4386 11.0924 11.612 10.75 10.75 10.75H4.25C3.38805 10.75 2.5614 11.0924 1.9519 11.7019C1.34241 12.3114 1 13.138 1 14V15.625" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M7.5 7.5C9.29493 7.5 10.75 6.04493 10.75 4.25C10.75 2.45507 9.29493 1 7.5 1C5.70507 1 4.25 2.45507 4.25 4.25C4.25 6.04493 5.70507 7.5 7.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
+  <symbol id="search" width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <path d="M5.60804 10.2161C8.15299 10.2161 10.2161 8.15299 10.2161 5.60804C10.2161 3.06309 8.15299 1 5.60804 1C3.06309 1 1 3.06309 1 5.60804C1 8.15299 3.06309 10.2161 5.60804 10.2161Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.365 11.3679L8.85938 8.8623" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="vertical-dots" width="4" height="16" viewBox="0 0 4 16" fill="none">
+    <path d="M1.875 8.875C2.35825 8.875 2.75 8.48325 2.75 8C2.75 7.51675 2.35825 7.125 1.875 7.125C1.39175 7.125 1 7.51675 1 8C1 8.48325 1.39175 8.875 1.875 8.875Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1.875 2.75C2.35825 2.75 2.75 2.35825 2.75 1.875C2.75 1.39175 2.35825 1 1.875 1C1.39175 1 1 1.39175 1 1.875C1 2.35825 1.39175 2.75 1.875 2.75Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1.875 15C2.35825 15 2.75 14.6082 2.75 14.125C2.75 13.6418 2.35825 13.25 1.875 13.25C1.39175 13.25 1 13.6418 1 14.125C1 14.6082 1.39175 15 1.875 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

@@ -19,6 +19,7 @@ $accent: #6B6B84;
 $accent-2: #7C4496;
 $accent-3: #898997;
 $accent-4: #9797A9;
+$accent-5: #9494B9;
 $alternative: #313150;
 $alternative-2: #23223B;
 $alternative-3: #303046;
@@ -32,6 +33,8 @@ $full-transparent-white: transparentize($white, 0.9);
 $full-transparent-dark: rgba(255, 255, 255, 0.1);
 $dark: #1D1D1D;
 
+$transparent-secondary: transparentize($secondary, 0.3);
+
 $alternative-linear-gradient: linear-gradient(0deg, $alternative, $alternative), $white;
 $alternative-3-linear-gradient: linear-gradient(0deg, $alternative-3, $alternative-3), transparentize($white, 0.8);
 
@@ -43,7 +46,7 @@ $transparent-gray2: transparentize($gray2, 0.85);
 
 $positive: #11B521;
 $negative: #96446B;
-$info: #31CCEC;
+$info: #67BAB0;
 $warning: #F2C037;
 
 $input-font-size: 16px !default;
@@ -64,6 +67,7 @@ $container: 1226px;
 $container-center: 508px;
 
 $secondary-box-shadow: 0px 0px 20px 20px transparentize($secondary, 0.5);
+$full-secondary-box-shadow: 0px 0px 20px $secondary;
 
 $h1: (size: 6rem, line-height: 6rem, letter-spacing: normal, weight: 300) !default;
 $h2: (size: 38px, line-height: 48px, letter-spacing: normal, weight: 400) !default;

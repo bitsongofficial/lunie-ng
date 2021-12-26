@@ -27,7 +27,7 @@
       <q-drawer class="drawer-menu bg-transparent column" persistent v-model="leftDrawer" :width="270" side="left">
         <q-list class="menu-links">
           <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="portfolio" />
-          <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Stacking" link="stacking" />
+          <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="validators" />
           <menu-link icon="svguse:icons.svg#like|0 0 18 18" title="Proposal" link="proposal" />
           <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" link="transactions" />
         </q-list>

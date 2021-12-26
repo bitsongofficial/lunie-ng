@@ -15,6 +15,14 @@ export default [
           title: 'Portfolio'
         },
       },
+      {
+        path: 'validators',
+        name: 'validators',
+        component: () => import('./views/Validators.vue'),
+        meta: {
+          title: 'Validators'
+        },
+      },
     ]
   }
 ] as RouteRecordRaw[];

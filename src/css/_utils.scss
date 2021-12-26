@@ -67,12 +67,24 @@
   color: $accent-4 !important;
 }
 
+.text-accent-5 {
+  color: $accent-5 !important;
+}
+
+.text-transparent-secondary {
+  color: $transparent-secondary !important;
+}
+
 .text-gray3 {
   color: $gray3 !important;
 }
 
 .bg-blur {
   backdrop-filter: blur(20px);
+}
+
+.bg-transparent-secondary {
+  color: $transparent-secondary !important;
 }
 
 .bg-gradient {
@@ -89,4 +101,15 @@
 
 .position-relative {
   position: relative;
+}
+
+.white-space-break-spaces {
+  white-space: break-spaces;
+}
+
+.overflow-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }

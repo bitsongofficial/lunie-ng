@@ -10,6 +10,20 @@
   }
 }
 
+.q-select,
+.q-input,
+.q-textarea {
+  &.medium {
+    & .q-field__control,
+    & .q-field__control,
+    & .q-field__control {
+      height: 40px;
+      padding-left: 28px;
+      padding-right: 20px;
+    }
+  }
+}
+
 .q-textarea .q-field__native {
   resize: none;
 }
@@ -19,9 +33,9 @@
 }
 
 .q-field--standout.q-field--highlighted .q-field__native {
-  color: $half-transparent-white;
+  color: $accent-5;
 }
 
 .q-field--standout .q-field__native {
-  color: $half-transparent-white;
+  color: $accent-5;
 }
