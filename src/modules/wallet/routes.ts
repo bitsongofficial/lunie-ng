@@ -23,6 +23,32 @@ export default [
           title: 'Validators'
         },
       },
+      {
+        path: 'validators/:address',
+        name: 'validator',
+        component: () => import('./views/Validator.vue'),
+        meta: {
+          title: 'Validator',
+          back: true,
+        },
+      },
+      {
+        path: 'proposals',
+        name: 'proposals',
+        component: () => import('./views/Proposals.vue'),
+        meta: {
+          title: 'Proposals'
+        },
+      },
+      {
+        path: 'proposals/:id',
+        name: 'proposal',
+        component: () => import('./views/Proposal.vue'),
+        meta: {
+          title: 'Proposal',
+          back: true,
+        },
+      }
     ]
   }
 ] as RouteRecordRaw[];

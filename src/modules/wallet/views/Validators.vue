@@ -57,7 +57,15 @@ export default defineComponent({
       },
       {
         id: 2,
-        name: 'BasBlock',
+        name: 'BasBlock2',
+        picture: '',
+        status: 'ACTIVE',
+        rewards: 30,
+        available: 12.9
+      },
+      {
+        id: 3,
+        name: 'BasBlock3',
         picture: '',
         status: 'ACTIVE',
         rewards: 30,
@@ -78,6 +86,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .validators {
   padding-top: 40px;
+  padding-bottom: 100px;
 }
 
 .section-header {

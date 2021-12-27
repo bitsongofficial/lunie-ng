@@ -39,3 +39,11 @@
 .q-field--standout .q-field__native {
   color: $accent-5;
 }
+
+.no-hoverable:hover,
+.no-hoverable:focus,
+.no-hoverable:active {
+  & > .q-focus-helper {
+    display: none;
+  }
+}

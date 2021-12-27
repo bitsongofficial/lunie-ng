@@ -13,4 +13,8 @@
 .drawer-menu {
   padding-top: 190px;
   padding-right: 46px;
+
+  &.back {
+    padding-top: 60px;
+  }
 }

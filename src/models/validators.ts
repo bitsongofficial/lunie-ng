@@ -5,4 +5,8 @@ export interface Validator {
   status: string;
   rewards: number;
   available: number;
+  staked?: number;
+  votingPower?: number;
+  unstaked?: number;
+  time?: number;
 }

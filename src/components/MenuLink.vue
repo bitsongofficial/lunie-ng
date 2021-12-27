@@ -2,19 +2,20 @@
   <router-link
     :to="link"
     custom
-    v-slot="{ href, navigate, isActive }"
+    v-slot="{ href, route, navigate, isActive }"
+    v-if="!external"
   >
     <q-item
       clickable
       tag="a"
       :href="href"
       @click="navigate"
-      :active="isActive"
+      :active="isActive || contained(route)"
       active-class="active"
       class="menu-link"
     >
       <q-item-section v-if="icon" avatar>
-        <q-icon :name="icon" :color="isActive ? 'accent-2' : 'accent'" size="15px" />
+        <q-icon :name="icon" :color="isActive || contained(route) ? 'accent-2' : 'accent'" size="15px" />
       </q-item-section>
 
       <q-item-section>
@@ -22,10 +23,28 @@
       </q-item-section>
     </q-item>
   </router-link>
+  <q-item
+    clickable
+    tag="a"
+    target="_blank"
+    :href="link"
+    active-class="active"
+    class="menu-link"
+    v-else
+  >
+    <q-item-section v-if="icon" avatar>
+      <q-icon :name="icon" color="accent" size="15px" />
+    </q-item-section>
+
+    <q-item-section>
+      <q-item-label class="text-weight-medium text-overline-2">{{ title }}</q-item-label>
+    </q-item-section>
+  </q-item>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 
 export default defineComponent({
   name: 'MenuLink',
@@ -40,6 +59,21 @@ export default defineComponent({
     },
     icon: {
       type: String,
+    },
+    external: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  setup() {
+    const router = useRouter();
+
+    const contained = (route: RouteLocationNormalizedLoaded) => {
+      return router.currentRoute.value.path.includes(route.path);
+    };
+
+    return {
+      contained,
     }
   }
 });
