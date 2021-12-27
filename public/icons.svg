@@ -64,4 +64,11 @@
     <path d="M7.5 10.1V7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M7.5 4.90039H7.5065" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
+  <symbol id="check" width="70" height="70" viewBox="0 0 70 70" fill="none">
+    <path d="M67 32.0743V35.0183C66.9961 41.9189 64.7616 48.6333 60.6299 54.1601C56.4981 59.687 50.6905 63.7302 44.0731 65.6868C37.4558 67.6433 30.3832 67.4084 23.9103 65.017C17.4374 62.6256 11.9109 58.2058 8.15507 52.4169C4.39925 46.628 2.61533 39.7801 3.06937 32.8945C3.5234 26.0089 6.19106 19.4546 10.6745 14.2089C15.1579 8.96334 21.2169 5.30754 27.9478 3.78678C34.6787 2.26603 41.7208 2.96179 48.024 5.77032" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M66.9984 9.41895L34.9984 41.4509L25.3984 31.8509" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="keyboard-arrow-down" width="10" height="6" viewBox="0 0 10 6" fill="none">
+    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

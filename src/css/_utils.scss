@@ -91,6 +91,10 @@
   background: radial-gradient(59.94% 60.98% at 27.46% 2.76%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 64.03%), rgba(255, 255, 255, 0.04);
 }
 
+.bg-accent-gradient {
+  background: $accent-linear-gradient;
+}
+
 .bg-blur-extra {
   backdrop-filter: blur(40px);
 }
@@ -116,4 +120,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+}
+
+.text-untransform {
+  text-transform: none;
 }

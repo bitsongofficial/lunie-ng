@@ -14,7 +14,9 @@
 
     <q-item-section side v-if="hasRightContent || details || rightIcon">
       <slot name="right">
-        <q-btn class="details-btn" rounded unelevated color="secondary" text-color="white" :disable="disable" size="18px" padding="17px 26px" v-if="details">
+        <q-btn class="details-btn" :class="{
+          'reverse': reverse
+        }" rounded unelevated :color="!reverse ? 'secondary' : 'accent-2'" text-color="white" :disable="disable" size="18px" padding="17px 26px" v-if="details">
           <q-icon class="small-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
         </q-btn>
         <q-icon class="small-icon" :name="rightIcon" color="gray3" v-else-if="rightIcon" />
@@ -46,6 +48,10 @@ export default defineComponent({
       type: String,
     },
     details: {
+      type: Boolean,
+      default: false,
+    },
+    reverse: {
       type: Boolean,
       default: false,
     },
@@ -81,13 +87,23 @@ export default defineComponent({
 
   &:hover {
     & .details-btn {
-      background-color: $accent-2 !important;
+      &:not(.reverse) {
+        background-color: $accent-2 !important;
+      }
+
+      &.reverse {
+        background-color: $secondary !important;
+      }
     }
   }
 }
 
 .details-btn {
   transition: all 250ms ease-in-out;
+
+  &::v-deep(.q-focus-helper) {
+    opacity: 0 !important;
+  }
 }
 
 .icon {

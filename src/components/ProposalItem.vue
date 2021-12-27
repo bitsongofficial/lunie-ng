@@ -1,5 +1,5 @@
 <template>
-  <item clickable details v-ripple :to="to">
+  <item clickable reverse details v-ripple :to="to">
     <div class="row items-center no-wrap">
       <h4 class="text-white text-weight-medium q-my-none">{{ title }}</h4>
 

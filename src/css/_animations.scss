@@ -1,0 +1,12 @@
+.animate__blurIn {
+  animation-name: blurIn;
+}
+
+@keyframes blurIn {
+  0% {
+    backdrop-filter: blur(0)
+  }
+  100% {
+    backdrop-filter: blur(60px)
+  }
+}

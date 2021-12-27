@@ -1,25 +1,45 @@
-.q-select .q-field__control,
-.q-input .q-field__control,
-.q-textarea .q-field__control {
-  height: 70px;
-  padding-left: 33px;
-  padding-right: 31px;
-
-  & .q-field__marginal {
-    height: 100%;
-  }
-}
-
 .q-select,
 .q-input,
 .q-textarea {
+  & .q-field__native {
+    color: $white !important;
+
+    &::placeholder {
+      color: $accent-5 !important;
+    }
+  }
+
+  & .q-field__control {
+    height: 70px;
+    padding-left: 33px;
+    padding-right: 31px;
+
+    & .q-field__marginal {
+      height: 100%;
+    }
+  }
+
   &.medium {
-    & .q-field__control,
-    & .q-field__control,
     & .q-field__control {
       height: 40px;
       padding-left: 28px;
       padding-right: 20px;
+    }
+  }
+
+  &.large {
+    & .q-field__control {
+      height: 56px;
+      padding-left: 17px;
+      padding-right: 32px;
+    }
+  }
+
+  &.extra-large {
+    & .q-field__control {
+      height: 63px;
+      padding-left: 25px;
+      padding-right: 28px;
     }
   }
 }
@@ -40,10 +60,21 @@
   color: $accent-5;
 }
 
-.no-hoverable:hover,
-.no-hoverable:focus,
-.no-hoverable:active {
-  & > .q-focus-helper {
-    display: none;
+.q-select__dropdown-icon {
+  font-size: 0;
+  width: 12px;
+  height: 8px;
+  background: url('../assets/keyboard-arrow-down.svg') no-repeat center;
+  background-size: contain;
+}
+
+.quantity-input {
+  & .q-field__native {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  & .q-field__prepend {
+    min-width: unset;
   }
 }

@@ -6,6 +6,26 @@
   min-height: 46px !important;
 }
 
+.btn-medium-small {
+  min-height: 38px !important;
+}
+
 .btn-small {
   min-height: 34px !important;
+}
+
+.btn-extra-small {
+  min-height: 32px !important;
+}
+
+.btn-super-extra-small {
+  min-height: 18px !important;
+}
+
+.no-hoverable:hover,
+.no-hoverable:focus,
+.no-hoverable:active {
+  & > .q-focus-helper {
+    display: none;
+  }
 }
