@@ -1,0 +1,21 @@
+body {
+  overflow: overlay;
+
+  &::-webkit-scrollbar {
+    width: 21px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-width: 0;
+    background-color: $secondary;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background-color: $transparent-white;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 7px;
+    background-clip: padding-box;
+  }
+}
