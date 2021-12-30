@@ -8,7 +8,7 @@
           <h5 class="text-white q-mt-none q-mb-xs">bitsongvaloper1fg5...za9s3newleq60zt9</h5>
         </div>
 
-        <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px">
+        <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="copyAddressToClipboard">
           COPY
         </q-btn>
       </div>
@@ -44,10 +44,26 @@
 </template>
 
 <script lang="ts">
+import { copyToClipboard } from 'quasar';
+import { notifySuccess } from 'src/common/notify';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ValidatorAddress',
+  setup() {
+    const copyAddressToClipboard = async () => {
+      try {
+        await copyToClipboard('bitsongvaloper1fg5...za9s3newleq60zt9');
+        notifySuccess('Text has been copied to the clipboard!');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return {
+      copyAddressToClipboard,
+    };
+  }
 });
 </script>
 
