@@ -38,12 +38,21 @@
           >
             <template v-slot:selected-item="{ opt }">
               <div class="row items-center cursor-pointer">
-                <q-avatar class="validator-avatar" size="32px">
+                <q-avatar class="validator-avatar" size="26px">
                   <img src="https://cdn.quasar.dev/img/avatar.png">
                 </q-avatar>
 
                 <label class="text-white text-body2 cursor-pointer">{{ opt.label }}</label>
               </div>
+            </template>
+            <template v-slot:option="{ itemProps, opt }">
+              <q-item class="validator-item row items-center cursor-pointer bg-secondary" v-bind="itemProps">
+                <q-avatar class="validator-avatar" size="26px">
+                  <img src="https://cdn.quasar.dev/img/avatar.png">
+                </q-avatar>
+
+                <label class="text-white text-body2 cursor-pointer">{{ opt.label }}</label>
+              </q-item>
             </template>
           </q-select>
         </div>
@@ -81,10 +90,10 @@
             padding="2px"
             @click="close"
           >
-            <label class="text-h6 text-capitalize no-pointer-events">{{ cancel }}</label>
+            <label class="text-h5 text-capitalize no-pointer-events">{{ cancel }}</label>
           </q-btn>
 
-          <q-btn type="submit" class="submit btn-medium text-h6" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px">
+          <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px">
             {{ submit }}
           </q-btn>
         </div>
@@ -180,8 +189,7 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $transparent-gray;
-  backdrop-filter: blur(60px);
+  background: $alternative;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
 }
@@ -229,5 +237,9 @@ export default defineComponent({
   width: 100%;
   max-width: 197px;
   margin-top: 36px;
+}
+
+.validator-item {
+  padding: 16px 24px;
 }
 </style>
