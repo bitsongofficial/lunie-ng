@@ -6,9 +6,9 @@
       <div class="row items-center" v-for="(data, index) in dataset" :key="index">
         <div :class="'vote-card-dot bg-' + data.color"></div>
 
-        <p class="vote-card-label text-overline2 text-white q-my-none">{{ data.label }}</p>
+        <p class="vote-card-label text-subtitle2 text-white q-my-none">{{ data.label }}</p>
 
-        <p class="text-overline2 text-white q-my-none">{{ data.value }} %</p>
+        <p class="text-subtitle2 text-white q-my-none">{{ data.value }} %</p>
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default defineComponent({
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;
-  padding: 31px 46px 26px 38px;
+  padding: 44px 46px 36px 38px;
 }
 
 .vote-card-legend {

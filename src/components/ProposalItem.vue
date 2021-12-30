@@ -10,7 +10,7 @@
       <q-space />
 
       <div class="section row items-center" v-if="voted">
-        <p class="section-title text-uppercase text-body3 text-weight-medium text-primary q-my-none">
+        <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
           voted
         </p>
 
@@ -18,7 +18,7 @@
       </div>
 
       <div class="section row items-center" v-if="quorum">
-        <p class="section-title text-uppercase text-body3 text-weight-medium text-primary q-my-none">
+        <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
           quorum
         </p>
 

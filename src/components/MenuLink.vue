@@ -15,11 +15,11 @@
       class="menu-link"
     >
       <q-item-section v-if="icon" avatar>
-        <q-icon :name="icon" :color="isActive || contained(route) ? 'accent-2' : 'accent'" size="15px" />
+        <q-icon :name="icon" :color="isActive || contained(route) ? 'accent-2' : 'accent'" size="20px" />
       </q-item-section>
 
       <q-item-section>
-        <q-item-label class="text-weight-medium text-overline-2">{{ title }}</q-item-label>
+        <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
       </q-item-section>
     </q-item>
   </router-link>
@@ -33,11 +33,11 @@
     v-else
   >
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" color="accent" size="15px" />
+      <q-icon :name="icon" color="accent" size="20px" />
     </q-item-section>
 
     <q-item-section>
-      <q-item-label class="text-weight-medium text-overline-2">{{ title }}</q-item-label>
+      <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>

@@ -5,7 +5,7 @@
         TOTAL BTSG
       </h3>
 
-      <p class="text-body-large text-white q-my-none">
+      <p class="text-body-extra-large text-white q-my-none">
         16.670,34
       </p>
     </div>
@@ -14,7 +14,7 @@
         REWARDS
       </h3>
 
-      <p class="text-body-large text-white q-my-none">
+      <p class="text-body-extra-large text-white q-my-none">
         239,87
       </p>
     </div>
@@ -23,7 +23,7 @@
         AVAILABLE
       </h3>
 
-      <p class="text-body-large text-white q-my-none">
+      <p class="text-body-extra-large text-white q-my-none">
         10.670,44
       </p>
     </div>
@@ -48,16 +48,16 @@ export default defineComponent({
   box-shadow: $full-secondary-box-shadow;
   backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
-  padding: 31px 46px 30px 43px;
+  padding: 34px 46px 30px 43px;
 }
 
 .balance-title {
-  margin-bottom: 21px;
+  margin-bottom: 10px;
 }
 
 .balance-section:nth-child(2) {
   margin-left: auto;
-  margin-right: 92px;
+  margin-right: 250px;
 }
 
 .balance-section:nth-child(3) {

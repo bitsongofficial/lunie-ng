@@ -5,7 +5,7 @@
         <div class="column">
           <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">operator address</label>
 
-          <h5 class="text-white q-mt-none q-mb-xs">bitsongvaloper1fg5...za9s3newleq60zt9</h5>
+          <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">bitsongvaloper1fg5...za9s3newleq60zt9</h5>
         </div>
 
         <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="copyAddressToClipboard">
@@ -27,7 +27,7 @@
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">bitsong1fg5g8acntt90n9303cm5fjza9s3newleq4rlmk</h5>
+        <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">bitsong1fg5g8acntt90n9303cm5fjza9s3newleq4rlmk</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>

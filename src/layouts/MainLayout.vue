@@ -12,12 +12,12 @@
 
         <q-item class="profile-item" clickable>
           <q-item-section class="column">
-            <label class="text-half-transparent-white text-body6 no-pointer-events">ADDRESS</label>
-            <label class="text-white text-body4 no-pointer-events">bitsong17dmxq...u085</label>
+            <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
+            <label class="text-white text-body2 no-pointer-events">bitsong17dmxq...u085</label>
           </q-item-section>
 
           <q-item-section side>
-            <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="14px" />
+            <q-icon class="q-ml-md" name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
           </q-item-section>
         </q-item>
       </q-toolbar>
@@ -42,11 +42,11 @@
 
           <q-item class="connection-item q-mt-auto">
             <q-item-section>
-              <q-item-label class="text-white text-h6">Bitsong-2b</q-item-label>
-            </q-item-section>
+              <div class="row items-center justify-between">
+                <label class="text-white text-h5">Bitsong-2b</label>
 
-            <q-item-section side>
-              <q-item-label class="text-accent-4 text-h6">connected</q-item-label>
+                <label class="text-accent-4 text-h5 q-ml-xs q-mt-none">connected</label>
+              </div>
             </q-item-section>
           </q-item>
         </q-drawer>
@@ -121,7 +121,7 @@ export default defineComponent({
   margin-bottom: 40px;
   background: $alternative-2;
   border-radius: 20px;
-  padding: 12px 32px;
+  padding: 12px 26px;
   min-height: 40px;
 }
 

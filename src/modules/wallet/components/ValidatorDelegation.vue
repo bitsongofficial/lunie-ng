@@ -6,7 +6,7 @@
       7.268,78
     </h5>
 
-    <div class="row items-center justify-between full-width">
+    <div class="row items-center justify-evenly full-width">
       <q-btn class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px" @click="openStakeDialog">
         STAKE
       </q-btn>

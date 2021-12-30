@@ -92,6 +92,6 @@ export default defineComponent({
   height: 100%;
   border-radius: 30px;
   opacity: 0;
-  transition: all 500ms ease-in-out;
+  transition: all 1s ease-in-out;
 }
 </style>

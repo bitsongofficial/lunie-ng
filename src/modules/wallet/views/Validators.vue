@@ -17,10 +17,10 @@
         placeholder="Search validator"
         no-error-icon
         hide-bottom-space
-        class="search-box medium text-h6 q-ml-auto"
+        class="search-box large text-h5 q-ml-auto"
       >
         <template v-slot:append>
-          <q-icon name="svguse:icons.svg#search|0 0 13 13" size="12px" color="accent-5" />
+          <q-icon name="svguse:icons.svg#search|0 0 13 13" size="16px" color="accent-5" />
         </template>
       </q-input>
     </div>

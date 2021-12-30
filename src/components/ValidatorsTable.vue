@@ -27,53 +27,53 @@
     <template v-slot:body="props">
       <q-tr class="validators-table-row cursor-pointer" @click="rowClick(props.row)" :props="props">
         <q-td key="id" class="text-white" :props="props">
-          <p class="text-body2 q-my-none">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.id }}
           </p>
         </q-td>
-        <q-td key="name" class="text-body2 text-white" :props="props">
+        <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
             <q-avatar size="32px">
               <img src="https://cdn.quasar.dev/img/avatar.png">
             </q-avatar>
-            <p class="validator-name q-my-none text-body2">
+            <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
             </p>
             <q-icon name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" />
           </div>
         </q-td>
-        <q-td key="status" class="text-body2 text-white" :props="props">
+        <q-td key="status" class="text-subtitle2 text-white" :props="props">
           <q-chip class="status q-mx-none q-my-none text-body3" text-color="white" color="info">
             {{ props.row.status }}
           </q-chip>
         </q-td>
-        <q-td key="staked" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="staked" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.staked }} %
           </p>
         </q-td>
-        <q-td key="rewards" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="rewards" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.rewards }} %
           </p>
         </q-td>
-        <q-td key="votingPower" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="votingPower" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.votingPower }} %
           </p>
         </q-td>
-        <q-td key="available" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="available" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.available }} %
           </p>
         </q-td>
-        <q-td key="unstaked" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.unstaked }} %
           </p>
         </q-td>
-        <q-td key="time" class="text-body2 text-white" :props="props">
-          <p class="text-body2 q-my-none">
+        <q-td key="time" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
             {{ props.row.time }} days
           </p>
         </q-td>

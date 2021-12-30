@@ -10,13 +10,13 @@
           Increase minimum commission rate to 5%
         </h2>
 
-        <p class="description text-body4 text-accent">
+        <p class="description text-h5 text-accent">
           This is a text proposal. Text proposals can be proposed by anyone and are used as a signalling mechanism for this community. If this proposal is accepted, nothing will change without community coordination.
         </p>
       </div>
 
       <div class="column items-end">
-        <q-btn class="vote-btn btn-medium text-weight-medium text-h6" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+        <q-btn class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
           vote
         </q-btn>
 
@@ -29,16 +29,16 @@
     </div>
 
     <div class="section-header row items-center justify-between">
-      <h3 class="text-subtitle2 text-weight-medium text-white q-my-none">Vote</h3>
+      <h3 class="text-h4 text-weight-medium text-white q-my-none">Vote</h3>
 
       <div class="row items-center">
         <div class="row items-center">
-          <h5 class="section-detail-title text-body3 text-primary text-weight-medium q-my-none">VOTED</h5>
+          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">24%</p>
         </div>
 
         <div class="row items-center q-ml-md">
-          <h5 class="section-detail-title text-body3 text-primary text-weight-medium q-my-none">QUORUM</h5>
+          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">20%</p>
         </div>
       </div>
@@ -47,16 +47,16 @@
     <vote-card class="section" :dataset="dataset" />
 
     <div class="section-header row items-center justify-between">
-      <h3 class="text-subtitle2 text-weight-medium text-white q-my-none">Timeline</h3>
+      <h3 class="text-h4 text-weight-medium text-white q-my-none">Timeline</h3>
     </div>
 
     <timeline class="section" :entries="entries" />
 
     <div class="section-header row items-center justify-between">
-      <h3 class="text-subtitle2 text-weight-medium text-white q-my-none">Description</h3>
+      <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <div class="description-block text-half-transparent-white text-body2">
+    <div class="description-block text-half-transparent-white text-h5">
       Increase the minimum commission rate to 5%. This will help provide network stability and stop 0% validators driving commissions down. It also ensures Validators are earning enough to support secure and stable validation.
 <br/><br/>
 If this proposal is accepted, it will imply having to update the blockchain so that it is possible to modify the commission of all validators automatically (see the Osmosis and/or Stargaze fork)
@@ -148,13 +148,14 @@ export default defineComponent({
 
 .description {
   margin: 0;
-  max-width: 335px;
+  max-width: 400px;
 }
 
 .vote-btn {
   margin-top: 6px;
   margin-bottom: 16px;
   width: 126px;
+  border-radius: 40px;
 }
 
 .copy-btn {

@@ -7,7 +7,7 @@
 
       <div class="validator-header col">
         <div class="validator-header-row row no-wrap items-center">
-          <h2 class="text-body-large text-white q-my-none">
+          <h2 class="text-body-extra-large text-white q-my-none">
             Forbole
           </h2>
 
@@ -16,7 +16,7 @@
           </q-chip>
         </div>
         <div class="row no-wrap items-center justify-between">
-          <p class="text-subtitle2 text-white q-my-none">
+          <p class="text-h4 text-white q-my-none">
             Co-building the interchain
           </p>
 
@@ -92,7 +92,7 @@ export default defineComponent({
 
 .validator-header-row {
   margin-right: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .validator-status {
