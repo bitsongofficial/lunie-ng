@@ -73,6 +73,27 @@ $secondary-box-shadow: 0px 0px 20px 20px transparentize($secondary, 0.5);
 $full-secondary-box-shadow: 0px 0px 20px $secondary;
 $black-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
 
+$breakpoint-xs: 599px !default;
+$breakpoint-sm: 1023px !default;
+$breakpoint-md: 1439px !default;
+$breakpoint-lg: 1919px !default;
+
+// sorry for long line; we need .sass and it doesn't support multi-line list
+$sizes: ('xs': 0, 'sm': ($breakpoint-xs + 1), 'md': ($breakpoint-sm + 1), 'lg': ($breakpoint-md + 1), 'xl': ($breakpoint-lg + 1)) !default;
+
+$breakpoint-xs-max: (map-get($sizes, "sm") - 0.02) !default;
+
+$breakpoint-sm-min: map-get($sizes, "sm") !default;
+$breakpoint-sm-max: (map-get($sizes, "md") - 0.02) !default;
+
+$breakpoint-md-min: map-get($sizes, "md") !default;
+$breakpoint-md-max: (map-get($sizes, "lg") - 0.02) !default;
+
+$breakpoint-lg-min: map-get($sizes, "lg") !default;
+$breakpoint-lg-max: (map-get($sizes, "xl") - 0.02) !default;
+
+$breakpoint-xl-min: map-get($sizes, "xl") !default;
+
 $h1: (size: 6rem, line-height: 6rem, letter-spacing: normal, weight: 300) !default;
 $h2: (size: 38px, line-height: 48px, letter-spacing: normal, weight: 400) !default;
 $h3: (size: 36px,  line-height: 46px, letter-spacing: normal, weight: 400) !default;

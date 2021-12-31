@@ -1,18 +1,33 @@
 .q-drawer {
-  background-color: transparent;
+  background-color: $secondary;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    background-color: transparent;
+  }
 }
 
 .q-drawer--left {
-  left: var(--offset-left, 0);
+  @media screen and (min-width: $breakpoint-md-min) {
+    left: var(--offset-left, 0);
+  }
 }
 
 .q-drawer--right {
-  right: var(--offset-right, 0);
+  @media screen and (min-width: $breakpoint-md-min) {
+    right: var(--offset-right, 0);
+  }
 }
 
 .drawer-menu {
-  padding-top: 190px;
-  padding-right: 46px;
+  padding-top: 80px;
+  padding-left: 24px;
+  padding-right: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding-top: 190px;
+    padding-right: 46px;
+    padding-left: 0;
+  }
 
   &.back {
     padding-top: 60px;

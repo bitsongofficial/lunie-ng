@@ -3,11 +3,15 @@
     <q-header class="header bg-transparent text-white">
       <q-toolbar class="header-toolbar container bg-transparent justify-between items-end">
         <q-toolbar-title class="text-body1 row items-center q-pt-sm">
-          <q-avatar class="toolbar-avatar">
+          <q-btn dense flat round v-if="quasar.screen.lt.md" @click="leftDrawer = !leftDrawer">
+            <q-icon name="svguse:icons.svg#menu|0 0 20 14" color="white" size="24px" />
+          </q-btn>
+
+          <q-avatar class="toolbar-avatar" v-if="!quasar.screen.lt.md">
             <img src="~assets/logo.svg">
           </q-avatar>
 
-          <p class="text-body-large text-weight-medium text-white q-my-none">wallet</p>
+          <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
         <q-item class="profile-item" clickable>
@@ -16,7 +20,7 @@
             <label class="text-white text-body2 no-pointer-events">bitsong17dmxq...u085</label>
           </q-item-section>
 
-          <q-item-section side>
+          <q-item-section side v-if="!quasar.screen.lt.md">
             <q-icon class="q-ml-md" name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
           </q-item-section>
         </q-item>
@@ -27,7 +31,7 @@
       <div class="drawer-container container">
         <q-drawer class="drawer-menu bg-transparent column" :class="{
           'back': back
-        }" persistent v-model="leftDrawer" :width="270" side="left">
+        }" :persistent="!quasar.screen.lt.md" :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
           <q-btn class="back-btn btn-medium" rounded unelevated @click="router.back" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
             <q-icon class="rotate-180 q-mr-md" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
             <label class="text-h6 text-white text-uppercase no-pointer-events">back</label>
@@ -69,9 +73,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import MenuLink from 'src/components/MenuLink.vue';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -79,11 +84,27 @@ export default defineComponent({
     MenuLink,
   },
   setup() {
+    const quasar = useQuasar();
     const router = useRouter();
-    const leftDrawer = ref<boolean>(true);
+    const leftDrawer = ref<boolean>(false);
     const back = computed(() => router.currentRoute.value.meta.back === true);
 
+    const responsiveWatch = watch(
+      () => quasar.screen.lt.md,
+      (value) => {
+        leftDrawer.value = !value;
+      },
+      {
+        immediate: true,
+      }
+    );
+
+    onUnmounted(() => {
+      responsiveWatch();
+    });
+
     return {
+      quasar,
       router,
       leftDrawer,
       back,
@@ -126,11 +147,13 @@ export default defineComponent({
 }
 
 .drawer-container {
-  position: fixed;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  transform: translateX(-50%);
+  @media screen and (min-width: $breakpoint-md-min) {
+    position: fixed;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%);
+  }
 }
 
 .back-btn {

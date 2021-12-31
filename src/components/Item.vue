@@ -1,6 +1,6 @@
 <template>
   <q-item class="item bg-transparent-gray rounded-borders" v-bind="$props" @click="click">
-    <q-item-section avatar v-if="hasLeftContent || leftIcon">
+    <q-item-section avatar v-if="(hasLeftContent || leftIcon) && !quasar.screen.lt.md">
       <slot name="left">
         <q-icon class="icon" :name="leftIcon" color="gray3" :size="leftIconSize" v-if="leftIcon" />
       </slot>
@@ -8,7 +8,7 @@
 
     <q-item-section v-if="hasDefaultContent || title">
       <slot>
-        <label class="text-subtitle2 text-white text-weight-medium cursor-pointer" v-if="title">{{ title }}</label>
+        <label class="title text-white text-weight-medium cursor-pointer" v-if="title">{{ title }}</label>
       </slot>
     </q-item-section>
 
@@ -16,7 +16,7 @@
       <slot name="right">
         <q-btn class="details-btn" :class="{
           'reverse': reverse
-        }" rounded unelevated :color="!reverse ? 'secondary' : 'accent-2'" text-color="white" :disable="disable" size="18px" padding="17px 26px" v-if="details">
+        }" rounded unelevated :color="!reverse ? 'secondary' : 'accent-2'" text-color="white" :disable="disable" size="18px" v-if="details">
           <q-icon class="small-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
         </q-btn>
         <q-icon class="small-icon" :name="rightIcon" color="gray3" v-else-if="rightIcon" />
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { QItem } from 'quasar';
+import { QItem, useQuasar } from 'quasar';
 import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
@@ -57,11 +57,13 @@ export default defineComponent({
     },
   },
   setup(props, { slots, emit }) {
+    const quasar = useQuasar();
     const hasLeftContent = computed(() => !!slots.left);
     const hasRightContent = computed(() => !!slots.right);
     const hasDefaultContent = computed(() => !!slots.default);
 
     return {
+      quasar,
       hasLeftContent,
       hasRightContent,
       hasDefaultContent,
@@ -75,7 +77,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .item {
-  padding: 25px 28px 24px 42px;
+  padding: 24px 28px 24px;
   min-height: 95px;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -100,6 +102,7 @@ export default defineComponent({
 
 .details-btn {
   transition: all 250ms ease-in-out;
+  padding: 17px 26px;
 
   &::v-deep(.q-focus-helper) {
     opacity: 0 !important;
@@ -109,5 +112,15 @@ export default defineComponent({
 .icon {
   width: 20px;
   height: 20px;
+}
+
+.title {
+  font-size: 12px;
+  line-break: 15px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    font-size: 16px;
+    line-break: 20px;
+  }
 }
 </style>

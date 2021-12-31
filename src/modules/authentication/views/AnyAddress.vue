@@ -1,8 +1,10 @@
 <template>
   <div class="any-address-content column items-center">
-    <h1 class="title text-body-large text-white text-weight-medium q-mt-none text-center">Explore with any address</h1>
+    <div class="col-12">
+      <h1 class="title text-body-large text-white text-weight-medium q-mt-none text-center">Explore with any address</h1>
+    </div>
 
-    <q-form>
+    <q-form class="col-12 column">
       <q-input
         color="transparent-gray"
         label-color="half-transparent-white"
@@ -14,18 +16,19 @@
         :rules="[val => !!val || 'Field is required']"
         no-error-icon
         hide-bottom-space
+        class="col-12"
       >
         <template v-slot:append>
           <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
         </template>
       </q-input>
 
-      <div class="explore-wrapper row no-wrap items-center space-between">
-        <h6 class="error text-accent text-weight-medium text-left q-my-none">
+      <div class="explore-wrapper column no-wrap items-center space-between col-12">
+        <h6 class="error text-accent text-weight-medium text-left q-my-none col-12 col-md-6">
           Use this software at your own risk. never enter your seed phrase into untrusted software.
         </h6>
 
-        <q-btn class="explore btn-medium text-body2" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+        <q-btn class="explore btn-medium text-body2 col-12 col-md-6 text-center items-center" type="submit" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
           Explore
         </q-btn>
       </div>
@@ -54,16 +57,33 @@ export default defineComponent({
 }
 
 .title {
-  margin-bottom: 60px;
+  margin-bottom: 32px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 60px;
+  }
 }
 
 .explore-wrapper {
   margin-top: 27px;
 }
 
+.error {
+  margin-bottom: 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 12px;
+  }
+}
+
 .explore {
-  min-width: 145px !important;
-  margin-left: 62px;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    width: unset;
+    min-width: 145px !important;
+    margin-left: 62px;
+  }
 }
 
 .warning {
