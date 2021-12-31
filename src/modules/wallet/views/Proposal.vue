@@ -152,10 +152,14 @@ export default defineComponent({
 }
 
 .vote-btn {
-  margin-top: 6px;
+  margin-top: 24px;
   margin-bottom: 16px;
   width: 126px;
   border-radius: 40px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-top: 6px;
+  }
 }
 
 .copy-btn {

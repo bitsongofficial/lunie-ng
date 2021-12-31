@@ -1,5 +1,7 @@
 <template>
-  <div class="validator-address row">
+  <div class="validator-address" :class="{
+    'row': !quasar.screen.lt.md,
+  }">
     <div class="validator-address-left column col-12 col-md">
       <div class="validator-address-row row items-center justify-between no-wrap">
         <div class="column">
@@ -44,13 +46,15 @@
 </template>
 
 <script lang="ts">
-import { copyToClipboard } from 'quasar';
+import { copyToClipboard, useQuasar } from 'quasar';
 import { notifySuccess } from 'src/common/notify';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ValidatorAddress',
   setup() {
+    const quasar = useQuasar();
+
     const copyAddressToClipboard = async () => {
       try {
         await copyToClipboard('bitsongvaloper1fg5...za9s3newleq60zt9');
@@ -61,6 +65,7 @@ export default defineComponent({
     }
 
     return {
+      quasar,
       copyAddressToClipboard,
     };
   }
@@ -108,6 +113,14 @@ export default defineComponent({
 .copy-btn {
   margin-top: 14px;
   margin-left: 8px;
+}
+
+.validator-address-left {
+  margin-bottom: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 0;
+  }
 }
 
 .validator-address-left > .validator-address-row:not(:last-of-type) {

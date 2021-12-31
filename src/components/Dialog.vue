@@ -34,6 +34,7 @@
             class="full-width large"
             no-error-icon
             hide-bottom-space
+            :options-cover="false"
             :rules="[val => !!val || 'Required field']"
           >
             <template v-slot:selected-item="{ opt }">
