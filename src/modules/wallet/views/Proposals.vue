@@ -6,18 +6,21 @@
       </h2>
     </div>
 
-    <q-btn-toggle
-      v-model="type"
-      class="filter"
-      toggle-color="primary"
-      flat
-      unelevated
-      :ripple="false"
-      text-color="accent"
-      toggle-text-color="white"
-      padding="0"
-      :options="options"
-    />
+    <div class="toggle-btn-wrapper scroll">
+      <q-btn-toggle
+        v-model="type"
+        class="filter"
+        toggle-color="primary"
+        flat
+        unelevated
+        :ripple="false"
+        text-color="accent"
+        toggle-text-color="white"
+        padding="0"
+        :options="options"
+        stretch
+      />
+    </div>
 
     <q-list class="proposals-list">
       <proposal-item title="Increase minimum commission rate to 5%" to="/proposals/1" status="voting" :voted="24" :quorum="50" />
@@ -73,5 +76,13 @@ export default defineComponent({
 
 .proposals-list {
   margin-top: 40px;
+}
+
+.toggle-btn-wrapper {
+  padding: 16px 0;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 0;
+  }
 }
 </style>

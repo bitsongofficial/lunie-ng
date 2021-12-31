@@ -13,6 +13,8 @@
       'width': `${segmentWidth}px`,
       'left': `${segmentOffset}px`,
     }"></div>
+
+    <q-resize-observer @resize="onResize" />
   </div>
 </template>
 
@@ -53,6 +55,13 @@ export default defineComponent({
       }
     };
 
+    const onResize = () => {
+      if (activeButton.value) {
+        segmentWidth.value = activeButton.value.offsetWidth;
+        segmentOffset.value = activeButton.value.offsetLeft;
+      }
+    };
+
     onMounted(() => {
       if (activeButton.value) {
         segmentWidth.value = activeButton.value.offsetWidth;
@@ -69,6 +78,7 @@ export default defineComponent({
       segmentWidth,
       segmentOffset,
       buttons,
+      onResize,
       onChange,
       setBtnRef
     }
@@ -100,6 +110,7 @@ export default defineComponent({
     padding-right: 26px;
     text-transform: uppercase;
     z-index: 1;
+    flex: 1;
     cursor: pointer;
 
     &.active {
