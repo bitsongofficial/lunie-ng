@@ -6,14 +6,16 @@
       7.268,78
     </h5>
 
-    <div class="row items-center justify-evenly full-width">
-      <q-btn class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px" @click="openStakeDialog">
+    <div class="btns row items-center justify-evenly" :class="{
+      'q-gutter-x-md': quasar.screen.lt.md
+    }">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog">
         STAKE
       </q-btn>
-      <q-btn class="btn-medium-small text-body4" rounded unelevated color="secondary" text-color="white" padding="12px 28px" @click="openUnstakeDialog">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog">
         UNSTAKE
       </q-btn>
-      <q-btn class="btn-medium-small text-body4" rounded unelevated color="accent" text-color="white" padding="12px 28px" @click="openRestakeDialog">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog">
         RESTAKE
       </q-btn>
     </div>
@@ -79,6 +81,7 @@ export default defineComponent({
     }
 
     return {
+      quasar,
       openUnstakeDialog,
       openStakeDialog,
       openRestakeDialog,
@@ -93,11 +96,27 @@ export default defineComponent({
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;
-  padding: 18px 61px 22px;
+  padding: 24px 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 18px 61px 22px;
+  }
 }
 
 .validator-delegation-amount {
   margin-top: 16px;
   margin-bottom: 20px;
+}
+
+.btns {
+  width: 100%;
+}
+
+.btn {
+  padding: 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 12px 28px;
+  }
 }
 </style>

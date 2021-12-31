@@ -1,6 +1,6 @@
 <template>
   <div class="timeline row items-center justify-between">
-    <div class="timeline-entry column items-center" v-for="(entry, index) in entries" :key="index">
+    <div class="timeline-entry column items-center col-12 col-md-auto" v-for="(entry, index) in entries" :key="index">
       <q-icon class="timeline-entry-icon" name="svguse:icons.svg#check-outlined|0 0 20 20" :color="entry.active ? 'white' : 'accent'" />
 
       <h6 class="text-subtitle2 text-weight-medium q-mt-sm q-mb-xs" :class="{
@@ -33,7 +33,13 @@ export default defineComponent({
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;
-  padding: 28px 60px 22px;
+  padding: 24px;
+  grid-gap: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 28px 60px 22px;
+    grid-gap: 0;
+  }
 }
 
 .timeline-entry-icon {

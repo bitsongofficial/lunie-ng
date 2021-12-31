@@ -28,7 +28,11 @@ export default defineComponent({
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;
-  padding: 18px 61px 22px;
+  padding: 24px 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 18px 61px 22px;
+  }
 }
 
 .validator-rewards-amount {

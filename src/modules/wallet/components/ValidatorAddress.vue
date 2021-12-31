@@ -1,6 +1,6 @@
 <template>
-  <div class="validator-address">
-    <div class="validator-address-left column">
+  <div class="validator-address row">
+    <div class="validator-address-left column col-12 col-md">
       <div class="validator-address-row row items-center justify-between no-wrap">
         <div class="column">
           <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">operator address</label>
@@ -23,7 +23,7 @@
         <h5 class="text-white q-mt-none q-mb-xs">100 %</h5>
       </div>
     </div>
-    <div class="validator-address-right column">
+    <div class="validator-address-right column col-12 col-md">
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>
 
@@ -71,24 +71,29 @@ export default defineComponent({
 <style lang="scss" scoped>
 .validator-address {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   grid-gap: 76px;
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;
-  padding: 24px 63px 24px 40px;
+  padding: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding: 24px 40px 24px;
+  }
 
   &::before {
-    content: '';
-    position: absolute;
-    left: calc(50% - 12px);
-    bottom: 24px;
-    height: calc(100% - 64px);
-    width: 1px;
-    background: transparentize($color: $accent-3, $amount: 0.5);
-    transform: translate(-50%, 0);
+    @media screen and (min-width: $breakpoint-md-min) {
+      content: '';
+      position: absolute;
+      left: calc(50% - 12px);
+      bottom: 24px;
+      height: calc(100% - 64px);
+      width: 1px;
+      background: transparentize($color: $accent-3, $amount: 0.5);
+      transform: translate(-50%, 0);
+    }
   }
+
 }
 
 .validator-address-amount {
@@ -102,6 +107,7 @@ export default defineComponent({
 
 .copy-btn {
   margin-top: 14px;
+  margin-left: 8px;
 }
 
 .validator-address-left > .validator-address-row:not(:last-of-type) {

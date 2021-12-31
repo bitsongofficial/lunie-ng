@@ -1,13 +1,13 @@
 <template>
   <q-page class="validator">
-    <validator-resume class="validator-resume" />
+    <div class="row grid">
+      <validator-resume class="col-12" />
 
-    <div class="center">
-      <validator-delegation />
-      <validator-rewards />
+      <validator-delegation class="col-12 col-md-auto validator-delegation" />
+      <validator-rewards class="col-12 col-md-auto validator-rewards" />
+
+      <validator-address class="col-12" />
     </div>
-
-    <validator-address />
   </q-page>
 </template>
 
@@ -35,14 +35,14 @@ export default defineComponent({
   padding-bottom: 20px;
 }
 
-.validator-resume {
-  margin-bottom: 30px;
+.validator-rewards,
+.validator-delegation {
+  @media screen and (min-width: $breakpoint-md-min) {
+    flex: 1;
+  }
 }
 
-.center {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.grid {
   grid-gap: 30px;
-  margin-bottom: 30px;
 }
 </style>

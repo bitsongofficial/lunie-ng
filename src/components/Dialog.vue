@@ -81,7 +81,7 @@
           </q-input>
         </div>
 
-        <div class="row full-width items-center justify-end q-mt-auto">
+        <div class="btns full-width items-center justify-end q-mt-auto">
           <q-btn
             unelevated
             rounded
@@ -200,8 +200,13 @@ export default defineComponent({
 
 .submit {
   width: 100%;
-  max-width: 217px;
-  margin-left: 34px;
+  margin-top: 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    max-width: 217px;
+    margin-left: 34px;
+    margin-top: 0;
+  }
 }
 
 .field-label {
@@ -241,5 +246,14 @@ export default defineComponent({
 
 .validator-item {
   padding: 16px 24px;
+}
+
+.btns {
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    flex-direction: row;
+  }
 }
 </style>

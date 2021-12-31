@@ -15,7 +15,7 @@
         </p>
       </div>
 
-      <div class="column items-end">
+      <div class="column items-end q-ml-auto">
         <q-btn class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
           vote
         </q-btn>
