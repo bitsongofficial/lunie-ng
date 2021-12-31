@@ -10,7 +10,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@bitsongjs/sdk": "^1.0.0-testnet.1",
+    "@bitsongjs/sdk": "1.0.0-dev-9",
     "@cosmjs/amino": "^0.26.5",
     "@cosmjs/launchpad": "^0.26.5",
     "@cosmjs/launchpad-ledger": "^0.23.2",
@@ -26,6 +26,7 @@
     "bignumber.js": "^9.0.2",
     "core-js": "^3.6.5",
     "cosmjs-types": "^0.4.0",
+    "lodash": "^4.17.21",
     "quasar": "^2.0.0",
     "vue-i18n": "^9.0.0",
     "vuex": "^4.0.1"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.0.0",
+    "@types/lodash": "^4.14.178",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",

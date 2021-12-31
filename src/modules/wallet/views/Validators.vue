@@ -61,6 +61,7 @@ export default defineComponent({
       {
         id: 1,
         name: 'BasBlock',
+        operatorAddress: '',
         picture: '',
         status: 'ACTIVE',
         rewards: 30,
@@ -69,6 +70,7 @@ export default defineComponent({
       {
         id: 2,
         name: 'BasBlock2',
+        operatorAddress: '',
         picture: '',
         status: 'ACTIVE',
         rewards: 30,
@@ -77,6 +79,7 @@ export default defineComponent({
       {
         id: 3,
         name: 'BasBlock3',
+        operatorAddress: '',
         picture: '',
         status: 'ACTIVE',
         rewards: 30,

@@ -1,6 +1,14 @@
 export enum ProposalStatus {
-  DEPOSIT = 'deposit',
-  VOTING = 'voting',
-  PASSED = 'passed',
-  REJECTED = 'rejected'
+  DEPOSIT = 'DEPOSIT',
+  VOTING = 'VOTING',
+  PASSED = 'PASSED',
+  REJECTED = 'REJECTED',
+  UNKNOWN = 'FAILED'
+}
+
+export enum ProposalType {
+  SOFTWARE_UPGRADE = 'SOFTWARE_UPGRADE',
+  TEXT = 'TEXT',
+  PARAMETER_CHANGE = 'PARAMETER_CHANGE',
+  TREASURY = 'TREASURY',
 }
