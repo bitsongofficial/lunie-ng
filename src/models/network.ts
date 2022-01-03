@@ -7,7 +7,11 @@ export interface CoinLookUp {
 
 export interface NetworkConfigFeeOption {
   denom: string;
-  amount: number;
+  amount: number | string;
+}
+
+export interface IBCInfo extends NetworkConfigFeeOption {
+  chainTrace: unknown[];
 }
 
 export interface NetworkConfigFee {

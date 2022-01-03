@@ -4,7 +4,7 @@
       <h1 class="title text-body-large text-white text-weight-medium q-mt-none text-center">Explore with any address</h1>
     </div>
 
-    <q-form class="col-12 column">
+    <q-form class="col-12 column" @submit="signIn">
       <q-input
         color="transparent-gray"
         label-color="half-transparent-white"
@@ -13,7 +13,7 @@
         standout
         v-model="address"
         placeholder="Public address"
-        :rules="[val => !!val || 'Field is required']"
+        :rules="[val => !!val || 'Field is required', val => isValidAddress(val) || 'Invalid address']"
         no-error-icon
         hide-bottom-space
         class="col-12"
@@ -23,7 +23,7 @@
         </template>
       </q-input>
 
-      <div class="explore-wrapper column no-wrap items-center space-between col-12">
+      <div class="explore-wrapper row items-center space-between">
         <h6 class="error text-accent text-weight-medium text-left q-my-none col-12 col-md-6">
           Use this software at your own risk. never enter your seed phrase into untrusted software.
         </h6>
@@ -38,14 +38,41 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useStore } from 'src/store';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { isValidAddress } from 'src/common/address';
+import { SessionType } from 'src/models';
+import { notifyError } from 'src/common/notify';
 
 export default defineComponent({
-  name: 'AnyAddress',
+  name: 'Explore',
   setup() {
+    const quasar = useQuasar();
+    const store = useStore();
+    const router = useRouter();
     const address = ref<string>('');
+
+    const signIn = async () => {
+      try {
+        quasar.loading.show();
+        await store.dispatch('authentication/signIn', {
+          address,
+          sessionType: SessionType.EXPLORE,
+        });
+        await router.replace('/');
+      } catch (error) {
+        console.error(error);
+        notifyError('Login Failed');
+      } finally {
+        quasar.loading.hide();
+      }
+    };
 
     return {
       address,
+      signIn,
+      isValidAddress
     }
   }
 })
@@ -82,7 +109,7 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     width: unset;
     min-width: 145px !important;
-    margin-left: 62px;
+    margin-left: auto;
   }
 }
 

@@ -1,13 +1,30 @@
-import crypto from 'crypto';
 import { bech32 } from 'bech32';
 import { Validator } from 'src/models';
+import { Bech32 } from '@cosmjs/encoding';
+import { network } from 'src/constants';
+
+export const isValidAddress = (address: string, requiredPrefix: string = network.addressPrefix): boolean => {
+  try {
+    const { prefix, data } = Bech32.decode(address);
+
+    console.log(prefix);
+
+    if (prefix !== requiredPrefix) {
+      return false;
+    }
+
+    return data.length === 20;
+  } catch {
+    return false;
+  }
+}
 
 export const hexToValidatorAddress = (address: string, validatorPrefix: string) => {
   const words = bech32.toWords(Buffer.from(address, 'hex'));
 
   return bech32.encode(validatorPrefix, words);
 }
-
+/*
 export const pubkeyToAddress = (cosmosValConsPub: string, validatorConsensusBech32Prefix: string) => {
   const words = bech32.decode(cosmosValConsPub).words;
 
@@ -18,15 +35,14 @@ export const pubkeyToAddress = (cosmosValConsPub: string, validatorConsensusBech
   );
 
   // the address is the first 20 bytes of the sha256 hash of the publickey
-  const hexAddress = crypto
-    .createHash('sha256')
+  const hexAddress = createHash('sha256')
     .update(publicKey)
     .digest()
     .toString('hex')
     .substr(0, 40);
 
   return hexToValidatorAddress(hexAddress, validatorConsensusBech32Prefix);
-}
+} */
 
 export const formatAddress = (address: string | undefined, length = 4) => {
   if (!address) {

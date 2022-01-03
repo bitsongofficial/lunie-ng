@@ -5,3 +5,8 @@ export * from './chart';
 export * from './timeline';
 export * from './network';
 export * from './notifications';
+export * from './block';
+export * from './balances';
+export * from './delegations';
+export * from './pool';
+export * from './session';

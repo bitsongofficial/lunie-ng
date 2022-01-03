@@ -10,8 +10,20 @@ import {
 import notifications from './notifications';
 import { NotificationsStateInterface } from './notifications/state';
 
+import authentication from './authentication';
+import { AuthenticationStateInterface } from './authentication/state';
+
+import data from './data';
+import { DataStateInterface } from './data/state';
+
+import keplr from './keplr';
+import { KeplrStateInterface } from './keplr/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
+  authentication: AuthenticationStateInterface;
+  data: DataStateInterface;
+  keplr: KeplrStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -33,6 +45,9 @@ if (!!process.env.DEBUGGING) {
 const Store = createStore<StateInterface>({
   modules: {
     notifications,
+    authentication,
+    data,
+    keplr,
   },
   plugins,
   // enable strict mode (adds overhead!)

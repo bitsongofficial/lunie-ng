@@ -32,9 +32,9 @@ export default [
             }
           },
           {
-            path: 'any-address',
-            name: 'any-address',
-            component: () => import('./views/AnyAddress.vue'),
+            path: 'explore',
+            name: 'explore',
+            component: () => import('./views/Explore.vue'),
             meta: {
               title: 'Explore with any address'
             }

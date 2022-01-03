@@ -57,35 +57,7 @@ export default defineComponent({
     const type = ref<string>('active');
     const search = ref<string>('');
 
-    const rows: Validator[] = [
-      {
-        id: 1,
-        name: 'BasBlock',
-        operatorAddress: '',
-        picture: '',
-        status: 'ACTIVE',
-        rewards: 30,
-        available: 12.9
-      },
-      {
-        id: 2,
-        name: 'BasBlock2',
-        operatorAddress: '',
-        picture: '',
-        status: 'ACTIVE',
-        rewards: 30,
-        available: 12.9
-      },
-      {
-        id: 3,
-        name: 'BasBlock3',
-        operatorAddress: '',
-        picture: '',
-        status: 'ACTIVE',
-        rewards: 30,
-        available: 12.9
-      }
-    ];
+    const rows: Validator[] = [];
 
     return {
       quasar,

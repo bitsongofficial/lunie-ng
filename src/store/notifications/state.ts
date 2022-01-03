@@ -12,4 +12,4 @@ function state (): NotificationsStateInterface {
   }
 }
 
-export default state
+export default state;
