@@ -446,9 +446,9 @@ export default class CosmosAPI {
     const coins = await Promise.all(
       balances.map(async (balance) => {
         let ibcInfo
-        if (balance.denom.startsWith('ibc/')) {
-          ibcInfo = await this.getIbcInfo(balance.denom)
-        }
+        // if (balance.denom.startsWith('ibc/')) {
+        //   ibcInfo = await this.getIbcInfo(balance.denom)
+        // }
         return this.reducers.coinReducer(balance, ibcInfo)
       })
     )
@@ -491,20 +491,15 @@ export default class CosmosAPI {
     if (traceId.startsWith('ibc/')) {
       traceId = traceId.split(`/`)[1]
     }
-    // const result = await this.get(
-    //   `/ibc_transfer/v1beta1/denom_traces/${traceId}`
-    // )
     const result = await this.get(
-      `/ibc/applications/transfer/v1beta1/denom_traces/${traceId}`
+      `/ibc_transfer/v1beta1/denom_traces/${traceId}`
     )
+    
     const trace = result.denom_trace
     const chainTrace = await Promise.all(
       chunk(trace.path.split('/'), 2).map(async ([port, channel]) => {
-        // const result = await this.get(
-        //   `/ibc/channel/v1beta1/channels/${channel}/ports/${port}/client_state`
-        // )
         const result = await this.get(
-          `/ibc/core/channel/v1beta1/channels/${channel}/ports/${port}/client_state`
+          `/ibc/channel/v1beta1/channels/${channel}/ports/${port}/client_state`
         )
         return result.identified_client_state.client_state.chain_id
       })
