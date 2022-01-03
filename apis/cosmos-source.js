@@ -446,9 +446,9 @@ export default class CosmosAPI {
     const coins = await Promise.all(
       balances.map(async (balance) => {
         let ibcInfo
-        if (balance.denom.startsWith('ibc/')) {
-          ibcInfo = await this.getIbcInfo(balance.denom)
-        }
+        // if (balance.denom.startsWith('ibc/')) {
+        //   ibcInfo = await this.getIbcInfo(balance.denom)
+        // }
         return this.reducers.coinReducer(balance, ibcInfo)
       })
     )
@@ -494,6 +494,7 @@ export default class CosmosAPI {
     const result = await this.get(
       `/ibc_transfer/v1beta1/denom_traces/${traceId}`
     )
+    
     const trace = result.denom_trace
     const chainTrace = await Promise.all(
       chunk(trace.path.split('/'), 2).map(async ([port, channel]) => {
