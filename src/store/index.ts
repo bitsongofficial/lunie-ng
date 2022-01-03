@@ -19,11 +19,15 @@ import { DataStateInterface } from './data/state';
 import keplr from './keplr';
 import { KeplrStateInterface } from './keplr/state';
 
+import ledger from './ledger';
+import { LedgerStateInterface } from './ledger/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
   authentication: AuthenticationStateInterface;
   data: DataStateInterface;
   keplr: KeplrStateInterface;
+  ledger: LedgerStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -48,6 +52,7 @@ const Store = createStore<StateInterface>({
     authentication,
     data,
     keplr,
+    ledger
   },
   plugins,
   // enable strict mode (adds overhead!)

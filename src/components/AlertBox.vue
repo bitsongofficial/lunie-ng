@@ -1,5 +1,5 @@
 <template>
-  <div :class="`alert-box row items-center no-wrap text-${color}`">
+  <div :class="`alert-box row items-center no-wrap text-${color} ${clickable ? 'clickable' : ''}`">
     <q-icon class="icon" name="svguse:icons.svg#warning|0 0 21 19" size="30px" />
 
     <h6 class="q-my-none white-space-break-spaces">{{ title }}</h6>
@@ -19,6 +19,10 @@ export default defineComponent({
     title: {
       type: String,
       required: true
+    },
+    clickable: {
+      type: Boolean,
+      default: false
     }
   }
 })
@@ -31,6 +35,10 @@ export default defineComponent({
   border-width: 1px;
   border-style: solid;
   border-color: currentColor;
+
+  &.clickable {
+    cursor: pointer;
+  }
 }
 
 .icon {

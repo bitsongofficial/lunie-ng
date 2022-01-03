@@ -14,7 +14,7 @@
           <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
-        <q-item class="profile-item" clickable>
+        <q-item class="profile-item" clickable to="/authentication">
           <q-item-section class="column">
             <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
             <label class="text-white text-body2 no-pointer-events">bitsong17dmxq...u085</label>
