@@ -115,7 +115,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .header-toolbar {
-  padding-top: 50px;
+  padding-top: 20px;
   padding-bottom: 20px;
 }
 
