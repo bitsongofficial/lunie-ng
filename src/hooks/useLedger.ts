@@ -1,7 +1,7 @@
 import { computed, onMounted } from 'vue';
 import { useStore } from 'src/store';
 import { copyToClipboard, useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { SessionType } from 'src/models';
 
@@ -14,6 +14,7 @@ export const useLedger = () => {
   const store = useStore();
   const quasar = useQuasar();
   const router = useRouter();
+  const route = useRoute();
 
   const error = computed(() => store.state.ledger.error);
   const loading = computed(() => store.state.ledger.loading)
@@ -53,7 +54,9 @@ export const useLedger = () => {
           address: account.value.address,
           sessionType: SessionType.LEDGER
         });
-        await router.replace('/');
+
+        const path = (route.query.r as string) || { name: 'wallet' };
+        await router.replace(path);
       } catch (error) {
         console.error(error);
         notifyError('Login Failed');

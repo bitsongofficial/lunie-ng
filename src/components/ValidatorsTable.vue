@@ -12,6 +12,9 @@
     :bordered="false"
     hide-pagination
   >
+    <template v-slot:no-data>
+      <h5 class="text-half-transparent-white text-weight-medium">No validators available</h5>
+    </template>
     <template v-slot:header="props">
       <q-tr :props="props" class="validators-table-head-row">
         <q-th

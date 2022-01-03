@@ -12,33 +12,34 @@
         There was an error connecting the Ledger Nano.
       </h6>
 
-      <alert-box class="col-12" :title="error" />
+      <alert-box class="col-12 full-width" :title="error" />
     </template>
     <template v-else-if="isWindows && !hasHIDEnabled">
       <h6 class="error text-accent text-weight-medium text-center q-mt-none q-mb-lg col-12">
         Due to recent Ledger updates, using a Ledger on Windows now requires "Experimental Web Platform features" to be enabled.
       </h6>
 
-      <alert-box class="col-12" v-if="isChrome" :title="chromeError" @click="onCopy(hidFeatureLink)" clickable />
+      <alert-box class="col-12 full-width" v-if="isChrome" :title="chromeError" @click="onCopy(hidFeatureLink)" clickable />
     </template>
     <template v-else-if="isLinux">
-      <alert-box class="col-12" :title="linuxError" @click="onCopy(linuxLedgerConnectionLink)" clickable />
+      <alert-box class="col-12 full-width" :title="linuxError" @click="onCopy(linuxLedgerConnectionLink)" clickable />
     </template>
 
     <template v-if="!isChromiumBrowser">
-      <alert-box class="col-12 q-mt-sm" title="Please use Chrome or Brave, Ledger is not supported in this browser." />
+      <alert-box class="col-12 q-mt-sm full-width" title="Please use Chrome or Brave, Ledger is not supported in this browser." />
     </template>
 
     <template v-if="!account && !error">
-      <alert-box class="col-12 q-mt-sm" title="No accounts found" />
+      <alert-box class="col-12 q-mt-sm full-width" title="No accounts found" />
     </template>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import AlertBox from 'src/components/AlertBox.vue';
 import { useLedger } from 'src/hooks';
+
+import AlertBox from 'src/components/AlertBox.vue';
 
 export default defineComponent({
   name: 'Ledger',

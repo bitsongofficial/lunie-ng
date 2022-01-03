@@ -1,3 +1,4 @@
+import Store from 'src/store';
 import {
   createMemoryHistory,
   createRouter,
@@ -20,6 +21,29 @@ const Router = createRouter({
   history: createHistory(
     process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE
   )
+});
+
+Router.beforeEach((to, _, next) => {
+  const logged = Store.state.authentication.session !== undefined;
+  const match = to.matched.find(el => el.name === 'login');
+
+  console.log(to);
+
+  if (!logged && !match) {
+    if (to.fullPath !== '/') {
+      return next({ name: 'authentication', query: { r: to.fullPath } });
+    }
+
+    return next({ name: 'authentication' });
+  }
+
+  const defaultRoute = { name: 'wallet' };
+
+  if (logged && (match || to.path === '/')) {
+    return next(defaultRoute);
+  }
+
+  return next();
 });
 
 Router.afterEach(to => {

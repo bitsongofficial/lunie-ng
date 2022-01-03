@@ -4,7 +4,7 @@ export default [
   {
     path: '/',
     redirect: '/portfolio',
-    name: 'mod-2',
+    name: 'wallet',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

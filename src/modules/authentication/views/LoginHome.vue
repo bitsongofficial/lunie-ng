@@ -17,7 +17,8 @@ import { defineComponent } from 'vue';
 import Item from 'src/components/Item.vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { SessionType } from 'src/models';
 
 export default defineComponent({
   name: 'LoginHome',
@@ -28,12 +29,25 @@ export default defineComponent({
     const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
 
     const keplrSignIn = async () => {
       try {
         quasar.loading.show();
         await store.dispatch('keplr/init', 0);
-        await router.replace('/');
+        const accounts = store.state.keplr.accounts;
+
+        if (accounts.length > 0) {
+          const account = accounts[0];
+
+          await store.dispatch('authentication/signIn', {
+            address: account.address,
+            sessionType: SessionType.KEPLR
+          });
+        }
+
+        const path = (route.query.r as string) || { name: 'wallet' };
+        await router.replace(path);
       } catch (error) {
         console.error(error);
       } finally {

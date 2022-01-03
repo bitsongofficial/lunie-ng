@@ -4,7 +4,7 @@ export default [
   {
     path: '/authentication',
     redirect: '/authentication/login',
-    name: 'mod-1',
+    name: 'authentication',
     component: () => import('layouts/AuthLayout.vue'),
     children: [
       {
@@ -17,7 +17,7 @@ export default [
         children: [
           {
             path: '',
-            name: 'choose',
+            name: 'login-home',
             component: () => import('./views/LoginHome.vue'),
             meta: {
               title: 'Login'
