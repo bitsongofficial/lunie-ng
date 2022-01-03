@@ -40,7 +40,7 @@
 import { defineComponent, ref } from 'vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { isValidAddress } from 'src/common/address';
 import { SessionType } from 'src/models';
 import { notifyError } from 'src/common/notify';
@@ -51,6 +51,7 @@ export default defineComponent({
     const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const address = ref<string>('');
 
     const signIn = async () => {
@@ -60,7 +61,9 @@ export default defineComponent({
           address,
           sessionType: SessionType.EXPLORE,
         });
-        await router.replace('/');
+
+        const path = (route.query.r as string) || { name: 'wallet' };
+        await router.replace(path);
       } catch (error) {
         console.error(error);
         notifyError('Login Failed');
