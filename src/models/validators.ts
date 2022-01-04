@@ -19,7 +19,7 @@ export interface Validator {
   votingPower: string | number;
   startHeight?: string;
   uptimePercentage: number;
-  tokens: string | number;
+  tokens: string | number | BigNumber;
   commissionUpdateTime: string;
   commission: string;
   maxCommission: string;

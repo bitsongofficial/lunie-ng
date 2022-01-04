@@ -10,7 +10,7 @@
         </h3>
 
         <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-          16.670,34
+          {{ balance ? balance.total : 0 }}
         </p>
       </div>
       <div class="balance-section column no-wrap col-12 col-md-2">
@@ -22,13 +22,13 @@
           239,87
         </p>
       </div>
-      <div class="balance-section column no-wrap col-12 col-md-2">
+      <div class="balance-section column no-wrap col-12 col-md-2" v-if="balance && balance.type === 'STAKE'">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
           AVAILABLE
         </h3>
 
         <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-          10.670,44
+          {{ balance.available }}
         </p>
       </div>
 
@@ -41,14 +41,20 @@
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent } from 'vue';
+import { Balance } from 'src/models';
+import { useStore } from 'src/store';
+import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   name: 'BalanceSummary',
   setup() {
+    const store = useStore();
     const quasar = useQuasar();
 
+    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+
     return {
+      balance,
       quasar,
     }
   }

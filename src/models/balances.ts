@@ -1,4 +1,15 @@
 import { Coin } from '@cosmjs/stargate';
+import { BigNumber } from 'bignumber.js';
+
+export interface Balance {
+  id: string;
+  type: string;
+  total: string | number | BigNumber;
+  denom: string;
+  available: string | number | BigNumber;
+  staked: number;
+  sourceChain: string | undefined;
+}
 
 export interface Pagination {
   next_key: string | null;

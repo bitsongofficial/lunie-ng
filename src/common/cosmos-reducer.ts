@@ -1,4 +1,5 @@
 import { BlockResponse } from '@cosmjs/launchpad';
+import { Coin } from '@cosmjs/stargate';
 import { BigNumber } from 'bignumber.js';
 import { network } from 'src/constants';
 import {
@@ -9,19 +10,28 @@ import {
   ValidatorRaw,
   ValidatorStatus,
   Validator,
-  Delegation
+  Delegation,
+  IBCInfo,
+  RewardWithAddress,
+  BalanceCoin,
+  UnbondingDelegationFlat,
+  UnbondingDelegation,
+  Balance
 } from 'src/models';
 import { getCoinLookup } from './network';
+import { flattenDeep } from 'lodash';
 
-export function coinReducer(chainCoin: NetworkConfigFeeOption, ibcInfo: NetworkConfigFeeOption | undefined = undefined) {
-  const chainDenom = ibcInfo ? ibcInfo.denom : chainCoin.denom;
+export function coinReducer(chainCoin: NetworkConfigFeeOption, ibcInfo: Partial<IBCInfo> | undefined = undefined): BalanceCoin {
+  const chainDenom = ibcInfo && ibcInfo.denom ? ibcInfo.denom : chainCoin.denom;
   const coinLookup = getCoinLookup(chainDenom);
+  const sourceChain = (ibcInfo && ibcInfo.chainTrace) ? ibcInfo.chainTrace[0] : undefined
 
   if (!coinLookup) {
     return {
       supported: false,
       amount: chainCoin.amount,
       denom: chainDenom,
+      sourceChain
     }
   }
 
@@ -35,6 +45,7 @@ export function coinReducer(chainCoin: NetworkConfigFeeOption, ibcInfo: NetworkC
       .times(coinLookup.chainToViewConversionFactor)
       .toFixed(precision),
     denom: coinLookup.viewDenom,
+    sourceChain
   };
 }
 
@@ -49,9 +60,51 @@ export const blockReducer = (block: BlockResponse): BlockReduced => {
   };
 }
 
+export function undelegationReducer(undelegation: UnbondingDelegationFlat, validator: Validator): UnbondingDelegation {
+  return {
+    id: `${validator.operatorAddress}_${undelegation.creation_height}`,
+    delegatorAddress: undelegation.delegator_address,
+    validator,
+    amount: getStakingCoinViewAmount(undelegation.balance),
+    startHeight: undelegation.creation_height,
+    endTime: undelegation.completion_time,
+  }
+}
+
+export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[]): Balance {
+  const isStakingDenom = lunieCoin.denom === network.stakingDenom;
+
+  const delegatedStake = delegations.reduce(
+    (sum, { amount }) => {
+      return new BigNumber(sum).plus(new BigNumber(amount));
+    },
+    new BigNumber(0)
+  );
+
+  const undelegatingStake = undelegations.reduce(
+    (sum, { amount }) => {
+      return new BigNumber(sum).plus(new BigNumber(amount));
+    },
+    new BigNumber(0)
+  );
+
+  const total = isStakingDenom
+    ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake)
+    : lunieCoin.amount;
+
+  return {
+    id: lunieCoin.denom,
+    type: isStakingDenom ? 'STAKE' : 'CURRENCY',
+    total,
+    denom: lunieCoin.denom,
+    available: lunieCoin.amount,
+    staked: 0,
+    sourceChain: lunieCoin.sourceChain,
+  };
+}
+
 export const delegationReducer = (delegation: DelegationWithBalance, validator: Validator, active: ValidatorStatus): Delegation | undefined => {
   const coinLookup = getCoinLookup(network.stakingDenom, delegation.balance.denom);
-  console.log(coinLookup);
 
   if (coinLookup) {
     const { amount, denom } = coinReducer(delegation.balance);
@@ -140,4 +193,32 @@ export const validatorReducer = (validator: ValidatorRaw, annualProvision: strin
     statusDetailed: statusInfo.status_detailed,
     expectedReturns: annualProvision ? expectedRewards : undefined,
   }
+}
+
+export const reduceFormattedRewards = (reward: Coin[], validator: Validator) => {
+  return reward.map((denomReward) => {
+    const lunieCoin = coinReducer(denomReward);
+
+    if (Number(lunieCoin.amount) < 0.000001) {
+      return null;
+    }
+
+    return {
+      id: `${validator.operatorAddress}_${lunieCoin.denom}`,
+      denom: lunieCoin.denom,
+      amount: lunieCoin.amount,
+      validator,
+    }
+  });
+}
+
+export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary: { [key: string]: Validator }) => {
+  const formattedRewards = rewards.map((reward) => ({
+    reward: reward.reward,
+    validator: validatorsDictionary[reward.validator_address],
+  }));
+
+  const multiDenomRewardsArray = formattedRewards.map(({ reward, validator }) => reduceFormattedRewards(reward, validator));
+
+  return flattenDeep(multiDenomRewardsArray).filter((reward) => reward);
 }

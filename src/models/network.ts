@@ -11,7 +11,7 @@ export interface NetworkConfigFeeOption {
 }
 
 export interface IBCInfo extends NetworkConfigFeeOption {
-  chainTrace: unknown[];
+  chainTrace?: string[];
 }
 
 export interface NetworkConfigFee {

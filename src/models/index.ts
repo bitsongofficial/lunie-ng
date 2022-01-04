@@ -10,3 +10,6 @@ export * from './balances';
 export * from './delegations';
 export * from './pool';
 export * from './session';
+export * from './denom-traces';
+export * from './client-state';
+export * from './rewards';

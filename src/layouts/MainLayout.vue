@@ -14,10 +14,10 @@
           <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
-        <q-item class="profile-item" clickable to="/authentication">
+        <q-item class="profile-item" clickable to="/authentication" v-if="session">
           <q-item-section class="column">
             <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
-            <label class="text-white text-body2 no-pointer-events">bitsong17dmxq...u085</label>
+            <label class="text-white text-body2 no-pointer-events">{{ address }}</label>
           </q-item-section>
 
           <q-item-section side v-if="!quasar.screen.lt.md">
@@ -75,8 +75,10 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'src/store';
 import MenuLink from 'src/components/MenuLink.vue';
 import { useQuasar } from 'quasar';
+import { formatAddress } from 'src/common/address';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -86,8 +88,11 @@ export default defineComponent({
   setup() {
     const quasar = useQuasar();
     const router = useRouter();
+    const store = useStore();
     const leftDrawer = ref<boolean>(false);
     const back = computed(() => router.currentRoute.value.meta.back === true);
+    const session = computed(() => store.state.authentication.session);
+    const address = computed(() => formatAddress(store.state.authentication.session?.address));
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -104,6 +109,8 @@ export default defineComponent({
     });
 
     return {
+      address,
+      session,
       quasar,
       router,
       leftDrawer,
