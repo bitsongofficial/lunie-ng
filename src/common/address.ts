@@ -58,11 +58,11 @@ export const decodeB32 = (value: string) => {
   return Buffer.from(bech32.fromWords(words.words)).toString('hex');
 }
 
-/* export const encodeB32 = (value: ArrayBuffer | SharedArrayBuffer, prefix = 'cosmos1', type = 'hex') => {
+export const encodeB32 = (value: string, prefix = 'cosmos1', type: BufferEncoding = 'hex') => {
   const words = bech32.toWords(Buffer.from(value, type));
 
   return bech32.encode(prefix, words);
-} */
+}
 
 export const validatorEntry = (validator: Validator) => {
   return `${validator.name} - ${formatAddress(validator.operatorAddress, 20)}`

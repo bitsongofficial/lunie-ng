@@ -1,5 +1,13 @@
 import { BondStatus } from '@cosmjs/launchpad/build/lcdapi/staking';
 import { BigNumber } from 'bignumber.js';
+import { Dictionary } from 'lodash';
+
+export enum ValidatorStatusRequest {
+  BOND_STATUS_BONDED = 'BOND_STATUS_BONDED',
+  BOND_STATUS_UNBONDING = 'BOND_STATUS_UNBONDING',
+  BOND_STATUS_UNBONDED = 'BOND_STATUS_UNBONDED',
+  BOND_STATUS_UNSPECIFIED = 'BOND_STATUS_UNSPECIFIED'
+}
 
 export enum ValidatorStatus {
   ACTIVE = 'ACTIVE',
@@ -57,6 +65,11 @@ export interface ValidatorRaw {
   readonly signing_info?: SignerInfo;
 }
 
+export interface ValidatorResponse {
+  height: string;
+  result: ValidatorRaw[];
+}
+
 export interface SignerInfo {
   address: string;
   start_height: string;
@@ -65,3 +78,5 @@ export interface SignerInfo {
   tombstoned: boolean;
   missed_blocks_counter: string;
 }
+
+export type ValidatorMap = Dictionary<Validator>;

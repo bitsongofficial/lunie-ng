@@ -1,8 +1,9 @@
 import { api } from 'src/boot/axios';
 import { BigNumber } from 'bignumber.js';
 import { BlockResponse } from '@cosmjs/launchpad';
-import { blockReducer, coinReducer, delegationReducer, rewardReducer, undelegationReducer, balanceReducer } from 'src/common/cosmos-reducer';
+import { blockReducer, coinReducer, delegationReducer, rewardReducer, undelegationReducer, balanceReducer, validatorReducer, depositReducer, voteReducer, proposalReducer } from 'src/common/cosmos-reducer';
 import {
+  PoolResponse,
   BalanceResponse,
   PaginationResponse,
   BlockReduced,
@@ -18,11 +19,29 @@ import {
   UnbondingDelegationFlat,
   UnbondingDelegationRaw,
   Delegation,
-  UnbondingDelegation
+  UnbondingDelegation,
+  ValidatorStatusRequest,
+  AnnualProvisionsResponse,
+  ValidatorResponse,
+  ProposalResponse,
+  GovParamsResponse,
+  TallyParams,
+  DepositParams,
+  ProposalRaw,
+  ProposalRawStatus,
+  VoteResponse,
+  DepositResponse,
+  ValidatorMap,
+  DetailedVote
 } from 'src/models';
 /* import { urlSafeEncode } from 'src/common/b64'; */
-import { chunk, compact, reduce } from 'lodash';
+import { chunk, compact, orderBy, reduce } from 'lodash';
 import { network } from 'src/constants';
+import Store from 'src/store';
+import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
+import { percentage } from 'src/common/numbers';
+
+const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized from null in golang
 
 export const getBlock = async (blockHeight: number | undefined = undefined): Promise<BlockReduced> => {
   try {
@@ -50,7 +69,7 @@ export const queryAutoPaginate = async <T extends PaginationResponse>(url: strin
   }
 }
 
-const getDelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
+export const getDelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
   const delegations = await queryAutoPaginate<DelegationResponse>(
     `cosmos/staking/v1beta1/delegations/${address}`
   );
@@ -66,7 +85,7 @@ const getDelegationsForDelegator = async (address: string, validatorsDictionary:
   return compact(delegationsReduced).filter((delegation) => new BigNumber(delegation.amount).gt(0));
 }
 
-const getUndelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
+export const getUndelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
   const response = await queryAutoPaginate<UnbondingDelegationResponse>(`cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`);
 
   const undelegations = response ? response.unbonding_response : [];
@@ -123,7 +142,51 @@ export const getRewards = async (delegatorAddress: string, validatorsDictionary:
     ({ reward }) => reward && reward.length > 0
   );
 
-  return rewardReducer(rewards, validatorsDictionary);
+  return compact(rewardReducer(rewards, validatorsDictionary));
+}
+
+export const getValidators = async (status: ValidatorStatusRequest) => {
+  const response = await api.get<ValidatorResponse>(`staking/validators?status=${status}`);
+
+  return response.data;
+}
+
+export const getAnnualProvision = async () => {
+  const response = await api.get<AnnualProvisionsResponse>('cosmos/mint/v1beta1/annual_provisions');
+
+  return response.data.annual_provisions;
+}
+
+export const getPool = async () => {
+  const response = await api.get<PoolResponse>('cosmos/staking/v1beta1/pool');
+
+  return response.data;
+}
+
+export const loadValidators = async () => {
+  const [
+    { result: bondedValidators },
+    { result: unbondingValidators },
+    { result: unbondedValidators },
+    { result: unspecifiedValidators },
+    annualProvision,
+    pool
+  ] = await Promise.all([
+    getValidators(ValidatorStatusRequest.BOND_STATUS_BONDED),
+    getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDING),
+    getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDED),
+    getValidators(ValidatorStatusRequest.BOND_STATUS_UNSPECIFIED),
+    getAnnualProvision(),
+    getPool()
+  ]);
+
+  const totalShares = bondedValidators.reduce(
+    (sum, { delegator_shares: delegatorShares }) => sum.plus(delegatorShares),
+    new BigNumber(0)
+  );
+
+  const allValidators = bondedValidators.concat(unbondingValidators, unbondedValidators, unspecifiedValidators)
+  return allValidators.map(validator => validatorReducer(validator, annualProvision, totalShares, pool))
 }
 
 export const getBalances = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
@@ -197,4 +260,162 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
   } catch (error) {
     throw error;
   }
+}
+
+export const getTallying = async () => {
+  const response = await api.get<GovParamsResponse>('cosmos/gov/v1beta1/params/tallying');
+
+  return response.data;
+}
+
+export const getDeposit = async () => {
+  const response = await api.get<GovParamsResponse>('cosmos/gov/v1beta1/params/deposit');
+
+  return response.data;
+}
+
+const getChainStartTime = () => {
+  return new Date(Store.state.data.block?.time ?? 0);
+}
+
+const dataExistsInThisChain = (timestamp: string | number) => {
+  return new Date(timestamp) > getChainStartTime();
+}
+
+const getVotes = async (proposal: ProposalRaw) => {
+  const response = await queryAutoPaginate<VoteResponse>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/votes`);
+
+  return response.votes;
+}
+
+const getDeposits = async (proposal: ProposalRaw) => {
+  const response = await queryAutoPaginate<DepositResponse>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/deposits`);
+
+  return response.deposits;
+}
+
+export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: TallyParams, depositParams: DepositParams, validators: ValidatorMap): Promise<DetailedVote> => {
+  const dataAvailable = dataExistsInThisChain(proposal.submit_time);
+  const votingComplete = [
+    ProposalRawStatus.PROPOSAL_STATUS_PASSED,
+    ProposalRawStatus.PROPOSAL_STATUS_REJECTED
+  ].includes(proposal.status);
+
+  const votes = dataAvailable ? await getVotes(proposal) : []
+  const deposits = dataAvailable ? await getDeposits(proposal) : []
+  let tally = proposal.final_tally_result;
+
+  if (!votingComplete) {
+    const response = await api.get<Tally>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`);
+
+    tally = response.data;
+  }
+
+  const totalVotingParticipation = new BigNumber(tally.yes)
+    .plus(tally.abstain)
+    .plus(tally.no)
+    .plus(tally.no_with_veto);
+
+  const formattedDeposits = deposits.length ?
+    deposits.map(
+      (deposit) => depositReducer(deposit, validators),
+    )
+    :
+    [];
+
+  const depositsSum = deposits.length ?
+    formattedDeposits.reduce<number>((depositAmountAggregator, deposit) => {
+      return (depositAmountAggregator += deposit.amount.length ? Number(deposit.amount[0].amount) : 0)
+    }, 0)
+    :
+    0;
+
+  return {
+    deposits: formattedDeposits,
+    depositsSum: deposits.length ? Number(depositsSum).toFixed(6) : [],
+    percentageDepositsNeeded: deposits ?
+      percentage(
+        depositsSum,
+        new BigNumber(depositParams.min_deposit[0].amount)
+      )
+      :
+      [],
+    votes: votes.length ? votes.map((vote) => voteReducer(vote, validators)) : [],
+    votesSum: votes ? votes.length : [],
+    votingThresholdYes: Number(tallyParams.threshold).toFixed(2),
+    votingThresholdNo: (1 - parseFloat(tallyParams.threshold)).toFixed(2),
+    votingPercentageYes: percentage(tally.yes, totalVotingParticipation),
+    votingPercentageNo: percentage(
+      new BigNumber(tally.no).plus(tally.no_with_veto),
+      totalVotingParticipation
+    ),
+    tally: tally,
+    timeline: [
+      proposal.submit_time
+        ? { title: 'Created', time: proposal.submit_time }
+        : undefined,
+      proposal.deposit_end_time
+        ? {
+          title: 'Deposit Period Ends',
+          // the deposit period can end before the time as the limit is reached already
+          time:
+            proposal.voting_start_time !== GOLANG_NULL_TIME &&
+              new Date(proposal.voting_start_time) <
+              new Date(proposal.deposit_end_time)
+              ? proposal.voting_start_time
+              : proposal.deposit_end_time,
+        }
+        : [],
+      proposal.voting_start_time
+        ? {
+          title: 'Voting Period Starts',
+          time:
+            proposal.voting_start_time !== GOLANG_NULL_TIME
+              ? proposal.voting_start_time
+              : [],
+        }
+        : [],
+      proposal.voting_end_time
+        ? {
+          title: 'Voting Period Ends',
+          time:
+            proposal.voting_end_time !== GOLANG_NULL_TIME
+              ? proposal.voting_end_time
+              : [],
+        }
+        : [],
+    ].filter((x) => !!x),
+  }
+}
+
+export const getProposals = async (validators: ValidatorMap) => {
+  const [
+    proposalsResponse,
+    { pool },
+    { tally_params: tallyParams },
+    { deposit_params: depositParams },
+  ] = await Promise.all([
+    queryAutoPaginate<ProposalResponse>('cosmos/gov/v1beta1/proposals'),
+    getPool(),
+    getTallying(),
+    getDeposit()
+  ]);
+
+  if (!Array.isArray(proposalsResponse.proposals)) {
+    return [];
+  }
+
+  const proposals = await Promise.all(
+    proposalsResponse.proposals.map(async (proposal) => {
+      const detailedVotes = await getDetailedVotes(proposal, tallyParams, depositParams, validators);
+
+      return proposalReducer(
+        proposal,
+        pool.bonded_tokens,
+        detailedVotes,
+      );
+    })
+  );
+
+  return orderBy(proposals, 'id', 'desc');
 }

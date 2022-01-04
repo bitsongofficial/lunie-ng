@@ -1,7 +1,17 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
-import { getBalances, getBlock } from 'src/services';
+import {
+  getBalances,
+  getBlock,
+  getDelegationsForDelegator,
+  getUndelegationsForDelegator,
+  getRewards,
+  loadValidators,
+  getProposals
+} from 'src/services';
+import { keyBy } from 'lodash';
+import { updateValidatorImages } from 'src/common/keybase';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -9,9 +19,10 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async refresh({ dispatch, commit }) {
     try {
-      /* await dispatch('getValidators'); */
+      await dispatch('getValidators');
       await dispatch('getBlock');
       await dispatch('refreshSession');
+      await dispatch('getProposals');
       /* await dispatch('getProposals');
       await dispatch('getGovernanceOverview'); */
     } catch (error) {
@@ -33,17 +44,16 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async refreshSession({ dispatch, commit, rootState }) {
     const session = rootState.authentication.session;
-    const currency = 'USD';
 
     if (session) {
       const address = session.address;
 
       try {
-        await dispatch('getBalances', { address, currency });
-        /* await dispatch('getRewards', { address, currency });
-        await dispatch('getTransactions', { address });
+        await dispatch('getBalances', { address });
+        await dispatch('getRewards', { address });
         await dispatch('getDelegations', address);
-        await dispatch('getUndelegations', address); */
+        await dispatch('getUndelegations', address);
+        /* await dispatch('getTransactions', { address }); */
       } catch (error) {
         console.error(error);
 
@@ -83,9 +93,9 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       throw err;
     }
   },
-  async getBalances({ commit }, { address, currency }) {
+  async getBalances({ commit, getters }, { address }) {
     try {
-      const balances = await getBalances(address, currency);
+      const balances = await getBalances(address, getters['validatorsDictionary']);
       commit('setBalances', balances);
       commit('setBalancesLoaded', true);
     } catch (err) {
@@ -103,6 +113,118 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setBalancesLoaded', false);
 
       throw err;
+    }
+  },
+  async getDelegations({ commit, getters }, address) {
+    try {
+      const delegations = await getDelegationsForDelegator(address, getters['validatorsDictionary']);
+      commit('setDelegations', delegations);
+      commit('setDelegationsLoaded', true);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting delegations failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    }
+  },
+  async getUndelegations({ commit, getters }, address) {
+    try {
+      const undelegations = await getUndelegationsForDelegator(address, getters['validatorsDictionary']);
+      commit('setUndelegations', undelegations);
+      commit('setUndelegationsLoaded', true);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting undelegations failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    }
+  },
+  async getRewards({ commit, getters }, { address }) {
+    try {
+      const rewards = await getRewards(address, getters['validatorsDictionary'])
+      commit('setRewards', rewards)
+      commit('setRewardsLoaded', true)
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting rewards failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    }
+  },
+  async getValidators({ commit, dispatch }) {
+    try {
+      const validators = await loadValidators();
+      commit('setValidators', validators);
+      commit('setValidatorsLoaded', true);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting validators failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    }
+
+    await dispatch('updateValidatorImages');
+  },
+  async updateValidatorImages({ state, commit }) {
+    // get validator images for chunk
+    await updateValidatorImages(state.validators, (updatedChunk) => {
+      const updatedValidatorsDict = keyBy(updatedChunk, 'operatorAddress')
+      // update the validators from our chunk
+      const updatedValidators = state.validators.map((validator) => {
+        const updatedValidator = updatedValidatorsDict[validator.operatorAddress];
+
+        if (updatedValidator) {
+          return updatedValidator;
+        }
+
+        return validator;
+      })
+
+      // update the store and UI
+      commit('setValidators', updatedValidators);
+    })
+  },
+  async getProposals({ commit, getters }) {
+    try {
+      const proposals = await getProposals(getters['validatorsDictionary']);
+
+      commit('setProposals', proposals);
+      commit('setProposalsLoaded', true);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting proposals failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
     }
   },
 }

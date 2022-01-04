@@ -7,6 +7,8 @@ import {
   Plugin
 } from 'vuex';
 
+import createPersistedState from 'vuex-persistedstate';
+
 import notifications from './notifications';
 import { NotificationsStateInterface } from './notifications/state';
 
@@ -40,20 +42,22 @@ declare module '@vue/runtime-core' {
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key');
 
-const plugins: Plugin<StateInterface>[] = [];
+const plugins: Plugin<StateInterface>[] = [createPersistedState()];
 
 if (!!process.env.DEBUGGING) {
   plugins.push(createLogger());
 }
 
+const modules = {
+  notifications,
+  authentication,
+  data,
+  keplr,
+  ledger
+};
+
 const Store = createStore<StateInterface>({
-  modules: {
-    notifications,
-    authentication,
-    data,
-    keplr,
-    ledger
-  },
+  modules,
   plugins,
   // enable strict mode (adds overhead!)
   // for dev mode and --debug builds only

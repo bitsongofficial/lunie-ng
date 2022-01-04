@@ -32,7 +32,7 @@
         </p>
       </div>
 
-      <q-btn class="send-btn btn-medium text-h6 col-12 col-md-2" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
+      <q-btn class="send-btn btn-medium text-h6 col-12 col-md-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
         SEND <q-icon class="balance-icon rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="half-transparent-white" />
       </q-btn>
     </div>

@@ -1,3 +1,4 @@
+import { encodeB32, decodeB32 } from './address';
 import { BlockResponse } from '@cosmjs/launchpad';
 import { Coin } from '@cosmjs/stargate';
 import { BigNumber } from 'bignumber.js';
@@ -16,12 +17,28 @@ import {
   BalanceCoin,
   UnbondingDelegationFlat,
   UnbondingDelegation,
-  Balance
+  Balance,
+  Deposit,
+  ValidatorMap,
+  Vote,
+  ProposalRaw,
+  DetailedVote,
+  ProposalType,
+  ProposalRawStatus
 } from 'src/models';
 import { getCoinLookup } from './network';
 import { flattenDeep } from 'lodash';
+import { getProposalSummary } from './common-reducer';
+import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 
-export function coinReducer(chainCoin: NetworkConfigFeeOption, ibcInfo: Partial<IBCInfo> | undefined = undefined): BalanceCoin {
+const proposalTypeEnumDictionary: { [key: string]: string } = {
+  TextProposal: 'TEXT',
+  CommunityPoolSpendProposal: 'TREASURY',
+  ParameterChangeProposal: 'PARAMETER_CHANGE',
+  SoftwareUpgradeProposal: 'SOFTWARE_UPGRADE',
+};
+
+export function coinReducer(chainCoin: NetworkConfigFeeOption | Coin, ibcInfo: Partial<IBCInfo> | undefined = undefined): BalanceCoin {
   const chainDenom = ibcInfo && ibcInfo.denom ? ibcInfo.denom : chainCoin.denom;
   const coinLookup = getCoinLookup(chainDenom);
   const sourceChain = (ibcInfo && ibcInfo.chainTrace) ? ibcInfo.chainTrace[0] : undefined
@@ -156,7 +173,7 @@ export const getStakingCoinViewAmount = (chainStakeAmount: string) => {
   return '0';
 }
 
-export const validatorReducer = (validator: ValidatorRaw, annualProvision: string | number, totalShares: number, pool: PoolResponse): Validator => {
+export const validatorReducer = (validator: ValidatorRaw, annualProvision: string | number | undefined, totalShares: number | BigNumber, pool: PoolResponse): Validator => {
   const statusInfo = getValidatorStatus(validator)
   let websiteURL = validator.description.website
   if (!websiteURL || websiteURL === '[do-not-modify]') {
@@ -166,9 +183,12 @@ export const validatorReducer = (validator: ValidatorRaw, annualProvision: strin
   }
 
   const pctCommission = new BigNumber(1 - parseFloat(validator.commission.commission_rates.rate));
-  const provision = new BigNumber(annualProvision);
+  const provision = new BigNumber(annualProvision ?? 0);
   const bonded = new BigNumber(pool.pool.bonded_tokens);
   const expectedRewards = pctCommission.times(provision.div(bonded));
+
+  const delegatorShares = new BigNumber(validator.delegator_shares);
+  const totalSharesBig = new BigNumber(totalShares);
 
   return {
     id: validator.operator_address,
@@ -179,7 +199,7 @@ export const validatorReducer = (validator: ValidatorRaw, annualProvision: strin
     website: websiteURL,
     identity: validator.description.identity,
     name: validator.description.moniker,
-    votingPower: validator.status.toString() === '3' ? (parseFloat(validator.delegator_shares) / totalShares).toFixed(6) : 0,
+    votingPower: validator.status.toString() === '3' ? (delegatorShares.div(totalSharesBig)).toFixed(6) : 0,
     startHeight: validator.signing_info
       ? validator.signing_info.start_height
       : undefined,
@@ -212,7 +232,7 @@ export const reduceFormattedRewards = (reward: Coin[], validator: Validator) => 
   });
 }
 
-export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary: { [key: string]: Validator }) => {
+export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary: ValidatorMap) => {
   const formattedRewards = rewards.map((reward) => ({
     reward: reward.reward,
     validator: validatorsDictionary[reward.validator_address],
@@ -221,4 +241,147 @@ export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary
   const multiDenomRewardsArray = formattedRewards.map(({ reward, validator }) => reduceFormattedRewards(reward, validator));
 
   return flattenDeep(multiDenomRewardsArray).filter((reward) => reward);
+}
+
+const networkAccountReducer = (address: string, validators: ValidatorMap) => {
+  const proposerValAddress = address ?
+    encodeB32(decodeB32(address), network.validatorAddressPrefix, 'hex')
+    :
+    '';
+
+  const validator = validators && proposerValAddress.length > 0 ?
+    validators[proposerValAddress]
+    :
+    undefined;
+
+  return {
+    name: validator ? validator.name : undefined,
+    address: validator ? proposerValAddress : address || '',
+    picture: validator ? validator.picture : '',
+    validator,
+  };
+}
+
+export const depositReducer = (deposit: Deposit, validators: ValidatorMap) => {
+  return {
+    id: deposit.depositor,
+    amount: deposit.amount.map(el => coinReducer(el)),
+    depositer: networkAccountReducer(deposit.depositor, validators)
+  };
+}
+
+export function voteReducer(vote: Vote, validators: ValidatorMap) {
+  return {
+    id: String(vote.proposal_id.concat(`_${vote.voter}`)),
+    voter: networkAccountReducer(vote.voter, validators),
+    option: vote.option
+  };
+}
+
+const proposalFinalized = (proposal: ProposalRaw) => {
+  return [ProposalRawStatus.PROPOSAL_STATUS_PASSED, ProposalRawStatus.PROPOSAL_STATUS_REJECTED].includes(
+    proposal.status
+  );
+}
+
+function getTotalVotePercentage(proposal: ProposalRaw, totalBondedTokens: string, totalVoted: string | number | BigNumber) {
+  // for passed proposals we can't calculate the total voted percentage, as we don't know the totalBondedTokens in the past
+  if (proposalFinalized(proposal)) {
+    return -1;
+  }
+
+  if (new BigNumber(totalVoted).eq(0)) {
+    return 0
+  }
+
+  if (!totalBondedTokens) {
+    return -1
+  }
+
+  return Number(
+    new BigNumber(totalVoted)
+      .div(getStakingCoinViewAmount(totalBondedTokens))
+      .toFixed(4) // output is 0.1234 = 12.34%
+  )
+}
+
+export const tallyReducer = (proposal: ProposalRaw, tally: Tally, totalBondedTokens: string) => {
+  // if the proposal is out of voting, use the final result for the tally
+  if (proposalFinalized(proposal)) {
+    tally = proposal.final_tally_result
+  }
+
+  const totalVoted = getStakingCoinViewAmount(
+    new BigNumber(tally.yes)
+      .plus(tally.no)
+      .plus(tally.abstain)
+      .plus(tally.no_with_veto)
+      .toString()
+  );
+
+  return {
+    yes: getStakingCoinViewAmount(tally.yes),
+    no: getStakingCoinViewAmount(tally.no),
+    abstain: getStakingCoinViewAmount(tally.abstain),
+    veto: getStakingCoinViewAmount(tally.no_with_veto),
+    total: totalVoted,
+    totalVotedPercentage: getTotalVotePercentage(
+      proposal,
+      totalBondedTokens,
+      totalVoted
+    ),
+  }
+}
+
+const getDeposit = (proposal: ProposalRaw) => {
+  const sum = proposal.total_deposit.filter(({ denom }) => denom === network.stakingDenom);
+  const s = sum.reduce((ss, cur) => { return ss.plus(cur.amount) }, new BigNumber(0));
+
+  return getStakingCoinViewAmount(s.toString());
+}
+
+const proposalBeginTime = (proposal: ProposalRaw) => {
+  switch (proposal.status) {
+    case ProposalRawStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD:
+      return proposal.submit_time
+    case ProposalRawStatus.PROPOSAL_STATUS_VOTING_PERIOD:
+      return proposal.voting_start_time
+    case ProposalRawStatus.PROPOSAL_STATUS_PASSED:
+    case ProposalRawStatus.PROPOSAL_STATUS_REJECTED:
+      return proposal.voting_end_time
+  }
+}
+
+const proposalEndTime = (proposal: ProposalRaw) => {
+  switch (proposal.status) {
+    case ProposalRawStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD:
+      return proposal.deposit_end_time
+    case ProposalRawStatus.PROPOSAL_STATUS_VOTING_PERIOD:
+    // the end time lives in the past already if the proposal is finalized
+    case ProposalRawStatus.PROPOSAL_STATUS_PASSED:
+    case ProposalRawStatus.PROPOSAL_STATUS_REJECTED:
+      return proposal.voting_end_time
+  }
+}
+
+export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote) => {
+  const typeStringArray = proposal.content['@type'].split('.')
+  const typeString = typeStringArray[typeStringArray.length - 1];
+  const type = proposalTypeEnumDictionary[typeString] as ProposalType;
+
+  return {
+    id: Number(proposal.proposal_id),
+    proposalId: String(proposal.proposal_id),
+    type,
+    title: proposal.content.title,
+    description: proposal.content.description,
+    creationTime: proposal.submit_time,
+    status: proposal.status,
+    statusBeginTime: proposalBeginTime(proposal),
+    statusEndTime: proposalEndTime(proposal),
+    tally: tallyReducer(proposal, detailedVotes.tally, totalBondedTokens),
+    deposit: getDeposit(proposal),
+    summary: getProposalSummary(type),
+    detailedVotes,
+  }
 }
