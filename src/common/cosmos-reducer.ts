@@ -24,7 +24,8 @@ import {
   ProposalRaw,
   DetailedVote,
   ProposalType,
-  ProposalRawStatus
+  ProposalRawStatus,
+  TopVoterValidator
 } from 'src/models';
 import { getCoinLookup } from './network';
 import { flattenDeep } from 'lodash';
@@ -383,5 +384,15 @@ export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string
     deposit: getDeposit(proposal),
     summary: getProposalSummary(type),
     detailedVotes,
+  }
+}
+
+export const topVoterReducer = (topVoter: Validator): TopVoterValidator => {
+  return {
+    name: topVoter.name,
+    address: topVoter.operatorAddress,
+    votingPower: topVoter.votingPower,
+    picture: topVoter.picture,
+    validator: topVoter,
   }
 }

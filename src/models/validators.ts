@@ -37,6 +37,14 @@ export interface Validator {
   expectedReturns?: BigNumber;
 }
 
+export interface TopVoterValidator {
+  name: string;
+  address: string;
+  votingPower: string | number;
+  picture?: string;
+  validator: Validator;
+}
+
 export interface ValidatorRaw {
   readonly operator_address: string;
   readonly consensus_pubkey: string;

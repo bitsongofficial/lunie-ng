@@ -2,7 +2,7 @@ import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 import { Coin } from '@cosmjs/stargate';
 import { BalanceCoin } from './rewards';
 import { PaginationResponse } from './balances';
-import { Validator } from './validators';
+import { Validator, TopVoterValidator } from './validators';
 import { BigNumber } from 'bignumber.js';
 
 export enum ProposalStatus {
@@ -149,4 +149,11 @@ export interface Proposal {
   deposit: string | number | BigNumber;
   summary: string;
   detailedVotes: DetailedVote;
+}
+
+export interface GovernanceOverview {
+  totalStakedAssets: string | null;
+  totalVoters: undefined;
+  treasurySize: string | null;
+  topVoters: TopVoterValidator[];
 }

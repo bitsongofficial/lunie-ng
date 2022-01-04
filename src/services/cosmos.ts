@@ -1,7 +1,7 @@
 import { api } from 'src/boot/axios';
 import { BigNumber } from 'bignumber.js';
 import { BlockResponse } from '@cosmjs/launchpad';
-import { blockReducer, coinReducer, delegationReducer, rewardReducer, undelegationReducer, balanceReducer, validatorReducer, depositReducer, voteReducer, proposalReducer } from 'src/common/cosmos-reducer';
+import { blockReducer, coinReducer, delegationReducer, rewardReducer, undelegationReducer, balanceReducer, validatorReducer, depositReducer, voteReducer, proposalReducer, getStakingCoinViewAmount, topVoterReducer } from 'src/common/cosmos-reducer';
 import {
   PoolResponse,
   BalanceResponse,
@@ -32,14 +32,17 @@ import {
   VoteResponse,
   DepositResponse,
   ValidatorMap,
-  DetailedVote
+  DetailedVote,
+  CommunityPoolResponse,
+  GovernanceOverview
 } from 'src/models';
 /* import { urlSafeEncode } from 'src/common/b64'; */
 import { chunk, compact, orderBy, reduce } from 'lodash';
 import { network } from 'src/constants';
 import Store from 'src/store';
 import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
-import { percentage } from 'src/common/numbers';
+import { percentage, setDecimalLength } from 'src/common/numbers';
+import { getCoinLookup } from 'src/common/network';
 
 const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized from null in golang
 
@@ -159,6 +162,12 @@ export const getAnnualProvision = async () => {
 
 export const getPool = async () => {
   const response = await api.get<PoolResponse>('cosmos/staking/v1beta1/pool');
+
+  return response.data;
+}
+
+export const getCommunityPool = async () => {
+  const response = await api.get<CommunityPoolResponse>('cosmos/distribution/v1beta1/community_pool');
 
   return response.data;
 }
@@ -418,4 +427,37 @@ export const getProposals = async (validators: ValidatorMap) => {
   );
 
   return orderBy(proposals, 'id', 'desc');
+}
+
+export const getGovernanceOverview = async (topVoters: Validator[]): Promise<GovernanceOverview> => {
+  const [pool, communityPoolArray] = await Promise.all([
+    getPool(),
+    getCommunityPool(),
+  ])
+
+  const stakingCoin = getCoinLookup(
+    network.stakingDenom,
+    'viewDenom'
+  );
+
+  const stakingChainDenom = stakingCoin?.chainDenom;
+
+  const communityPool = communityPoolArray.pool.find(
+    ({ denom }) => denom === stakingChainDenom
+  );
+
+  return {
+    totalStakedAssets: setDecimalLength(
+      new BigNumber(getStakingCoinViewAmount(pool.pool.bonded_tokens)).toNumber(),
+      2
+    ),
+    totalVoters: undefined,
+    treasurySize: setDecimalLength(
+      !communityPool ? 0 : new BigNumber(getStakingCoinViewAmount(communityPool.amount)).toNumber(),
+      2
+    ),
+    topVoters: topVoters.map((topVoter) =>
+      topVoterReducer(topVoter)
+    ),
+  };
 }

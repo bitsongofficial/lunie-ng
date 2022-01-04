@@ -26,11 +26,13 @@ export const bigFigure = (number = 0) => {
 }
 
 export const setDecimalLength = (value: number, length: number) => {
-  if (value === undefined || value === null || Number.isNaN(value)) return null
+  if (value === undefined || value === null || Number.isNaN(value)) {
+    return null;
+  }
 
   // rounding up the last decimal
-  const roundedValue =
-    Math.round(value * Math.pow(10, length)) / Math.pow(10, length)
+  const roundedValue = Math.round(value * Math.pow(10, length)) / Math.pow(10, length);
+
   return new Intl.NumberFormat(language, {
     minimumFractionDigits: length > 3 ? length : 0,
   }).format(roundedValue)

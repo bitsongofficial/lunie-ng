@@ -1,4 +1,4 @@
-import { Balance, BlockReduced, Delegation, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
@@ -14,6 +14,8 @@ export interface DataStateInterface {
   rewardsLoaded: boolean;
   proposals: Proposal[];
   proposalsLoaded: boolean;
+  governanceOverview: GovernanceOverview | null;
+  governanceOverviewLoaded: boolean;
 }
 
 function state (): DataStateInterface {
@@ -30,7 +32,9 @@ function state (): DataStateInterface {
     rewards: [],
     rewardsLoaded: false,
     proposals: [],
-    proposalsLoaded: false
+    proposalsLoaded: false,
+    governanceOverview: null,
+    governanceOverviewLoaded: false
   }
 }
 

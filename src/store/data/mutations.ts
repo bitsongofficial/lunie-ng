@@ -1,4 +1,4 @@
-import { Balance, BlockReduced, Delegation, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
 import { MutationTree } from 'vuex'
 import { DataStateInterface } from './state'
 
@@ -41,6 +41,12 @@ const mutation: MutationTree<DataStateInterface> = {
   },
   setProposalsLoaded(state, proposalsLoaded: boolean) {
     state.proposalsLoaded = proposalsLoaded;
+  },
+  setGovernanceOverview(state, governanceOverview: GovernanceOverview) {
+    state.governanceOverview = governanceOverview;
+  },
+  setGovernanceOverviewLoaded(state, governanceOverviewLoaded: boolean) {
+    state.governanceOverviewLoaded = governanceOverviewLoaded;
   },
   resetSessionData(state) {
     state.balances = [];

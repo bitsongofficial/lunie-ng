@@ -3,8 +3,8 @@ import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
 import { bigFigureOrShortDecimals } from 'src/common/numbers';
-import { keyBy } from 'lodash';
-import { ValidatorMap } from 'src/models';
+import { keyBy, reverse, sortBy, take } from 'lodash';
+import { Validator, ValidatorMap } from 'src/models';
 
 const getters: GetterTree<DataStateInterface, StateInterface> = {
   /* totalRewardsPerDenom ({ rewards }) {
@@ -28,6 +28,18 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   },
   validatorsDictionary({ validators }): ValidatorMap {
     return keyBy(validators, 'operatorAddress');
+  },
+  topVoters({ validators }): Validator[] {
+    return take(
+      reverse(
+        sortBy(validators, [
+          (validator) => {
+            return validator.votingPower
+          },
+        ])
+      ),
+      10
+    );
   }
 }
 

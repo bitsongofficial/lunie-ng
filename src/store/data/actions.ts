@@ -8,7 +8,8 @@ import {
   getUndelegationsForDelegator,
   getRewards,
   loadValidators,
-  getProposals
+  getProposals,
+  getGovernanceOverview
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
@@ -23,8 +24,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       await dispatch('getBlock');
       await dispatch('refreshSession');
       await dispatch('getProposals');
-      /* await dispatch('getProposals');
-      await dispatch('getGovernanceOverview'); */
+      await dispatch('getGovernanceOverview');
     } catch (error) {
       console.error(error);
 
@@ -221,6 +221,24 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           {
             type: 'danger',
             message: 'Getting proposals failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    }
+  },
+  async getGovernanceOverview({ commit, getters }) {
+    try {
+      const governanceOverview = await getGovernanceOverview(getters['topVoters']);
+      commit('setGovernanceOverview', governanceOverview);
+      commit('setGovernanceOverviewLoaded', true);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting governanceOverview failed:' + err.message,
           },
           { root: true }
         );
