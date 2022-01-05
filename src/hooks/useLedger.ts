@@ -1,8 +1,8 @@
 import { computed, onMounted } from 'vue';
 import { useStore } from 'src/store';
-import { copyToClipboard, useQuasar } from 'quasar';
+import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError } from 'src/common/notify';
 import { SessionType } from 'src/models';
 
 const hidFeatureLink = 'chrome://flags/#enable-experimental-web-platform-features';
@@ -35,16 +35,6 @@ export const useLedger = () => {
       console.error(error);
     }
   });
-
-  const onCopy = async (link: string) => {
-    try {
-      await copyToClipboard(link);
-      notifySuccess('Link copied to the clipboard');
-    } catch (error) {
-      console.error(error);
-      notifyError('Something went wrong');
-    }
-  };
 
   const signIn = async () => {
     if (account.value) {
@@ -80,7 +70,6 @@ export const useLedger = () => {
     linuxLedgerConnectionLink,
     chromeError,
     linuxError,
-    onCopy,
     signIn
   }
 };

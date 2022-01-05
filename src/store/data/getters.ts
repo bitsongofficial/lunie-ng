@@ -3,18 +3,21 @@ import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
 import { bigFigureOrShortDecimals } from 'src/common/numbers';
-import { keyBy, reverse, sortBy, take } from 'lodash';
-import { Validator, ValidatorMap } from 'src/models';
+import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
+import { Validator, ValidatorMap, Reward } from 'src/models';
 
 const getters: GetterTree<DataStateInterface, StateInterface> = {
-  /* totalRewardsPerDenom ({ rewards }) {
-    return rewards.reduce((all, reward) => {
+  totalRewardsPerDenom({ rewards }) {
+    return reduce<Reward, Dictionary<number>>(rewards, (all, reward) => {
+      const amount = new BigNumber(reward.amount);
+      const rewardDenom = new BigNumber(all[reward.denom] || 0);
+
       return {
         ...all,
-        [reward.denom]: parseFloat(reward.amount) + (all[reward.denom] || 0),
-      }
-    }, {})
-  } */
+        [reward.denom]: amount.plus(rewardDenom).toNumber()
+      };
+    }, {});
+  },
   currentBalance({ balances }) {
     const balance = [...balances].pop();
 

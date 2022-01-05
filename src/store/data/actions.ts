@@ -16,6 +16,7 @@ import {
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { Validator } from 'src/models';
+import { network } from 'src/constants';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -24,6 +25,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   async refresh({ dispatch, commit }) {
     try {
       await dispatch('getValidators');
+      await dispatch('getFirstBlock');
       await dispatch('getBlock');
       await dispatch('refreshSession');
       await dispatch('getProposals');
@@ -73,6 +75,27 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
         throw error;
       }
+    }
+  },
+  async getFirstBlock ({ commit }) {
+    try {
+      const block = await getBlock(network.minBlockHeight);
+      commit('setFirstBlock', block);
+
+      return block;
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting first block failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+
+      throw err;
     }
   },
   async getBlock ({ commit }) {

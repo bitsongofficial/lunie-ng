@@ -145,6 +145,7 @@ export default defineComponent({
 .profile-item {
   background: $secondary;
   border-radius: 50px;
+  margin-top: 10px;
   padding: 12px 24px 12px 26px;
   border: 2px solid $accent-3;
 }

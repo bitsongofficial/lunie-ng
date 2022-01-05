@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useLedger } from 'src/hooks';
+import { useLedger, useClipboard } from 'src/hooks';
 
 import AlertBox from 'src/components/AlertBox.vue';
 
@@ -49,6 +49,7 @@ export default defineComponent({
   setup() {
     return {
       ...useLedger(),
+      ...useClipboard()
     }
   }
 })

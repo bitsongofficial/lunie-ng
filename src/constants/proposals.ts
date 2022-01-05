@@ -3,22 +3,22 @@ import { Option } from 'src/models';
 export const proposalsTypeOptions: Option[] = [
   {
     label: 'All',
-    value: 'all',
+    value: undefined,
   },
   {
     label: 'Deposit',
-    value: 'deposit',
+    value: 'DEPOSIT',
   },
   {
     label: 'Voting',
-    value: 'voting',
+    value: 'VOTING',
   },
   {
     label: 'Passed',
-    value: 'passed',
+    value: 'PASSED',
   },
   {
     label: 'Rejected',
-    value: 'rejected',
+    value: 'REJECTED',
   },
 ];

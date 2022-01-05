@@ -3,6 +3,9 @@ import { MutationTree } from 'vuex'
 import { DataStateInterface } from './state'
 
 const mutation: MutationTree<DataStateInterface> = {
+  setFirstBlock(state, firstBlock: BlockReduced) {
+    state.firstBlock = firstBlock;
+  },
   setBlock(state, block: BlockReduced) {
     state.block = block;
   },

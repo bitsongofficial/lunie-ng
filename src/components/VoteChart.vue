@@ -4,7 +4,6 @@
       @before-enter="beforeEnter"
       @enter="enter"
       @leave="leave"
-      :css="false"
       appear
       v-for="(data, index) in datasetReverse"
       :key="index"

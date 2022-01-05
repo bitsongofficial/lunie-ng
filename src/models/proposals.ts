@@ -129,6 +129,8 @@ export interface DetailedVote {
   votingThresholdNo: string;
   votingPercentageYes: string | number;
   votingPercentageNo: string | number;
+  votingPercentageNoWithVeto: string | number;
+  votingPercentageAbstain: string | number;
   tally: Tally;
   timeline: (never[] | {
     title: string;

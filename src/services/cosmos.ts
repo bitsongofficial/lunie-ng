@@ -282,7 +282,7 @@ export const getDeposit = async () => {
 }
 
 const getChainStartTime = () => {
-  return new Date(Store.state.data.block?.time ?? 0);
+  return new Date(Store.state.data.firstBlock?.time ?? 0);
 }
 
 const dataExistsInThisChain = (timestamp: string | number) => {
@@ -353,7 +353,15 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
     votingThresholdNo: (1 - parseFloat(tallyParams.threshold)).toFixed(2),
     votingPercentageYes: percentage(tally.yes, totalVotingParticipation),
     votingPercentageNo: percentage(
-      new BigNumber(tally.no).plus(tally.no_with_veto),
+      new BigNumber(tally.no),
+      totalVotingParticipation
+    ),
+    votingPercentageNoWithVeto: percentage(
+      new BigNumber(tally.no_with_veto),
+      totalVotingParticipation
+    ),
+    votingPercentageAbstain: percentage(
+      new BigNumber(tally.abstain),
       totalVotingParticipation
     ),
     tally: tally,

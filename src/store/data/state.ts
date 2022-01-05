@@ -2,6 +2,7 @@ import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
+  firstBlock: BlockReduced | undefined;
   balances: Balance[];
   balancesLoaded: boolean;
   delegations: Delegation[];
@@ -25,6 +26,7 @@ export interface DataStateInterface {
 function state (): DataStateInterface {
   return {
     block: undefined,
+    firstBlock: undefined,
     balances: [],
     balancesLoaded: false,
     delegations: [],

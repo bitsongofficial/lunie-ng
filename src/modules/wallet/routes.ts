@@ -49,6 +49,7 @@ export default [
           title: 'Proposal',
           back: true,
         },
+        props: true
       }
     ]
   }

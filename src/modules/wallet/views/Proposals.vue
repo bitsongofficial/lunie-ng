@@ -23,7 +23,9 @@
     </div>
 
     <q-list class="proposals-list">
-      <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
+      <transition-group enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+        <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
+      </transition-group>
     </q-list>
   </q-page>
 </template>
@@ -33,6 +35,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { proposalsTypeOptions } from 'src/constants';
 import ProposalItem from 'src/components/ProposalItem.vue';
 import { useStore } from 'src/store';
+import { ProposalStatus } from 'src/models';
 
 export default defineComponent({
   name: 'Proposals',
@@ -41,9 +44,15 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const type = ref<string>('all');
+    const type = ref<ProposalStatus>();
 
-    const proposals = computed(() => store.state.data.proposals);
+    const proposals = computed(() => {
+      if (type.value) {
+        return store.state.data.proposals.filter(el => el.status === type.value);
+      }
+
+      return store.state.data.proposals;
+    });
 
     return {
       proposals,

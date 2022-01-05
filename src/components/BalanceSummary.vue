@@ -18,7 +18,12 @@
           REWARDS
         </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none">239,87</p>
+        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="rewards !== null">
+          {{ rewards }} {{ balance?.denom }}
+        </p>
+        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-else>
+          0
+        </p>
       </div>
       <div class="balance-section column no-wrap col-12 col-md-2">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
@@ -38,7 +43,9 @@
 </template>
 
 <script lang="ts">
+import { Dictionary } from 'lodash';
 import { useQuasar } from 'quasar';
+import { bigFigureOrShortDecimals } from 'src/common/numbers';
 import { Balance } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, computed } from 'vue';
@@ -50,8 +57,20 @@ export default defineComponent({
     const quasar = useQuasar();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const rewards = computed(() => {
+      const totalRewardsPerDenom = store.getters['data/totalRewardsPerDenom'] as Dictionary<number>;
+
+      if (totalRewardsPerDenom && balance.value) {
+        const amount = totalRewardsPerDenom[balance.value.denom];
+
+        return amount > 0.001 ? bigFigureOrShortDecimals(amount) : null;
+      }
+
+      return null;
+    });
 
     return {
+      rewards,
       balance,
       quasar,
     }

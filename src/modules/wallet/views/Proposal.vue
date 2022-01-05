@@ -1,17 +1,15 @@
 <template>
   <q-page class="proposal">
-    <q-chip class="proposal-status status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" text-color="white" color="info">
-      passed
-    </q-chip>
+    <proposal-status v-if="proposal" :status="proposal.status" />
 
     <div class="row proposal-header justify-between">
       <div class="column">
         <h2 class="title text-body-large text-weight-medium text-white">
-          Increase minimum commission rate to 5%
+          {{ proposal?.title }}
         </h2>
 
         <p class="description text-h5 text-accent">
-          This is a text proposal. Text proposals can be proposed by anyone and are used as a signalling mechanism for this community. If this proposal is accepted, nothing will change without community coordination.
+          {{ proposal?.summary }}
         </p>
       </div>
 
@@ -20,7 +18,7 @@
           vote
         </q-btn>
 
-        <q-btn class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
+        <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
           Copy link
 
           <q-icon class="q-ml-md" name="svguse:icons.svg#attachment|0 0 24 12" size="16px" color="white" />
@@ -31,7 +29,7 @@
     <div class="section-header row items-center justify-between">
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Vote</h3>
 
-      <div class="row items-center">
+      <!-- <div class="row items-center">
         <div class="row items-center">
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">24%</p>
@@ -41,10 +39,10 @@
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">20%</p>
         </div>
-      </div>
+      </div> -->
     </div>
 
-    <vote-card class="section" :dataset="dataset" />
+    <vote-card class="section" :dataset="dataset" v-if="dataset.length > 0" />
 
     <div class="section-header row items-center justify-between">
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Timeline</h3>
@@ -56,50 +54,49 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <div class="description-block text-half-transparent-white text-h5">
-      Increase the minimum commission rate to 5%. This will help provide network stability and stop 0% validators driving commissions down. It also ensures Validators are earning enough to support secure and stable validation.
-<br/><br/>
-If this proposal is accepted, it will imply having to update the blockchain so that it is possible to modify the commission of all validators automatically (see the Osmosis and/or Stargaze fork)
-    </div>
+    <pre class="description-block text-half-transparent-white text-h5">{{ proposal?.description }}</pre>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import { ChartData, TimelineData } from 'src/models';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
+import { getMappedVotes } from 'src/common/chart';
+import { useClipboard } from 'src/hooks';
 
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
+import ProposalStatus from 'src/components/ProposalStatus.vue';
 
 export default defineComponent({
   name: 'Proposal',
   components: {
     VoteCard,
-    Timeline
-},
-  setup() {
-    const dataset = ref<ChartData[]>([
-      {
-        label: 'Yes',
-        color: 'white',
-        value: 34.65
-      },
-      {
-        label: 'No',
-        color: 'primary',
-        value: 12.12
-      },
-      {
-        label: 'No with veto',
-        color: 'accent-2',
-        value: 23.87
-      },
-      {
-        label: 'Abstain',
-        color: 'secondary',
-        value: 29.36
-      },
-    ]);
+    Timeline,
+    ProposalStatus
+  },
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props) {
+    const store = useStore();
+    const router = useRouter();
+    const proposalID = parseInt(props.id);
+
+    const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
+
+    const dataset = computed<ChartData[]>(() => {
+      if (proposal.value) {
+        return getMappedVotes(proposal.value.detailedVotes);
+      }
+
+      return [];
+    });
 
     const entries = ref<TimelineData[]>([
       {
@@ -124,9 +121,18 @@ export default defineComponent({
       },
     ]);
 
+    onMounted(async () => {
+      if (proposal.value === undefined) {
+        await router.replace({ name: 'wallet' });
+      }
+    });
+
     return {
+      proposal,
       dataset,
       entries,
+      href: window.location.href,
+      ...useClipboard()
     }
   }
 });
@@ -180,6 +186,8 @@ export default defineComponent({
 }
 
 .description-block {
+  word-break: break-word;
+  white-space: pre-wrap;
   background-color: $transparent-gray;
   backdrop-filter: blur(60px);
   border-radius: 10px;

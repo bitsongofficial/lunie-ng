@@ -6,17 +6,15 @@
       7.268,78
     </h5>
 
-    <div class="btns row items-center justify-evenly" :class="{
-      'q-gutter-x-md': quasar.screen.lt.md
-    }">
+    <div class="btns row items-center justify-evenly q-gutter-sm">
       <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog">
-        STAKE
+        delegate
       </q-btn>
       <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog">
-        UNSTAKE
+        undelegate
       </q-btn>
       <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog">
-        RESTAKE
+        redelegate
       </q-btn>
     </div>
   </div>
