@@ -11,9 +11,7 @@
             {{ validator.name }}
           </h2>
 
-          <q-chip class="validator-status proposal-status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" text-color="white" color="info">
-            {{ validator.status }}
-          </q-chip>
+          <validator-status class="validator-status" :status="validator.status" />
         </div>
         <div class="row items-center justify-between">
           <p class="text-h4 text-white q-my-none col-12 col-md-8">
@@ -71,9 +69,13 @@ import { useQuasar } from 'quasar';
 import { Delegation, Validator } from 'src/models';
 import { defineComponent, PropType } from 'vue';
 import { bigFigureOrPercent, shortDecimals } from 'src/common/numbers';
+import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 
 export default defineComponent({
   name: 'ValidatorResume',
+  components: {
+    ValidatorStatus
+  },
   props: {
     validator: {
       type: Object as PropType<Validator>,

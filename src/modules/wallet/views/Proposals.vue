@@ -23,17 +23,16 @@
     </div>
 
     <q-list class="proposals-list">
-      <proposal-item title="Increase minimum commission rate to 5%" to="/proposals/1" status="voting" :voted="24" :quorum="50" />
-      <proposal-item title="Enable IBC Transfer" status="passed" :voted="12" :quorum="20" />
-      <proposal-item title="Decrease of voting period" status="rejected" :voted="24" :quorum="20" />
+      <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
     </q-list>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { proposalsTypeOptions } from 'src/constants';
 import ProposalItem from 'src/components/ProposalItem.vue';
+import { useStore } from 'src/store';
 
 export default defineComponent({
   name: 'Proposals',
@@ -41,9 +40,13 @@ export default defineComponent({
     ProposalItem,
   },
   setup() {
+    const store = useStore();
     const type = ref<string>('all');
 
+    const proposals = computed(() => store.state.data.proposals);
+
     return {
+      proposals,
       type,
       options: proposalsTypeOptions.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-subtitle2' }))
     }

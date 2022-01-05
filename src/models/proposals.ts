@@ -10,7 +10,8 @@ export enum ProposalStatus {
   VOTING = 'VOTING',
   PASSED = 'PASSED',
   REJECTED = 'REJECTED',
-  UNKNOWN = 'FAILED'
+  FAILED = 'FAILED',
+  UNSPECIFIED = 'UNSPECIFIED'
 }
 
 export enum VoteOption {
@@ -142,7 +143,7 @@ export interface Proposal {
   title: string;
   description: string;
   creationTime: string;
-  status: ProposalRawStatus;
+  status: ProposalStatus;
   statusBeginTime: string | undefined;
   statusEndTime: string | undefined;
   tally: Tally;

@@ -44,13 +44,11 @@
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
             </p>
-            <q-icon name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" />
+            <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" />
           </div>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
-          <q-chip class="status q-mx-none q-my-none text-body3" text-color="white" color="info">
-            {{ props.row.status }}
-          </q-chip>
+          <validator-status :status="props.row.status" />
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
@@ -111,9 +109,13 @@ import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import { bigFigureOrPercent } from 'src/common/numbers';
+import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 
 export default defineComponent({
   name: 'ValidatorsTable',
+  components: {
+    ValidatorStatus
+  },
   props: {
     loading: {
       type: Boolean,
@@ -283,14 +285,18 @@ export default defineComponent({
   }
 }
 
-.status {
-  padding-left: 12px;
-  padding-right: 12px;
-  min-height: 22px;
-}
-
 .validator-name {
   margin-left: 17px;
   margin-right: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+.info-icon {
+  min-width: 13px;
 }
 </style>

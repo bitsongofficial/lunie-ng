@@ -18,17 +18,15 @@
           REWARDS
         </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-          239,87
-        </p>
+        <p class="balance-subtitle text-body-extra-large text-white q-my-none">239,87</p>
       </div>
-      <div class="balance-section column no-wrap col-12 col-md-2" v-if="balance && balance.type === 'STAKE'">
+      <div class="balance-section column no-wrap col-12 col-md-2">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
           AVAILABLE
         </h3>
 
         <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-          {{ balance.available }}
+          {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
         </p>
       </div>
 
@@ -77,6 +75,8 @@ export default defineComponent({
 .balance-section {
   & .balance-title,
   & .balance-subtitle {
+    text-overflow: ellipsis;
+    overflow: hidden;
     text-align: center;
   }
 

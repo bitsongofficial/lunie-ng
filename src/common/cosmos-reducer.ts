@@ -25,7 +25,8 @@ import {
   DetailedVote,
   ProposalType,
   ProposalRawStatus,
-  TopVoterValidator
+  TopVoterValidator,
+  ProposalStatus
 } from 'src/models';
 import { getCoinLookup } from './network';
 import { flattenDeep } from 'lodash';
@@ -361,6 +362,24 @@ const proposalEndTime = (proposal: ProposalRaw) => {
   }
 }
 
+const proposalStatusMap = (status: ProposalRawStatus) => {
+  switch (status) {
+    case ProposalRawStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD:
+      return ProposalStatus.DEPOSIT;
+    case ProposalRawStatus.PROPOSAL_STATUS_VOTING_PERIOD:
+      return ProposalStatus.VOTING;
+    case ProposalRawStatus.PROPOSAL_STATUS_PASSED:
+      return ProposalStatus.PASSED;
+    case ProposalRawStatus.PROPOSAL_STATUS_REJECTED:
+      return ProposalStatus.REJECTED;
+    case ProposalRawStatus.PROPOSAL_STATUS_FAILED:
+      return ProposalStatus.FAILED;
+    case ProposalRawStatus.PROPOSAL_STATUS_UNSPECIFIED:
+    default:
+      return ProposalStatus.UNSPECIFIED;
+  }
+}
+
 export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote) => {
   const typeStringArray = proposal.content['@type'].split('.')
   const typeString = typeStringArray[typeStringArray.length - 1];
@@ -373,7 +392,7 @@ export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string
     title: proposal.content.title,
     description: proposal.content.description,
     creationTime: proposal.submit_time,
-    status: proposal.status,
+    status: proposalStatusMap(proposal.status),
     statusBeginTime: proposalBeginTime(proposal),
     statusEndTime: proposalEndTime(proposal),
     tally: tallyReducer(proposal, detailedVotes.tally, totalBondedTokens),

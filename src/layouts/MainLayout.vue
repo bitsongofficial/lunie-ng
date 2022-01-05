@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
+import { defineComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import MenuLink from 'src/components/MenuLink.vue';
@@ -103,6 +103,10 @@ export default defineComponent({
         immediate: true,
       }
     );
+
+    onMounted(async () => {
+      await store.dispatch('authentication/signIn', session.value);
+    });
 
     onUnmounted(() => {
       responsiveWatch();

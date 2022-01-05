@@ -223,13 +223,8 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
     const balances = balancesResponse ? balancesResponse.balances : [];
 
     const coins = await Promise.all(
-      balances.map(async (balance) => {
-        let ibcInfo;
-        if (balance.denom.startsWith('ibc/')) {
-          ibcInfo = await getIbcInfo(balance.denom);
-        }
-
-        return coinReducer(balance, ibcInfo);
+      balances.map((balance) => {
+        return coinReducer(balance);
       })
     );
 
