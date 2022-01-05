@@ -364,13 +364,18 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
       new BigNumber(tally.abstain),
       totalVotingParticipation
     ),
-    tally: tally,
+    tally,
     timeline: [
       proposal.submit_time
-        ? { title: 'Created', time: proposal.submit_time }
+        ?
+        {
+          title: 'Created',
+          time: proposal.submit_time
+        }
         : undefined,
       proposal.deposit_end_time
-        ? {
+        ?
+        {
           title: 'Deposit Period Ends',
           // the deposit period can end before the time as the limit is reached already
           time:
@@ -380,25 +385,26 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
               ? proposal.voting_start_time
               : proposal.deposit_end_time,
         }
-        : [],
+        : undefined,
       proposal.voting_start_time
-        ? {
+        ?
+        {
           title: 'Voting Period Starts',
           time:
             proposal.voting_start_time !== GOLANG_NULL_TIME
               ? proposal.voting_start_time
-              : [],
+              : undefined,
         }
-        : [],
+        : undefined,
       proposal.voting_end_time
         ? {
           title: 'Voting Period Ends',
           time:
             proposal.voting_end_time !== GOLANG_NULL_TIME
               ? proposal.voting_end_time
-              : [],
+              : undefined,
         }
-        : [],
+        : undefined,
     ].filter((x) => !!x),
   }
 }

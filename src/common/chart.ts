@@ -1,5 +1,7 @@
+import { compact } from 'lodash';
 import { BigNumber } from 'bignumber.js';
-import { ChartData, DetailedVote } from 'src/models';
+import { ChartData, DetailedVote, TimelineData } from 'src/models';
+import { compareNow, fromNow } from './date';
 
 export const getMappedVotes = (details: DetailedVote) => {
   const data: ChartData[] = [];
@@ -29,4 +31,18 @@ export const getMappedVotes = (details: DetailedVote) => {
   });
 
   return data;
+}
+
+export const getMappedTimeline = (details: DetailedVote): TimelineData[] => {
+  const timeline = details.timeline.map((el) => {
+    if (el) {
+      return ({
+        label: el.title,
+        active: el.time ? !compareNow(el.time) : false,
+        subtitle: el.time ? `${fromNow(el.time)} ago` : '--'
+      });
+    }
+  });
+
+  return compact(timeline);
 }

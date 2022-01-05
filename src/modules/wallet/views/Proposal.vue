@@ -59,11 +59,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { ChartData, TimelineData } from 'src/models';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
-import { getMappedVotes } from 'src/common/chart';
+import { getMappedTimeline, getMappedVotes } from 'src/common/chart';
 import { useClipboard } from 'src/hooks';
 
 import VoteCard from 'src/components/VoteCard.vue';
@@ -98,28 +98,13 @@ export default defineComponent({
       return [];
     });
 
-    const entries = ref<TimelineData[]>([
-      {
-        label: 'Created',
-        active: true,
-        subtitle: '1 month ago'
-      },
-      {
-        label: 'Deposit Period Ends',
-        active: true,
-        subtitle: '1 month ago'
-      },
-      {
-        label: 'Voting Period Starts',
-        active: false,
-        subtitle: '1 month ago'
-      },
-      {
-        label: 'Voting Period Ends',
-        active: false,
-        subtitle: '1 month ago'
-      },
-    ]);
+    const entries = computed<TimelineData[]>(() => {
+      if (proposal.value) {
+        return getMappedTimeline(proposal.value.detailedVotes);
+      }
+
+      return [];
+    });
 
     onMounted(async () => {
       if (proposal.value === undefined) {

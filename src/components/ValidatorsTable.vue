@@ -9,7 +9,6 @@
     class="validators-table"
     flat
     square
-    virtual-scroll
     :rows-per-page-options="[0]"
     :bordered="false"
     hide-pagination
@@ -38,8 +37,11 @@
         </q-td>
         <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
-            <q-avatar size="32px">
-              <img :src="props.row.picture">
+            <q-avatar size="32px" :color="props.row.picture ? 'transparent' : 'secondary'">
+              <img :src="props.row.picture" v-if="props.row.picture">
+              <p class="text-subtitle2 text-uppercase q-my-none">
+                {{ props.row.name[0] }}
+              </p>
             </q-avatar>
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}

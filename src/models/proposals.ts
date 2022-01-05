@@ -132,10 +132,12 @@ export interface DetailedVote {
   votingPercentageNoWithVeto: string | number;
   votingPercentageAbstain: string | number;
   tally: Tally;
-  timeline: (never[] | {
-    title: string;
-    time: string | never[];
-  } | undefined)[];
+  timeline: (TimelineEntry | undefined)[];
+}
+
+export interface TimelineEntry {
+  title: string;
+  time: string | undefined;
 }
 
 export interface Proposal {
