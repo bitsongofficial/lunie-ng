@@ -34,7 +34,9 @@ import {
   ValidatorMap,
   DetailedVote,
   CommunityPoolResponse,
-  GovernanceOverview
+  GovernanceOverview,
+  StakingDelegationResponse,
+  ValidatorsDelegationResponse
 } from 'src/models';
 /* import { urlSafeEncode } from 'src/common/b64'; */
 import { chunk, compact, orderBy, reduce } from 'lodash';
@@ -43,6 +45,7 @@ import Store from 'src/store';
 import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 import { percentage, setDecimalLength } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
+import { decodeB32, encodeB32 } from 'src/common/address';
 
 const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized from null in golang
 
@@ -460,4 +463,43 @@ export const getGovernanceOverview = async (topVoters: Validator[]): Promise<Gov
       topVoterReducer(topVoter)
     ),
   };
+}
+
+export const getValidatorDelegations = async (validator: Validator) => {
+  const delegations = await api.get<StakingDelegationResponse>(`staking/validators/${validator.operatorAddress}/delegations`);
+
+  const delegationsReduced = delegations.data.result.map((delegation) =>
+    delegationReducer(
+      delegation,
+      validator,
+      ValidatorStatus.ACTIVE
+    )
+  );
+
+  return compact(delegationsReduced);
+}
+
+export const getSelfStake = async (validator: Validator): Promise<number> => {
+  const hexDelegatorAddressFromOperator = decodeB32(validator.operatorAddress)
+  const delegatorAddressFromOperator = encodeB32(
+    hexDelegatorAddressFromOperator,
+    network.addressPrefix
+  );
+
+  try {
+    const response = await api.get<ValidatorsDelegationResponse>(
+      `cosmos/staking/v1beta1/validators/${validator.operatorAddress}/delegations/${delegatorAddressFromOperator}`
+    );
+
+    const delegation = delegationReducer(
+      response.data.delegation_response,
+      validator,
+      ValidatorStatus.ACTIVE
+    );
+
+    return delegation ? new BigNumber(delegation.amount).toNumber() : 0;
+  } catch (error) {
+    // in some rare cases the validator has no self delegation so this query fails
+    return 0;
+  }
 }

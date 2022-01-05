@@ -4,10 +4,12 @@
     :columns="columns"
     :visible-columns="visibleColumns"
     :loading="loading"
+    :pagination="pagination"
     row-key="id"
     class="validators-table"
     flat
     square
+    virtual-scroll
     :rows-per-page-options="[0]"
     :bordered="false"
     hide-pagination
@@ -31,13 +33,13 @@
       <q-tr class="validators-table-row cursor-pointer" @click="rowClick(props.row)" :props="props">
         <q-td key="id" class="text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.id }}
+            {{ props.rowIndex + 1 }}
           </p>
         </q-td>
         <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
             <q-avatar size="32px">
-              <img src="https://cdn.quasar.dev/img/avatar.png">
+              <img :src="props.row.picture">
             </q-avatar>
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
@@ -57,12 +59,12 @@
         </q-td>
         <q-td key="rewards" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.rewards }} %
+            {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : '--' }}
           </p>
         </q-td>
         <q-td key="votingPower" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.votingPower }} %
+            {{ bigFigureOrPercent(props.row.votingPower) }}
           </p>
         </q-td>
         <q-td key="available" class="text-subtitle2 text-white" :props="props">
@@ -107,6 +109,8 @@ import { defineComponent, computed, PropType } from 'vue';
 import { Validator } from 'src/models';
 import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useStore } from 'src/store';
+import { bigFigureOrPercent } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'ValidatorsTable',
@@ -129,7 +133,16 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
     const router = useRouter();
+
+    const delegations = computed(() => store.state.data.delegations);
+    const rewards = computed(() => store.state.data.rewards);
+    const pagination = {
+      sortBy: 'votingPower',
+      descending: true,
+      rowsPerPage: 0
+    };
 
     const columns = [
       {
@@ -201,7 +214,7 @@ export default defineComponent({
         return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', 'actions'];
       }
 
-      return ['id', 'name', 'status', 'rewards', 'available', 'actions'];
+      return ['id', 'name', 'status', 'rewards', 'votingPower', 'actions'];
     });
 
     const rowClick = async (row: LooseDictionary) => {
@@ -213,10 +226,22 @@ export default defineComponent({
       }
     };
 
+    const getDelegation = ({ operatorAddress }: Validator) => {
+      return delegations.value.find(({ validator }) => validator.operatorAddress === operatorAddress);
+    }
+
+    const getRewards = ({ operatorAddress }: Validator) => {
+      return rewards.value.find(({ validator }) => validator.operatorAddress === operatorAddress);
+    }
+
     return {
+      pagination,
       columns,
       visibleColumns,
       rowClick,
+      getDelegation,
+      getRewards,
+      bigFigureOrPercent
     }
   }
 });

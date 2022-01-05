@@ -34,34 +34,59 @@
       </div>
     </div>
 
-    <validators-table :rows="rows" />
+    <validators-table :rows="rows" :loading="loading" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { validatorTypeOptions } from 'src/constants';
+import { useQuasar } from 'quasar';
+import { useStore } from 'src/store';
+import { ValidatorStatus } from 'src/models';
+
 import ToggleBtn from 'src/components/ToggleBtn.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
-import { Validator } from 'src/models';
-import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'Validators',
   components: {
     ToggleBtn,
     ValidatorsTable
-},
+  },
   setup() {
+    const store = useStore();
     const quasar = useQuasar();
     const type = ref<string>('active');
     const search = ref<string>('');
 
-    const rows: Validator[] = [];
+    const rows = computed(() => {
+      let validators = [...store.state.data.validators];
+
+      if (type.value === 'active') {
+        validators = validators.filter(el => el.status === ValidatorStatus.ACTIVE);
+      }
+
+      if (search.value.length > 0) {
+        validators = validators.filter(({ name, operatorAddress }) => {
+          return (
+            name.toLowerCase().includes(search.value.toLowerCase()) ||
+            operatorAddress
+              .toLowerCase()
+              .includes(search.value.toLowerCase())
+          );
+        });
+      }
+
+      return validators;
+    });
+
+    const loading = computed(() => !store.state.data.validatorsLoaded);
 
     return {
       quasar,
       rows,
+      loading,
       search,
       type,
       validatorTypeOptions,

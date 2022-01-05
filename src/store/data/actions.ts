@@ -9,10 +9,13 @@ import {
   getRewards,
   loadValidators,
   getProposals,
-  getGovernanceOverview
+  getGovernanceOverview,
+  getValidatorDelegations,
+  getSelfStake
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
+import { Validator } from 'src/models';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -95,6 +98,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getBalances({ commit, getters }, { address }) {
     try {
+      commit('setBalancesLoaded', false);
       const balances = await getBalances(address, getters['validatorsDictionary']);
       commit('setBalances', balances);
       commit('setBalancesLoaded', true);
@@ -110,13 +114,12 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         );
       }
 
-      commit('setBalancesLoaded', false);
-
       throw err;
     }
   },
   async getDelegations({ commit, getters }, address) {
     try {
+      commit('setDelegationsLoaded', false);
       const delegations = await getDelegationsForDelegator(address, getters['validatorsDictionary']);
       commit('setDelegations', delegations);
       commit('setDelegationsLoaded', true);
@@ -135,6 +138,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getUndelegations({ commit, getters }, address) {
     try {
+      commit('setUndelegationsLoaded', false);
       const undelegations = await getUndelegationsForDelegator(address, getters['validatorsDictionary']);
       commit('setUndelegations', undelegations);
       commit('setUndelegationsLoaded', true);
@@ -153,9 +157,10 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getRewards({ commit, getters }, { address }) {
     try {
-      const rewards = await getRewards(address, getters['validatorsDictionary'])
-      commit('setRewards', rewards)
-      commit('setRewardsLoaded', true)
+      commit('setRewardsLoaded', false)
+      const rewards = await getRewards(address, getters['validatorsDictionary']);
+      commit('setRewards', rewards);
+      commit('setRewardsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -171,6 +176,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getValidators({ commit, dispatch }) {
     try {
+      commit('setValidatorsLoaded', false);
       const validators = await loadValidators();
       commit('setValidators', validators);
       commit('setValidatorsLoaded', true);
@@ -210,6 +216,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getProposals({ commit, getters }) {
     try {
+      commit('setProposalsLoaded', false);
       const proposals = await getProposals(getters['validatorsDictionary']);
 
       commit('setProposals', proposals);
@@ -229,6 +236,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getGovernanceOverview({ commit, getters }) {
     try {
+      commit('setGovernanceOverviewLoaded', false);
       const governanceOverview = await getGovernanceOverview(getters['topVoters']);
       commit('setGovernanceOverview', governanceOverview);
       commit('setGovernanceOverviewLoaded', true);
@@ -243,6 +251,50 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    }
+  },
+  async getValidatorDelegations({ commit }, validator: Validator) {
+    try {
+      commit('setValidatorDelegations', []);
+      commit('setValidatorDelegationsLoading', true);
+      const delegations = await getValidatorDelegations(validator);
+
+      commit('setValidatorDelegations', delegations);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting validator delegations failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    } finally {
+      commit('setValidatorDelegationsLoading', false);
+    }
+  },
+  async getValidatorSelfStake({ commit }, validator: Validator) {
+    try {
+      commit('setSelfStakeValidator', 0);
+      commit('setSelfStakeValidatorLoading', true);
+      const selfStake = await getSelfStake(validator);
+
+      commit('setSelfStakeValidator', selfStake);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting validator self stake failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+    } finally {
+      commit('setSelfStakeValidatorLoading', false);
     }
   },
 }

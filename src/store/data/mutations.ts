@@ -48,6 +48,18 @@ const mutation: MutationTree<DataStateInterface> = {
   setGovernanceOverviewLoaded(state, governanceOverviewLoaded: boolean) {
     state.governanceOverviewLoaded = governanceOverviewLoaded;
   },
+  setValidatorDelegations(state, validatorDelegations: Delegation[]) {
+    state.validatorDelegations = validatorDelegations;
+  },
+  setValidatorDelegationsLoading(state, validatorDelegationsLoading: boolean) {
+    state.validatorDelegationsLoading = validatorDelegationsLoading;
+  },
+  setSelfStakeValidator(state, selfStakeValidator: number) {
+    state.selfStakeValidator = selfStakeValidator;
+  },
+  setSelfStakeValidatorLoading(state, selfStakeValidatorLoading: boolean) {
+    state.selfStakeValidatorLoading = selfStakeValidatorLoading;
+  },
   resetSessionData(state) {
     state.balances = [];
     state.rewards = [];

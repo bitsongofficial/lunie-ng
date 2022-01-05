@@ -31,6 +31,7 @@ export default [
           title: 'Validator',
           back: true,
         },
+        props: true
       },
       {
         path: 'proposals',

@@ -25,20 +25,22 @@ export const bigFigure = (number = 0) => {
   );
 }
 
-export const setDecimalLength = (value: number, length: number) => {
+export const setDecimalLength = (value: string | number | BigNumber, length: number) => {
   if (value === undefined || value === null || Number.isNaN(value)) {
     return null;
   }
 
+  const valueParsed = Number(value);
+
   // rounding up the last decimal
-  const roundedValue = Math.round(value * Math.pow(10, length)) / Math.pow(10, length);
+  const roundedValue = Math.round(valueParsed * Math.pow(10, length)) / Math.pow(10, length);
 
   return new Intl.NumberFormat(language, {
     minimumFractionDigits: length > 3 ? length : 0,
   }).format(roundedValue)
 }
 
-function shortDecimals(value: number) {
+export const shortDecimals = (value: string | number | BigNumber) => {
   return setDecimalLength(value, 3)
 }
 
@@ -56,4 +58,26 @@ export const bigFigureOrShortDecimals = (number: string | number) => {
 export const percentage = (x: string | number | BigNumber, total: BigNumber) => {
   // percentage output should always be a number between 0 and 1
   return total.toNumber() > 0 ? new BigNumber(x).div(total).toNumber().toFixed(4) : 0;
+}
+
+export const percent = (numberRaw: number | string = 0) => {
+  const number = Number(numberRaw);
+
+  return (
+    new Intl.NumberFormat(language, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(Math.round(number * 10000) / 100) + '%'
+  );
+}
+
+export const bigFigureOrPercent = (number: string | number | BigNumber) => {
+  // once again, the same logic
+  const numberParse = Number(number);
+
+  if (Math.abs(numberParse) < 1e4) {
+    return percent(numberParse);
+  } else {
+    return bigFigure(numberParse * 100).toString().concat(' %');
+  }
 }

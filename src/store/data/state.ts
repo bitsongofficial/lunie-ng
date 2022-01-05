@@ -16,6 +16,10 @@ export interface DataStateInterface {
   proposalsLoaded: boolean;
   governanceOverview: GovernanceOverview | null;
   governanceOverviewLoaded: boolean;
+  validatorDelegations: Delegation[];
+  validatorDelegationsLoading: boolean;
+  selfStakeValidator: number;
+  selfStakeValidatorLoading: boolean;
 }
 
 function state (): DataStateInterface {
@@ -34,7 +38,11 @@ function state (): DataStateInterface {
     proposals: [],
     proposalsLoaded: false,
     governanceOverview: null,
-    governanceOverviewLoaded: false
+    governanceOverviewLoaded: false,
+    validatorDelegations: [],
+    validatorDelegationsLoading: false,
+    selfStakeValidator: 0,
+    selfStakeValidatorLoading: false
   }
 }
 

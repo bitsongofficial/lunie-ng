@@ -7,7 +7,7 @@
         <div class="column">
           <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">operator address</label>
 
-          <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">bitsongvaloper1fg5...za9s3newleq60zt9</h5>
+          <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ address }}</h5>
         </div>
 
         <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="copyAddressToClipboard">
@@ -17,29 +17,39 @@
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">uptime</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">100 %</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.uptimePercentage ? percent(validator.uptimePercentage) : '--' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">MAX COMMISSION RATE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">100 %</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxCommission ? percent(validator.maxCommission) : '--' }}</h5>
+      </div>
+      <div class="validator-address-row column">
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Validator Since</label>
+
+        <h5 class="text-white q-mt-none q-mb-xs">Block #{{ validator.startHeight || 0 }}</h5>
       </div>
     </div>
     <div class="validator-address-right column col-12 col-md">
-      <div class="validator-address-row column">
+      <div class="validator-address-row column" v-if="userAddress">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">bitsong1fg5g8acntt90n9303cm5fjza9s3newleq4rlmk</h5>
+        <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ userAddress }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">CURRENT COMMISSION RATE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">12,5 %</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.commission ? percent(validator.commission) : '--' }}</h5>
+      </div>
+      <div class="validator-address-row column">
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Max Daily Commission Change</label>
+
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxChangeCommission ? percent(validator.maxChangeCommission) : '--' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">LAST COMMISSION CHANGE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">9 months ago</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ fromNow(validator.commissionUpdateTime) }} ago</h5>
       </div>
     </div>
   </div>
@@ -47,17 +57,30 @@
 
 <script lang="ts">
 import { copyToClipboard, useQuasar } from 'quasar';
+import { percent } from 'src/common/numbers';
 import { notifySuccess } from 'src/common/notify';
-import { defineComponent } from 'vue';
+import { fromNow } from 'src/common/date';
+import { Validator } from 'src/models';
+import { defineComponent, PropType, computed } from 'vue';
+import { useStore } from 'src/store';
 
 export default defineComponent({
   name: 'ValidatorAddress',
-  setup() {
+  props: {
+    validator: {
+      type: Object as PropType<Validator>,
+      required: true
+    },
+  },
+  setup(props) {
+    const store = useStore();
     const quasar = useQuasar();
+    const address = computed(() => props.validator.operatorAddress);
+    const userAddress = computed(() => store.state.authentication.session?.address);
 
     const copyAddressToClipboard = async () => {
       try {
-        await copyToClipboard('bitsongvaloper1fg5...za9s3newleq60zt9');
+        await copyToClipboard(props.validator.operatorAddress);
         notifySuccess('Text has been copied to the clipboard!');
       } catch (error) {
         console.error(error);
@@ -66,7 +89,11 @@ export default defineComponent({
 
     return {
       quasar,
+      address,
+      userAddress,
       copyAddressToClipboard,
+      percent,
+      fromNow
     };
   }
 });

@@ -7,8 +7,6 @@ export const isValidAddress = (address: string, requiredPrefix: string = network
   try {
     const { prefix, data } = Bech32.decode(address);
 
-    console.log(prefix);
-
     if (prefix !== requiredPrefix) {
       return false;
     }
@@ -44,12 +42,12 @@ export const pubkeyToAddress = (cosmosValConsPub: string, validatorConsensusBech
   return hexToValidatorAddress(hexAddress, validatorConsensusBech32Prefix);
 } */
 
-export const formatAddress = (address: string | undefined, length = 4) => {
+export const formatAddress = (address: string | undefined, start = 9, end = 6 ) => {
   if (!address) {
     return 'Address Not Found';
   }
 
-  return `${address.split('1')[0]}…${address.slice(-1 * length)}`;
+  return `${address.substring(0, start)}...${address.slice(-end)}`;
 }
 
 export const decodeB32 = (value: string) => {

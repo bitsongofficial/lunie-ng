@@ -40,7 +40,7 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       ),
       10
     );
-  }
+  },
 }
 
 export default getters

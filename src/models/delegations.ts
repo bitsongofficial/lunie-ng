@@ -54,6 +54,14 @@ export interface DelegationResponse extends PaginationResponse {
   delegation_responses: DelegationWithBalance[];
 }
 
+export interface ValidatorsDelegationResponse {
+  delegation_response: DelegationWithBalance;
+}
+
+export interface StakingDelegationResponse extends PaginationResponse {
+  result: DelegationWithBalance[];
+}
+
 export interface UnbondingDelegationResponse extends PaginationResponse {
   unbonding_response: UnbondingDelegationRaw[];
 }

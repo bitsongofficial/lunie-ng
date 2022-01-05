@@ -122,19 +122,15 @@ export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[]
 }
 
 export const delegationReducer = (delegation: DelegationWithBalance, validator: Validator, active: ValidatorStatus): Delegation | undefined => {
-  const coinLookup = getCoinLookup(network.stakingDenom, delegation.balance.denom);
+  const { amount, denom } = coinReducer(delegation.balance);
 
-  if (coinLookup) {
-    const { amount, denom } = coinReducer(delegation.balance);
-
-    return {
-      id: delegation.delegation.validator_address.concat(`-${denom}`),
-      validatorAddress: delegation.delegation.validator_address,
-      delegatorAddress: delegation.delegation.delegator_address,
-      validator,
-      amount,
-      active,
-    }
+  return {
+    id: delegation.delegation.validator_address.concat(`-${denom}`),
+    validatorAddress: delegation.delegation.validator_address,
+    delegatorAddress: delegation.delegation.delegator_address,
+    validator,
+    amount,
+    active,
   }
 }
 

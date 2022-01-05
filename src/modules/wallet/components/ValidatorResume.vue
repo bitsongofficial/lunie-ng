@@ -2,27 +2,27 @@
   <div class="validator-resume column">
     <div class="row items-center">
       <q-avatar class="validator-avatar col-auto" size="100px">
-        <img src="https://cdn.quasar.dev/img/avatar.png">
+        <img :src="validator.picture">
       </q-avatar>
 
       <div class="validator-header col-12 col-md">
         <div class="validator-header-row row items-center">
           <h2 class="text-body-extra-large text-white q-my-none">
-            Forbole
+            {{ validator.name }}
           </h2>
 
           <q-chip class="validator-status proposal-status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" text-color="white" color="info">
-            active
+            {{ validator.status }}
           </q-chip>
         </div>
         <div class="row items-center justify-between">
-          <p class="text-h4 text-white q-my-none">
-            Co-building the interchain
+          <p class="text-h4 text-white q-my-none col-12 col-md-8">
+            {{ validator.details }}
           </p>
 
-          <p class="text-subtitle2 text-half-transparent-white q-my-none">
-            https://twitter.com/forbolestaking
-          </p>
+          <a :href="validator.website" target="_blank" class="website text-subtitle2 text-half-transparent-white col-md-auto q-my-none" v-if="validator.website && validator.website.length > 0">
+            {{ validator.website }}
+          </a>
         </div>
       </div>
     </div>
@@ -35,30 +35,30 @@
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">REWARDS</label>
 
           <p class="text-body-large text-white q-my-none">
-            29,66 %
+            {{ validator.expectedReturns ? bigFigureOrPercent(validator.expectedReturns) : '--' }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">VOTING POWER</label>
 
           <p class="text-body-large text-white q-my-none">
-            29,66 %
+            {{ bigFigureOrPercent(validator.votingPower) }}
           </p>
 
-          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">4.456.283,23 BTSG</label>
+          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(selfStake) }} BTSG</label>
         </div>
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">TOTAL STAKE</label>
 
           <p class="text-body-large text-white q-my-none">
-            4.467.268,78
+            {{ shortDecimals(validator.tokens) }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">STAKERS</label>
 
           <p class="text-body-large text-white q-my-none">
-            64
+            {{ validatorDelegations.length }}
           </p>
         </div>
       </div>
@@ -68,15 +68,33 @@
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent } from 'vue';
+import { Delegation, Validator } from 'src/models';
+import { defineComponent, PropType } from 'vue';
+import { bigFigureOrPercent, shortDecimals } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'ValidatorResume',
+  props: {
+    validator: {
+      type: Object as PropType<Validator>,
+      required: true
+    },
+    validatorDelegations: {
+      type: Array as PropType<Delegation[]>,
+      required: true
+    },
+    selfStake: {
+      type: Number,
+      required: true
+    }
+  },
   setup() {
     const quasar = useQuasar();
 
     return {
       quasar,
+      bigFigureOrPercent,
+      shortDecimals
     }
   }
 });
@@ -92,6 +110,14 @@ export default defineComponent({
 
   @media screen and (min-width: $breakpoint-md-min) {
     padding: 45px 47px 17px;
+  }
+}
+
+.website {
+  margin-top: 16px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-top: 0;
   }
 }
 
