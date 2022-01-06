@@ -124,6 +124,7 @@ export interface DetailedVote {
     };
     option: VoteOption;
   }[];
+  votingQuorum: string;
   votesSum: number | never[];
   votingThresholdYes: string;
   votingThresholdNo: string;
@@ -140,6 +141,15 @@ export interface TimelineEntry {
   time: string | undefined;
 }
 
+export interface TallyWithExtra {
+  yes: string | number | BigNumber;
+  abstain: string | number | BigNumber;
+  veto: string | number | BigNumber;
+  no: string | number | BigNumber;
+  total: string | number | BigNumber;
+  totalVotedPercentage?: string | number;
+}
+
 export interface Proposal {
   id: number;
   proposalId: string;
@@ -150,7 +160,7 @@ export interface Proposal {
   status: ProposalStatus;
   statusBeginTime: string | undefined;
   statusEndTime: string | undefined;
-  tally: Tally;
+  tally: TallyWithExtra;
   deposit: string | number | BigNumber;
   summary: string;
   detailedVotes: DetailedVote;

@@ -26,7 +26,9 @@ import {
   ProposalType,
   ProposalRawStatus,
   TopVoterValidator,
-  ProposalStatus
+  ProposalStatus,
+  TallyWithExtra,
+  Proposal
 } from 'src/models';
 import { getCoinLookup } from './network';
 import { flattenDeep } from 'lodash';
@@ -159,13 +161,13 @@ export const getValidatorStatus = (validator: ValidatorRaw) => {
 }
 
 export const getStakingCoinViewAmount = (chainStakeAmount: string) => {
-  const coinLookup = getCoinLookup(network.stakingDenom, 'viewDenom')
+  const coinLookup = getCoinLookup(network.stakingDenom, 'viewDenom');
 
   if (coinLookup) {
     return coinReducer({
       amount: chainStakeAmount,
       denom: coinLookup.chainDenom,
-    }).amount
+    }).amount;
   }
 
   return '0';
@@ -303,7 +305,7 @@ function getTotalVotePercentage(proposal: ProposalRaw, totalBondedTokens: string
   )
 }
 
-export const tallyReducer = (proposal: ProposalRaw, tally: Tally, totalBondedTokens: string) => {
+export const tallyReducer = (proposal: ProposalRaw, tally: Tally, totalBondedTokens: string): TallyWithExtra => {
   // if the proposal is out of voting, use the final result for the tally
   if (proposalFinalized(proposal)) {
     tally = proposal.final_tally_result
@@ -380,7 +382,7 @@ const proposalStatusMap = (status: ProposalRawStatus) => {
   }
 }
 
-export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote) => {
+export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote): Proposal => {
   const typeStringArray = proposal.content['@type'].split('.')
   const typeString = typeStringArray[typeStringArray.length - 1];
   const type = proposalTypeEnumDictionary[typeString] as ProposalType;

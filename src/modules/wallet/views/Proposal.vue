@@ -26,20 +26,20 @@
       </div>
     </div>
 
-    <div class="section-header row items-center justify-between">
+    <div class="section-header row items-center justify-between" v-if="proposal">
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Vote</h3>
 
-      <!-- <div class="row items-center">
-        <div class="row items-center">
+      <div class="row items-center">
+        <div class="row items-center" v-if="proposal.tally.totalVotedPercentage !== -1">
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
-          <p class="text-h4 text-white text-weight-medium q-my-none">24%</p>
+          <p class="text-h4 text-white text-weight-medium q-my-none">{{ percent(proposal.tally.totalVotedPercentage) }}</p>
         </div>
 
         <div class="row items-center q-ml-md">
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
-          <p class="text-h4 text-white text-weight-medium q-my-none">20%</p>
+          <p class="text-h4 text-white text-weight-medium q-my-none">{{ percent(proposal.detailedVotes.votingQuorum) }}</p>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <vote-card class="section" :dataset="dataset" v-if="dataset.length > 0" />
@@ -65,6 +65,7 @@ import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { getMappedTimeline, getMappedVotes } from 'src/common/chart';
 import { useClipboard } from 'src/hooks';
+import { percent } from 'src/common/numbers';
 
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
@@ -117,6 +118,7 @@ export default defineComponent({
       dataset,
       entries,
       href: window.location.href,
+      percent,
       ...useClipboard()
     }
   }

@@ -12,23 +12,23 @@
 
       <q-space />
 
-      <!-- <div class="row items-center col-12 col-md-auto">
-        <div class="section row items-center" v-if="voted">
+      <div class="row items-center col-12 col-md-auto">
+        <div class="section row items-center" v-if="proposal.tally.totalVotedPercentage !== -1">
           <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
             voted
           </p>
 
-          <p class="text-h4 text-weight-medium text-white q-my-none">{{ voted }}%</p>
+          <p class="text-h4 text-weight-medium text-white q-my-none">{{ percent(proposal.tally.totalVotedPercentage) }}</p>
         </div>
 
-        <div class="section row items-center" v-if="quorum">
+        <div class="section row items-center">
           <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
             quorum
           </p>
 
-          <p class="text-h4 text-weight-medium text-white q-my-none">{{ quorum }}%</p>
+          <p class="text-h4 text-weight-medium text-white q-my-none">{{ percent(proposal.detailedVotes.votingQuorum) }}</p>
         </div>
-      </div> -->
+      </div>
     </div>
   </item>
 </template>
@@ -38,6 +38,7 @@ import { defineComponent, PropType } from 'vue';
 import Item from 'src/components/Item.vue';
 import { Proposal } from 'src/models';
 import { useQuasar } from 'quasar';
+import { percent } from 'src/common/numbers';
 import ProposalStatus from 'src/components/ProposalStatus.vue';
 
 export default defineComponent({
@@ -57,6 +58,7 @@ export default defineComponent({
 
     return {
       quasar,
+      percent
     }
   }
 });

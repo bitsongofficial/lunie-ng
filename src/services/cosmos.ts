@@ -349,6 +349,7 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
       [],
     votes: votes.length ? votes.map((vote) => voteReducer(vote, validators)) : [],
     votesSum: votes ? votes.length : [],
+    votingQuorum: tallyParams.quorum,
     votingThresholdYes: Number(tallyParams.threshold).toFixed(2),
     votingThresholdNo: (1 - parseFloat(tallyParams.threshold)).toFixed(2),
     votingPercentageYes: percentage(tally.yes, totalVotingParticipation),
