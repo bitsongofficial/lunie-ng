@@ -1,4 +1,6 @@
 import Transport from '@ledgerhq/hw-transport';
+import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
+import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
 import { Coin } from '@cosmjs/stargate';
 import { NetworkConfig } from './network';
 import { Validator } from './validators';
@@ -32,10 +34,13 @@ export interface WalletSignData {
 export interface TransactionRequest {
   type: MessageTypes;
   memo?: string;
+  proposalId?: number;
+  voteOption?: number;
   password?: string;
   to?: Validator;
   from?: Validator;
-  amounts: Coin[];
+  froms?: Validator[];
+  amounts?: Coin[];
   amount: Coin;
 }
 
@@ -57,18 +62,18 @@ export interface SignBroadcastRequest {
 export interface SignMessageRequest {
   typeUrl: string;
   value: {
-      validatorSrcAddress?: string | undefined;
-      validatorDstAddress?: string | undefined;
-      delegatorAddress?: string;
-      validatorAddress?: string | undefined;
-      fromAddress?: string;
-      toAddress?: string | undefined;
-      amount?: {
+    validatorSrcAddress?: string | undefined;
+    validatorDstAddress?: string | undefined;
+    delegatorAddress?: string;
+    validatorAddress?: string | undefined;
+    fromAddress?: string;
+    toAddress?: string | undefined;
+    amount?: {
+      amount: string;
+      denom: string;
+    } | ({
         amount: string;
         denom: string;
-      } | ({
-          amount: string;
-          denom: string;
-      } | undefined)[];
-  };
+    } | undefined)[];
+  } | MsgWithdrawDelegatorReward | MsgVote | MsgDeposit;
 }

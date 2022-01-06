@@ -331,11 +331,11 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {
     try {
-      if (rootState.authentication.session) {
+      if (rootState.authentication.session && data) {
         commit('setLoadingSignTransaction', true);
         const session = rootState.authentication.session;
-        const block = await dispatch('data/getBlock') as BlockReduced;
-        const accountInfo = await dispatch('data/getAccountInfo', session.address) as AccountInfo;
+        const block = await dispatch('getBlock') as BlockReduced;
+        const accountInfo = await dispatch('getAccountInfo', session.address) as AccountInfo;
 
         const { type, memo } = data;
         const HDPath = network.HDPath;
@@ -359,7 +359,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
         await pollTxInclusion(hash);
 
-        dispatch('data/refresh').catch(err => console.error(err));
+        dispatch('refresh').catch(err => console.error(err));
       }
     } catch (err) {
       if (err instanceof Error) {

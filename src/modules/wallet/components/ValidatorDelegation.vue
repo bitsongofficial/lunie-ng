@@ -3,17 +3,17 @@
     <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">MY DELEGATION</label>
 
     <h5 class="validator-delegation-amount text-body5 text-white">
-      7.268,78
+      {{ delegated }}
     </h5>
 
     <div class="btns row items-center justify-evenly q-gutter-sm">
-      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
         delegate
       </q-btn>
-      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
         undelegate
       </q-btn>
-      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog">
+      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
         redelegate
       </q-btn>
     </div>
@@ -21,10 +21,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { useQuasar } from 'quasar';
-import Dialog from 'src/components/Dialog.vue';
+import { defineComponent, PropType, computed } from 'vue';
 import { Validator } from 'src/models';
+import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
+import { useStore } from 'src/store';
+import { BigNumber } from 'bignumber.js';
+import { bigFigureOrShortDecimals } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'ValidatorDelegation',
@@ -35,62 +37,22 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const quasar = useQuasar();
+    const store = useStore();
+    const delegations = computed(() => store.state.data.delegations);
 
-    const openStakeDialog = () => {
-      quasar.dialog({
-        component: Dialog,
-        componentProps: {
-          title: 'Delegate',
-          toLabel: 'Delegate to',
-          amountLabel: 'Amount to delegate',
-          submit: 'Delegate',
-          successTitle: 'Successfully delegate',
-          successSubtitle: 'You have successfully delegated your BTSGs.',
-          defaultTo: props.validator
-        },
-        fullWidth: true,
-        maximized: true,
-      });
-    }
+    const delegated = computed(() => {
+      const delegation = delegations.value.find(({ validator }) =>
+        validator.operatorAddress === props.validator.operatorAddress
+      );
 
-    const openUnstakeDialog = () => {
-      quasar.dialog({
-        component: Dialog,
-        componentProps: {
-          title: 'Undelegate',
-          toLabel: 'Undelegate from',
-          amountLabel: 'Amount to undelegate',
-          submit: 'Undelegate',
-          successTitle: 'Successfully undelegated',
-          successSubtitle: 'You have successfully undelegated your BTSGs.'
-        },
-        fullWidth: true,
-        maximized: true,
-      });
-    }
+      const amount = delegation ? new BigNumber(delegation.amount).toString() : '0';
 
-    const openRestakeDialog = () => {
-      quasar.dialog({
-        component: Dialog,
-        componentProps: {
-          title: 'Redelegate',
-          toLabel: 'Redelegate to',
-          amountLabel: 'Amount to redelegate',
-          submit: 'Redelegate',
-          successTitle: 'Successfully redelegated',
-          successSubtitle: 'You have successfully redelegated your BTSGs.'
-        },
-        fullWidth: true,
-        maximized: true,
-      });
-    }
+      return bigFigureOrShortDecimals(amount);
+    });
 
     return {
-      quasar,
-      openUnstakeDialog,
-      openStakeDialog,
-      openRestakeDialog,
+      delegated,
+      ...useDelegatorActions(),
     };
   },
 });

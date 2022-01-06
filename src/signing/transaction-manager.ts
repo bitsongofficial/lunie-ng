@@ -1,4 +1,4 @@
-import { MessageTypes, SignBroadcastRequest } from 'src/models';
+import { MessageTypes, SignBroadcastRequest, SignMessageRequest } from 'src/models';
 import { getNetworkFee } from 'src/common/fees';
 import { BigNumber } from 'bignumber.js';
 import { coins } from '@cosmjs/amino';
@@ -7,7 +7,7 @@ import {
   assertIsBroadcastTxSuccess,
 } from '@cosmjs/stargate';
 import { getSigner } from './signer';
-import { SendTx, RestakeTx, StakeTx, UnstakeTx } from './messages';
+import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx } from './messages';
 import { getCoinLookup } from 'src/common/network';
 import { network } from 'src/constants';
 
@@ -70,7 +70,7 @@ export const createSignBroadcast = async ({
     ledgerTransport
   );
 
-  const messages = [];
+  let messages: SignMessageRequest[] = [];
 
   switch(messageType) {
     case MessageTypes.SEND:
@@ -84,6 +84,26 @@ export const createSignBroadcast = async ({
       break;
     case MessageTypes.RESTAKE:
       messages.push(RestakeTx(senderAddress, message, network));
+      break;
+    case MessageTypes.VOTE:
+      const vote = VoteTx(senderAddress, message);
+
+      if (vote) {
+        messages.push(vote);
+      }
+
+      break;
+    case MessageTypes.DEPOSIT:
+      const deposit = DepositTx(senderAddress, message, network);
+
+      if (deposit) {
+        messages.push(deposit);
+      }
+
+      break;
+    case MessageTypes.CLAIM_REWARDS:
+      const rewards = ClaimRewardsTx(senderAddress, message);
+      messages = [...rewards];
       break;
   }
 

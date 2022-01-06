@@ -75,6 +75,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .portfolio {
   padding-top: 37px;
+  padding-bottom: 16px;
 }
 
 .section-header {

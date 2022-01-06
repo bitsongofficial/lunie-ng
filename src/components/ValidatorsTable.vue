@@ -85,13 +85,13 @@
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" clickable v-if="!staking">
+              <q-item class="menu-item" active-class="active" clickable v-if="!staking" @click="openStakeDialog(props.row)" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Delegate</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable>
+              <q-item class="menu-item" active-class="active" clickable @click="openRestakeDialog(props.row)" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Redelegate</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable>
+              <q-item class="menu-item" active-class="active" clickable @click="openUnstakeDialog(props.row)" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Undelegate</q-item-section>
               </q-item>
             </q-menu>
@@ -112,6 +112,7 @@ import { bigFigureOrPercent, bigFigureOrShortDecimals } from 'src/common/numbers
 import { fromNow } from 'src/common/date';
 import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 import { network } from 'src/constants';
+import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
 
 export default defineComponent({
   name: 'ValidatorsTable',
@@ -140,8 +141,6 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const rewards = computed(() => store.state.data.rewards);
-
-    console.log(props.rows);
 
     const pagination = {
       sortBy: 'votingPower',
@@ -257,7 +256,8 @@ export default defineComponent({
       getRewards,
       bigFigureOrPercent,
       bigFigureOrShortDecimals,
-      fromNow
+      fromNow,
+      ...useDelegatorActions(),
     }
   }
 });

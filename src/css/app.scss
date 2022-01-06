@@ -9,3 +9,8 @@
 @import 'dialog';
 @import 'animations';
 @import 'scrollbar';
+
+.q-body--prevent-scroll {
+  position: static !important;
+  overflow: hidden !important;
+}

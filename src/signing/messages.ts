@@ -5,25 +5,25 @@ import {
   MsgUndelegate,
   MsgBeginRedelegate,
 } from 'cosmjs-types/cosmos/staking/v1beta1/tx';
-/* import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
+import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
 import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
-import Long from 'long'; */
+import Long from 'long';
 import { CoinLookUp, NetworkConfig, TransactionRequest, SignMessageRequest } from 'src/models';
 
 // Bank
-export function SendTx(senderAddress: string, { to, amounts }: TransactionRequest, network: NetworkConfig): SignMessageRequest {
+export const SendTx = (senderAddress: string, { to, amounts }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
   return {
     typeUrl: '/cosmos.bank.v1beta1.MsgSend',
     value: {
       fromAddress: senderAddress,
       toAddress: to?.operatorAddress,
-      amount: amounts.map((amount) => Coin(amount, network.coinLookup)),
+      amount: amounts ? amounts.map((amount) => Coin(amount, network.coinLookup)) : [],
     },
   }
 }
 
 // Staking
-export function StakeTx(senderAddress: string, { to, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest {
+export const StakeTx = (senderAddress: string, { to, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
   return {
     typeUrl: '/cosmos.staking.v1beta1.MsgDelegate',
     value: MsgDelegate.fromPartial({
@@ -34,7 +34,7 @@ export function StakeTx(senderAddress: string, { to, amount }: TransactionReques
   };
 }
 
-export function RestakeTx(senderAddress: string, { from, to, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest {
+export const RestakeTx = (senderAddress: string, { from, to, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
   return {
     typeUrl: '/cosmos.staking.v1beta1.MsgBeginRedelegate',
     value: MsgBeginRedelegate.fromPartial({
@@ -46,7 +46,7 @@ export function RestakeTx(senderAddress: string, { from, to, amount }: Transacti
   };
 }
 
-export function UnstakeTx(senderAddress: string, { from, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest {
+export const UnstakeTx = (senderAddress: string, { from, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
   return {
     typeUrl: '/cosmos.staking.v1beta1.MsgUndelegate',
     value: MsgUndelegate.fromPartial({
@@ -57,50 +57,44 @@ export function UnstakeTx(senderAddress: string, { from, amount }: TransactionRe
   };
 }
 
-/* export function ClaimRewardsTx(
-  senderAddress,
-  {
-    // amounts,
-    from,
-  }
-) {
-  return from.map((valAddr) => ({
+export const ClaimRewardsTx = (senderAddress: string, { froms }: TransactionRequest): SignMessageRequest[] => {
+  return froms ? froms.map((valAddr) => ({
     typeUrl: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
     value: MsgWithdrawDelegatorReward.fromPartial({
       delegatorAddress: senderAddress,
-      validatorAddress: valAddr,
+      validatorAddress: valAddr.operatorAddress,
     }),
-  }))
+  })) : [];
 }
 
-export function VoteTx(senderAddress, { proposalId, voteOption }) {
-  const chainVoteOption = {
-    Yes: 1,
-    Abstain: 2,
-    No: 3,
-    NoWithVeto: 4,
-  }[voteOption]
-  return {
-    typeUrl: '/cosmos.gov.v1beta1.MsgVote',
-    value: MsgVote.fromPartial({
-      voter: senderAddress,
-      proposalId: Long.fromNumber(proposalId),
-      option: chainVoteOption,
-    }),
+export const VoteTx = (senderAddress: string, { proposalId, voteOption }: TransactionRequest): SignMessageRequest | undefined => {
+  if (proposalId !== undefined && voteOption) {
+    return {
+      typeUrl: '/cosmos.gov.v1beta1.MsgVote',
+      value: MsgVote.fromPartial({
+        voter: senderAddress,
+        proposalId: Long.fromNumber(proposalId),
+        option: voteOption,
+      }),
+    };
   }
 }
 
-export function DepositTx(senderAddress, { proposalId, amount }, network) {
-  return {
-    typeUrl: '/cosmos.gov.v1beta1.MsgDeposit',
-    value: MsgDeposit.fromPartial({
-      depositor: senderAddress,
-      proposalId: Long.fromNumber(proposalId),
-      amount: [Coin(amount, network.coinLookup)],
-    }),
+export const DepositTx = (senderAddress: string, { proposalId, amount }: TransactionRequest, network: NetworkConfig): SignMessageRequest | undefined => {
+  const coin = Coin(amount, network.coinLookup);
+
+  if (proposalId !== undefined && coin) {
+    return {
+      typeUrl: '/cosmos.gov.v1beta1.MsgDeposit',
+      value: MsgDeposit.fromPartial({
+        depositor: senderAddress,
+        proposalId: Long.fromNumber(proposalId),
+        amount: [coin]
+      }),
+    };
   }
 }
-*/
+
 export function Coin({ amount, denom }: StargateCoin, coinLookup: CoinLookUp[]) {
   const lookup = coinLookup.find(({ viewDenom }) => viewDenom === denom);
 
@@ -119,7 +113,7 @@ export default {
   StakeTx,
   UnstakeTx,
   RestakeTx,
-  /* ClaimRewardsTx,
+  ClaimRewardsTx,
   VoteTx,
-  DepositTx, */
+  DepositTx
 };

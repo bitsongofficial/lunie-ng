@@ -3,7 +3,7 @@
     <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">MY REWARDS</label>
 
     <h5 class="validator-rewards-amount text-body5 text-white">
-      234,7864
+      {{ stakingDenomReward }}
     </h5>
 
     <div class="row items-center justify-center full-width">
@@ -15,10 +15,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { network } from 'src/constants';
+import { useStore } from 'src/store';
+import { defineComponent, computed, PropType } from 'vue';
+import { Validator } from 'src/models';
+import { bigFigureOrShortDecimals } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'ValidatorRewards',
+  props: {
+    validator: {
+      type: Object as PropType<Validator>,
+      required: true
+    },
+  },
+  setup(props) {
+    const store = useStore();
+    const rewards = computed(() => store.state.data.rewards);
+
+    const stakingDenomReward = computed(() => {
+      const rewardsFilter = rewards.value.filter(({ validator }) => validator.operatorAddress === props.validator.operatorAddress);
+
+      const stakingDenomRewards = rewardsFilter.filter(
+        (reward) => reward.denom === network.stakingDenom
+      );
+
+      const amount = stakingDenomRewards.length > 0 ? stakingDenomRewards[0].amount : 0;
+
+      return bigFigureOrShortDecimals(amount);
+    });
+
+    return {
+      stakingDenomReward,
+    }
+  }
 });
 </script>
 
