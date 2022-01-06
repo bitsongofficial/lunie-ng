@@ -15,3 +15,5 @@ export * from './client-state';
 export * from './rewards';
 export * from './annual-provisions';
 export * from './keybase';
+export * from './wallet';
+export * from './account';

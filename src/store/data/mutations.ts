@@ -63,6 +63,9 @@ const mutation: MutationTree<DataStateInterface> = {
   setSelfStakeValidatorLoading(state, selfStakeValidatorLoading: boolean) {
     state.selfStakeValidatorLoading = selfStakeValidatorLoading;
   },
+  setLoadingSignTransaction(state, loadingSignTransaction: boolean) {
+    state.loadingSignTransaction = loadingSignTransaction;
+  },
   resetSessionData(state) {
     state.balances = [];
     state.rewards = [];

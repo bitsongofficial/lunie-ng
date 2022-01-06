@@ -40,6 +40,7 @@ export interface NetworkConfig {
   lockUpPeriod: string;
   fees: {
     default: NetworkConfigFee,
+    [key: string]: NetworkConfigFee
   },
   icon: string;
   localSigning: boolean; // this is only to be used as a developer tool - never deployed in production or for mainnet chains

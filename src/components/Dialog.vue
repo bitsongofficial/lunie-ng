@@ -25,9 +25,9 @@
             v-model="to"
             rounded
             standout
-            emit-value
             map-options
-            :options="[{ 'label': 'BasBlock', 'value': 'basblock' }]"
+            :options="validators"
+            :disable="defaultTo !== undefined"
             bg-color="transparent-white"
             color="transparent-white"
             label-color="primary"
@@ -39,20 +39,26 @@
           >
             <template v-slot:selected-item="{ opt }">
               <div class="row items-center cursor-pointer">
-                <q-avatar class="validator-avatar" size="26px">
-                  <img src="https://cdn.quasar.dev/img/avatar.png">
+                <q-avatar class="validator-avatar" size="26px" :color="opt.picture ? 'transparent' : 'primary'" v-if="opt">
+                  <img :src="opt.picture" v-if="opt.picture">
+                  <p class="text-subtitle2 text-uppercase q-my-none" v-if="opt.name">
+                    {{ opt.name[0] }}
+                  </p>
                 </q-avatar>
 
-                <label class="text-white text-body2 cursor-pointer">{{ opt.label }}</label>
+                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
               </div>
             </template>
             <template v-slot:option="{ itemProps, opt }">
               <q-item class="validator-item row items-center cursor-pointer bg-secondary" v-bind="itemProps">
-                <q-avatar class="validator-avatar" size="26px">
-                  <img src="https://cdn.quasar.dev/img/avatar.png">
+                <q-avatar class="validator-avatar" size="26px" :color="opt.picture ? 'transparent' : 'primary'">
+                  <img :src="opt.picture" v-if="opt.picture">
+                  <p class="text-subtitle2 text-uppercase q-my-none" v-if="opt.name">
+                    {{ opt.name[0] }}
+                  </p>
                 </q-avatar>
 
-                <label class="text-white text-body2 cursor-pointer">{{ opt.label }}</label>
+                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
               </q-item>
             </template>
           </q-select>
@@ -62,24 +68,31 @@
           <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ amountLabel }}</label>
 
           <q-input
+            v-model="amount"
             color="transparent-white"
             label-color="accent-5"
             bg-color="transparent-white"
             round
             standout
-            v-model.number="amount"
             no-error-icon
             hide-bottom-space
             class="quantity-input full-width large"
-            :rules="[val => !!val || 'Required field']"
+            :rules="[
+              val => !!val || 'Required field',
+              val => !isNaN(val) || 'Amount must be a decimal value',
+              val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
+              val => !isNegative(val) || 'Amount must be greater then zero'
+            ]"
           >
             <template v-slot:append>
-              <q-btn class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+              <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
                 MAX
               </q-btn>
-              <label class="text-body2 text-primary">BTSG</label>
+              <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
             </template>
           </q-input>
+
+          <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
         </div>
 
         <div class="btns full-width items-center justify-end q-mt-auto">
@@ -117,7 +130,12 @@
 
 <script lang="ts">
 import { useDialogPluginComponent } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { Balance, Validator } from 'src/models';
+import { useStore } from 'src/store';
+import { defineComponent, ref, computed, PropType } from 'vue';
+import { network } from 'src/constants';
+import { BigNumber } from 'bignumber.js';
+import { compareBalance, isNegative, isNaN } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'Dialog',
@@ -148,16 +166,27 @@ export default defineComponent({
     successSubtitle: {
       type: String,
       default: 'You have successifully staked your BTSGs.'
+    },
+    defaultTo: {
+      type: Object as PropType<Validator>
+    },
+    defaultFrom: {
+      type: Object as PropType<Validator>
     }
   },
   emits: [
     ...useDialogPluginComponent.emits,
   ],
-  setup() {
+  setup(props) {
+    const store = useStore();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-    const to = ref<string>('basblock');
-    const amount = ref<number>(0);
+    const validators = computed(() => store.getters['data/activeValidators'] as Validator[]);
+    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const availableCoins = computed(() => balance.value ? new BigNumber(balance.value.available).toString() : '0');
+
+    const to = ref<Validator | undefined>(props.defaultTo);
+    const amount = ref<string>('0');
     const success = ref<boolean>(false);
 
     const close = () => {
@@ -165,11 +194,18 @@ export default defineComponent({
     };
 
     return {
+      availableCoins,
+      balance,
+      network,
+      validators,
       to,
       amount,
       success,
       dialogRef,
       close,
+      compareBalance,
+      isNegative,
+      isNaN,
       onDialogHide
     }
   },

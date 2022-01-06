@@ -81,3 +81,22 @@ export const bigFigureOrPercent = (number: string | number | BigNumber) => {
     return bigFigure(numberParse * 100).toString().concat(' %');
   }
 }
+
+export const compareBalance = (amount: string, compare: string): boolean => {
+  const number = new BigNumber(amount);
+  const compareNumber = new BigNumber(compare);
+
+  return number.lte(compareNumber);
+}
+
+export const isNegative = (amount: string): boolean => {
+  const number = new BigNumber(amount);
+
+  return number.isNegative();
+}
+
+export const isNaN = (amount: string): boolean => {
+  const number = new BigNumber(amount);
+
+  return number.isNaN();
+}

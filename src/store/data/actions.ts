@@ -11,12 +11,14 @@ import {
   getProposals,
   getGovernanceOverview,
   getValidatorDelegations,
-  getSelfStake
+  getSelfStake,
+  getAccountInfo
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
-import { Validator } from 'src/models';
+import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
 import { network } from 'src/constants';
+import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -320,6 +322,60 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       }
     } finally {
       commit('setSelfStakeValidatorLoading', false);
+    }
+  },
+  async getAccountInfo(_, address: string) {
+    const accountInfo = await getAccountInfo(address);
+
+    return accountInfo;
+  },
+  async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {
+    try {
+      if (rootState.authentication.session) {
+        commit('setLoadingSignTransaction', true);
+        const session = rootState.authentication.session;
+        const block = await dispatch('data/getBlock') as BlockReduced;
+        const accountInfo = await dispatch('data/getAccountInfo', session.address) as AccountInfo;
+
+        const { type, memo } = data;
+        const HDPath = network.HDPath;
+
+        const hashResult = await createSignBroadcast({
+          messageType: type,
+          message: data,
+          senderAddress: session.address,
+          accountInfo,
+          network,
+          signingType: session.sessionType,
+          password: data.password ?? '',
+          HDPath,
+          memo: memo ?? '',
+          feeDenom: network.stakingDenom,
+          chainId: block.chainId,
+          ledgerTransport: rootState.ledger.transport
+        })
+
+        const { hash } = hashResult;
+
+        await pollTxInclusion(hash);
+
+        dispatch('data/refresh').catch(err => console.error(err));
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting validator self stake failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+
+      throw err;
+    } finally {
+      commit('setLoadingSignTransaction', false);
     }
   },
 }

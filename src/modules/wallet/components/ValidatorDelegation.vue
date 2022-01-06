@@ -21,25 +21,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { useQuasar } from 'quasar';
 import Dialog from 'src/components/Dialog.vue';
+import { Validator } from 'src/models';
 
 export default defineComponent({
   name: 'ValidatorDelegation',
-  setup() {
+  props: {
+    validator: {
+      type: Object as PropType<Validator>,
+      required: true
+    },
+  },
+  setup(props) {
     const quasar = useQuasar();
 
     const openStakeDialog = () => {
       quasar.dialog({
         component: Dialog,
         componentProps: {
-          title: 'Stake',
-          toLabel: 'Stake to',
-          amountLabel: 'Amount to stake',
-          submit: 'Stake',
-          successTitle: 'Successfully staked',
-          successSubtitle: 'You have successifully staked your BTSGs.'
+          title: 'Delegate',
+          toLabel: 'Delegate to',
+          amountLabel: 'Amount to delegate',
+          submit: 'Delegate',
+          successTitle: 'Successfully delegate',
+          successSubtitle: 'You have successfully delegated your BTSGs.',
+          defaultTo: props.validator
         },
         fullWidth: true,
         maximized: true,
@@ -50,12 +58,12 @@ export default defineComponent({
       quasar.dialog({
         component: Dialog,
         componentProps: {
-          title: 'Unstake',
-          toLabel: 'Redelegate to',
-          amountLabel: 'Amount to redelegate',
-          submit: 'Redelegate',
-          successTitle: 'Successfully redelegated',
-          successSubtitle: 'You have successifully redelegated your BTSGs.'
+          title: 'Undelegate',
+          toLabel: 'Undelegate from',
+          amountLabel: 'Amount to undelegate',
+          submit: 'Undelegate',
+          successTitle: 'Successfully undelegated',
+          successSubtitle: 'You have successfully undelegated your BTSGs.'
         },
         fullWidth: true,
         maximized: true,
@@ -66,12 +74,12 @@ export default defineComponent({
       quasar.dialog({
         component: Dialog,
         componentProps: {
-          title: 'Restake',
+          title: 'Redelegate',
           toLabel: 'Redelegate to',
           amountLabel: 'Amount to redelegate',
           submit: 'Redelegate',
           successTitle: 'Successfully redelegated',
-          successSubtitle: 'You have successifully redelegated your BTSGs.'
+          successSubtitle: 'You have successfully redelegated your BTSGs.'
         },
         fullWidth: true,
         maximized: true,

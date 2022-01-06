@@ -36,9 +36,10 @@ import {
   CommunityPoolResponse,
   GovernanceOverview,
   StakingDelegationResponse,
-  ValidatorsDelegationResponse
+  ValidatorsDelegationResponse,
+  AccountResponse,
+  AccountInfo
 } from 'src/models';
-/* import { urlSafeEncode } from 'src/common/b64'; */
 import { chunk, compact, orderBy, reduce } from 'lodash';
 import { network } from 'src/constants';
 import Store from 'src/store';
@@ -512,4 +513,14 @@ export const getSelfStake = async (validator: Validator): Promise<number> => {
     // in some rare cases the validator has no self delegation so this query fails
     return 0;
   }
+}
+
+export const getAccountInfo = async (address: string): Promise<AccountInfo> => {
+  const response = await api.get<AccountResponse>(`cosmos/auth/v1beta1/accounts/${address}`);
+  const account = response.data.account;
+
+  return {
+    accountNumber: account.account_number || account.base_vesting_account.base_account.account_number,
+    sequence: account.sequence || account.base_vesting_account.base_account.sequence || '0',
+  };
 }

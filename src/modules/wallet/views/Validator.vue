@@ -9,7 +9,7 @@
         class="col-12"
       />
 
-      <validator-delegation class="col-12 col-md-auto validator-delegation" />
+      <validator-delegation v-if="validator" :validator="validator" class="col-12 col-md-auto validator-delegation" />
       <validator-rewards class="col-12 col-md-auto validator-rewards" />
 
       <validator-address v-if="validator" :validator="validator" class="col-12" />

@@ -21,6 +21,7 @@ export interface DataStateInterface {
   validatorDelegationsLoading: boolean;
   selfStakeValidator: number;
   selfStakeValidatorLoading: boolean;
+  loadingSignTransaction: boolean;
 }
 
 function state (): DataStateInterface {
@@ -44,7 +45,8 @@ function state (): DataStateInterface {
     validatorDelegations: [],
     validatorDelegationsLoading: false,
     selfStakeValidator: 0,
-    selfStakeValidatorLoading: false
+    selfStakeValidatorLoading: false,
+    loadingSignTransaction: false
   }
 }
 
