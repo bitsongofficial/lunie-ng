@@ -12,32 +12,60 @@
 
     <balance-summary class="balance-summary" />
 
+    <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
+      <div class="section-header row items-center no-wrap">
+        <h2 class="section-title text-body-large text-white">
+          Unstaking
+        </h2>
+      </div>
+
+      <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded" unstaking />
+    </div>
+
     <div class="section-header row items-center no-wrap">
       <h2 class="section-title text-body-large text-white">
         Your Stake
       </h2>
     </div>
 
-    <validators-summary />
+    <validators-summary v-if="validatorsOfDelegations.length === 0" />
+
+    <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useQuasar } from 'quasar';
+import { useStore } from 'src/store';
+import { Validator } from 'src/models';
+
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
-import { useQuasar } from 'quasar';
+import ValidatorsTable from 'src/components/ValidatorsTable.vue';
 
 export default defineComponent({
   name: 'Portfolio',
   components: {
     BalanceSummary,
     ValidatorsSummary,
+    ValidatorsTable
   },
   setup() {
+    const store = useStore();
     const quasar = useQuasar();
 
+    const validatorsOfDelegations = computed(() => store.getters['data/validatorsOfDelegations'] as Validator[]);
+    const delegationsLoaded = computed(() => store.state.data.delegationsLoaded);
+
+    const validatorsOfUndelegations = computed(() => store.getters['data/validatorsOfUndelegations'] as Validator[]);
+    const undelegationsLoaded = computed(() => store.state.data.undelegationsLoaded);
+
     return {
+      validatorsOfDelegations,
+      delegationsLoaded,
+      validatorsOfUndelegations,
+      undelegationsLoaded,
       quasar,
     }
   }
@@ -68,5 +96,9 @@ export default defineComponent({
 
 .balance-summary {
   margin-bottom: 68px;
+}
+
+.undelegation-section {
+  margin-bottom: 62px;
 }
 </style>

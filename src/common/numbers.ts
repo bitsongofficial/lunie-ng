@@ -44,9 +44,9 @@ export const shortDecimals = (value: string | number | BigNumber) => {
   return setDecimalLength(value, 3)
 }
 
-export const bigFigureOrShortDecimals = (number: string | number) => {
+export const bigFigureOrShortDecimals = (number: string | number | BigNumber) => {
   // here we check how many positive digits the number has to see how we should format it
-  const castNumber = Number(number);
+  const castNumber = new BigNumber(number).toNumber();
 
   if (Math.abs(castNumber) < 1e6) {
     return shortDecimals(castNumber);

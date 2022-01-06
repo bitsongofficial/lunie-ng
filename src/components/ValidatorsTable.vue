@@ -54,7 +54,10 @@
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.staked }} %
+            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation) : '--' }}
+          </p>
+          <p class="text-subtitle2 q-my-none" v-if="hasRewards(props.row.operatorAddress)">
+            + {{ bigFigureOrShortDecimals(filterStakingDenomReward(props.row.operatorAddress)) }}
           </p>
         </q-td>
         <q-td key="rewards" class="text-subtitle2 text-white" :props="props">
@@ -67,19 +70,14 @@
             {{ bigFigureOrPercent(props.row.votingPower) }}
           </p>
         </q-td>
-        <q-td key="available" class="text-subtitle2 text-white" :props="props">
-          <p class="text-subtitle2 q-my-none">
-            {{ props.row.available }} %
-          </p>
-        </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.unstaked }} %
+            {{ props.row.undelegation ? props.row.undelegation.amount : '--' }}
           </p>
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.time }} days
+            {{ props.row.undelegation ? fromNow(props.row.undelegation.endTime) : '--' }}
           </p>
         </q-td>
         <q-td key="actions" :props="props">
@@ -110,8 +108,10 @@ import { Validator } from 'src/models';
 import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import { bigFigureOrPercent } from 'src/common/numbers';
+import { bigFigureOrPercent, bigFigureOrShortDecimals } from 'src/common/numbers';
+import { fromNow } from 'src/common/date';
 import ValidatorStatus from 'src/components/ValidatorStatus.vue';
+import { network } from 'src/constants';
 
 export default defineComponent({
   name: 'ValidatorsTable',
@@ -142,6 +142,7 @@ export default defineComponent({
 
     const delegations = computed(() => store.state.data.delegations);
     const rewards = computed(() => store.state.data.rewards);
+
     const pagination = {
       sortBy: 'votingPower',
       descending: true,
@@ -186,12 +187,6 @@ export default defineComponent({
         field: 'votingPower',
       },
       {
-        name: 'available',
-        label: 'Available',
-        align: 'center',
-        field: 'available',
-      },
-      {
         name: 'unstaked',
         label: 'Unstaked',
         align: 'center',
@@ -234,18 +229,40 @@ export default defineComponent({
       return delegations.value.find(({ validator }) => validator.operatorAddress === operatorAddress);
     }
 
-    const getRewards = ({ operatorAddress }: Validator) => {
-      return rewards.value.find(({ validator }) => validator.operatorAddress === operatorAddress);
+    const getRewards = (operatorAddress: string) => {
+      return rewards.value.filter(({ validator }) => validator.operatorAddress === operatorAddress);
     }
+
+    const filterStakingDenomReward = (operatorAddress: string) => {
+      const rewards = getRewards(operatorAddress);
+
+      const stakingDenomRewards = rewards.filter(
+        (reward) => reward.denom === network.stakingDenom
+      );
+
+      return stakingDenomRewards.length > 0 ? stakingDenomRewards[0].amount : 0
+    }
+
+    const hasRewards = (operatorAddress: string) => {
+      const rewards = getRewards(operatorAddress);
+
+      return rewards.find((reward) =>
+        reward.denom === network.stakingDenom && reward.amount > 0.000001
+      ) !== undefined;
+    };
 
     return {
       pagination,
       columns,
       visibleColumns,
+      hasRewards,
+      filterStakingDenomReward,
       rowClick,
       getDelegation,
       getRewards,
-      bigFigureOrPercent
+      bigFigureOrPercent,
+      bigFigureOrShortDecimals,
+      fromNow
     }
   }
 });

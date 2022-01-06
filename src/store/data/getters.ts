@@ -44,6 +44,18 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       10
     );
   },
+  validatorsOfDelegations({ delegations }) {
+    return delegations.map(el => ({
+      ...el.validator,
+      delegation: el,
+    }));
+  },
+  validatorsOfUndelegations({ undelegations }) {
+    return undelegations.map(el => ({
+      ...el.validator,
+      undelegation: el,
+    }));
+  }
 }
 
 export default getters

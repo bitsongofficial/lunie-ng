@@ -54,7 +54,7 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <pre class="description-block text-half-transparent-white text-h5">{{ proposal?.description }}</pre>
+    <pre class="description-block text-half-transparent-white text-h5" v-html="proposal?.description"></pre>
   </q-page>
 </template>
 

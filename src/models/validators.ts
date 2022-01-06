@@ -1,3 +1,4 @@
+import { Delegation, UnbondingDelegation } from './delegations';
 import { BondStatus } from '@cosmjs/launchpad/build/lcdapi/staking';
 import { BigNumber } from 'bignumber.js';
 import { Dictionary } from 'lodash';
@@ -35,6 +36,8 @@ export interface Validator {
   status: ValidatorStatus,
   statusDetailed: string;
   expectedReturns?: BigNumber;
+  delegation?: Delegation;
+  undelegation?: UnbondingDelegation;
 }
 
 export interface TopVoterValidator {

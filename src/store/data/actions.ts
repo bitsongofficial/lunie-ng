@@ -145,7 +145,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setDelegationsLoaded', false);
       const delegations = await getDelegationsForDelegator(address, getters['validatorsDictionary']);
       commit('setDelegations', delegations);
-      commit('setDelegationsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -157,6 +156,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setDelegationsLoaded', true);
     }
   },
   async getUndelegations({ commit, getters }, address) {
@@ -164,7 +165,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setUndelegationsLoaded', false);
       const undelegations = await getUndelegationsForDelegator(address, getters['validatorsDictionary']);
       commit('setUndelegations', undelegations);
-      commit('setUndelegationsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -176,6 +176,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setUndelegationsLoaded', true);
     }
   },
   async getRewards({ commit, getters }, { address }) {
