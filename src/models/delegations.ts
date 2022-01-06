@@ -63,5 +63,5 @@ export interface StakingDelegationResponse extends PaginationResponse {
 }
 
 export interface UnbondingDelegationResponse extends PaginationResponse {
-  unbonding_response: UnbondingDelegationRaw[];
+  unbonding_responses: UnbondingDelegationRaw[];
 }

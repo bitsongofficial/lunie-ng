@@ -54,7 +54,7 @@
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation) : '--' }}
+            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : '--' }}
           </p>
           <p class="text-subtitle2 q-my-none" v-if="hasRewards(props.row.operatorAddress)">
             + {{ bigFigureOrShortDecimals(filterStakingDenomReward(props.row.operatorAddress)) }}
@@ -72,7 +72,7 @@
         </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? props.row.undelegation.amount : '--' }}
+            {{ props.row.undelegation ? bigFigureOrShortDecimals(props.row.undelegation.amount) : '--' }}
           </p>
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
@@ -85,7 +85,7 @@
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" clickable>
+              <q-item class="menu-item" active-class="active" clickable v-if="!staking">
                 <q-item-section class="text-center text-subtitle2">Delegate</q-item-section>
               </q-item>
               <q-item class="menu-item" active-class="active" clickable>
@@ -139,9 +139,9 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const router = useRouter();
-
-    const delegations = computed(() => store.state.data.delegations);
     const rewards = computed(() => store.state.data.rewards);
+
+    console.log(props.rows);
 
     const pagination = {
       sortBy: 'votingPower',
@@ -206,7 +206,7 @@ export default defineComponent({
 
     const visibleColumns = computed<string[]>(() => {
       if (props.unstaking) {
-        return ['id', 'name', 'unstaked', 'time', 'actions'];
+        return ['id', 'name', 'unstaked', 'time'];
       }
 
       if (props.staking) {
@@ -224,10 +224,6 @@ export default defineComponent({
         console.error(error);
       }
     };
-
-    const getDelegation = ({ operatorAddress }: Validator) => {
-      return delegations.value.find(({ validator }) => validator.operatorAddress === operatorAddress);
-    }
 
     const getRewards = (operatorAddress: string) => {
       return rewards.value.filter(({ validator }) => validator.operatorAddress === operatorAddress);
@@ -258,7 +254,6 @@ export default defineComponent({
       hasRewards,
       filterStakingDenomReward,
       rowClick,
-      getDelegation,
       getRewards,
       bigFigureOrPercent,
       bigFigureOrShortDecimals,
@@ -285,10 +280,10 @@ export default defineComponent({
 
 .validators-table-row {
   background: none;
+  backdrop-filter: blur(60px);
 
   & .q-td {
     background: $transparent-gray;
-    backdrop-filter: blur(60px);
     border-bottom: none;
     height: 60px;
 

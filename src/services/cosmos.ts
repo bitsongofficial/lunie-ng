@@ -94,7 +94,7 @@ export const getDelegationsForDelegator = async (address: string, validatorsDict
 export const getUndelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
   const response = await queryAutoPaginate<UnbondingDelegationResponse>(`cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`);
 
-  const undelegations = response ? response.unbonding_response : [];
+  const undelegations = response ? response.unbonding_responses : [];
 
   // undelegations come in a nested format { validator_address, delegator_address, entries }
   // we flatten the format to be able to easier iterate over the list
