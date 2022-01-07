@@ -7,7 +7,7 @@
     </h5>
 
     <div class="row items-center justify-center full-width">
-      <q-btn @click="openClaimDialog" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
+      <q-btn @click="openClaimDialog" :disable="validatorReward.length === 0" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>
@@ -35,10 +35,12 @@ export default defineComponent({
     const store = useStore();
     const rewards = computed(() => store.state.data.rewards);
 
-    const stakingDenomReward = computed(() => {
-      const rewardsFilter = rewards.value.filter(({ validator }) => validator.operatorAddress === props.validator.operatorAddress);
+    const validatorReward = computed(() => rewards.value.filter(
+      ({ validator }) => validator.operatorAddress === props.validator.operatorAddress)
+    );
 
-      const stakingDenomRewards = rewardsFilter.filter(
+    const stakingDenomReward = computed(() => {
+      const stakingDenomRewards = validatorReward.value.filter(
         (reward) => reward.denom === network.stakingDenom
       );
 
@@ -59,6 +61,7 @@ export default defineComponent({
     }
 
     return {
+      validatorReward,
       stakingDenomReward,
       openClaimDialog
     }

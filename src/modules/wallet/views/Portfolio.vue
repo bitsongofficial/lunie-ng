@@ -5,7 +5,7 @@
         Your Balances
       </h2>
 
-      <q-btn @click="openClaimDialog" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
+      <q-btn @click="openClaimDialog" :disable="rewards.length === 0" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
         {{ !quasar.screen.lt.md ? 'CLAIM REWARDS' : 'CLAIM' }}
       </q-btn>
     </div>
@@ -56,6 +56,8 @@ export default defineComponent({
     const store = useStore();
     const quasar = useQuasar();
 
+    const rewards = computed(() => store.state.data.rewards);
+
     const validatorsOfDelegations = computed(() => store.getters['data/validatorsOfDelegations'] as Validator[]);
     const delegationsLoaded = computed(() => store.state.data.delegationsLoaded);
 
@@ -71,6 +73,7 @@ export default defineComponent({
     }
 
     return {
+      rewards,
       validatorsOfDelegations,
       delegationsLoaded,
       validatorsOfUndelegations,

@@ -28,6 +28,9 @@
               color="primary"
               class="text-primary"
               keep-color
+              :rules="[
+                val => !!val || 'Required field',
+              ]"
             />
           </div>
 
