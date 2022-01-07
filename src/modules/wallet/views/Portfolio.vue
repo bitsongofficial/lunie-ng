@@ -15,7 +15,7 @@
     <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
       <div class="section-header row items-center no-wrap">
         <h2 class="section-title text-body-large text-white">
-          Unstaking
+          Undelegated
         </h2>
       </div>
 
@@ -24,7 +24,7 @@
 
     <div class="section-header row items-center no-wrap">
       <h2 class="section-title text-body-large text-white">
-        Your Stake
+        Your Delegations
       </h2>
     </div>
 

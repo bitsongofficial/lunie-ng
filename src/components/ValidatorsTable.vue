@@ -175,7 +175,7 @@ export default defineComponent({
       },
       {
         name: 'staked',
-        label: 'Staked',
+        label: 'Delegated',
         align: 'center',
         field: 'staked',
       },
@@ -193,7 +193,7 @@ export default defineComponent({
       },
       {
         name: 'unstaked',
-        label: 'Unstaked',
+        label: 'Undelegated',
         align: 'center',
         field: 'unstaked',
       },
