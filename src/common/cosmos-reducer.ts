@@ -2,7 +2,6 @@ import { encodeB32, decodeB32 } from './address';
 import { BlockResponse } from '@cosmjs/launchpad';
 import { Coin } from '@cosmjs/stargate';
 import { BigNumber } from 'bignumber.js';
-import { network } from 'src/constants';
 import {
   BlockReduced,
   DelegationWithBalance,
@@ -34,6 +33,7 @@ import { getCoinLookup } from './network';
 import { flattenDeep } from 'lodash';
 import { getProposalSummary } from './common-reducer';
 import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
+import Store from 'src/store';
 
 const proposalTypeEnumDictionary: { [key: string]: string } = {
   TextProposal: 'TEXT',
@@ -93,7 +93,7 @@ export function undelegationReducer(undelegation: UnbondingDelegationFlat, valid
 }
 
 export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[]): Balance {
-  const isStakingDenom = lunieCoin.denom === network.stakingDenom;
+  const isStakingDenom = lunieCoin.denom === Store.state.authentication.network.stakingDenom;
 
   const delegatedStake = delegations.reduce(
     (sum, { amount }) => {
@@ -161,7 +161,7 @@ export const getValidatorStatus = (validator: ValidatorRaw) => {
 }
 
 export const getStakingCoinViewAmount = (chainStakeAmount: string) => {
-  const coinLookup = getCoinLookup(network.stakingDenom, 'viewDenom');
+  const coinLookup = getCoinLookup(Store.state.authentication.network.stakingDenom, 'viewDenom');
 
   if (coinLookup) {
     return coinReducer({
@@ -245,7 +245,7 @@ export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary
 
 const networkAccountReducer = (address: string, validators: ValidatorMap) => {
   const proposerValAddress = address ?
-    encodeB32(decodeB32(address), network.validatorAddressPrefix, 'hex')
+    encodeB32(decodeB32(address), Store.state.authentication.network.validatorAddressPrefix, 'hex')
     :
     '';
 
@@ -334,7 +334,7 @@ export const tallyReducer = (proposal: ProposalRaw, tally: Tally, totalBondedTok
 }
 
 const getDeposit = (proposal: ProposalRaw) => {
-  const sum = proposal.total_deposit.filter(({ denom }) => denom === network.stakingDenom);
+  const sum = proposal.total_deposit.filter(({ denom }) => denom === Store.state.authentication.network.stakingDenom);
   const s = sum.reduce((ss, cur) => { return ss.plus(cur.amount) }, new BigNumber(0));
 
   return getStakingCoinViewAmount(s.toString());

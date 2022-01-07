@@ -77,7 +77,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { MessageTypes } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, ref, computed } from 'vue';
-import { network, voteOptions } from 'src/constants';
+import { voteOptions } from 'src/constants';
 
 export default defineComponent({
   name: 'VoteDialog',
@@ -99,6 +99,7 @@ export default defineComponent({
     const error = ref<string>();
 
     const loading = computed(() => store.state.data.loadingSignTransaction);
+    const network = computed(() => store.state.authentication.network);
 
     const close = () => {
       dialogRef.value?.hide();

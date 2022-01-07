@@ -117,7 +117,6 @@ import { useStore } from 'src/store';
 import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
 import { fromNow } from 'src/common/date';
 import ValidatorStatus from 'src/components/ValidatorStatus.vue';
-import { network } from 'src/constants';
 import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
 
 export default defineComponent({
@@ -147,6 +146,7 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const rewards = computed(() => store.state.data.rewards);
+    const network = computed(() => store.state.authentication.network);
 
     const pagination = {
       sortBy: 'votingPower',
@@ -242,7 +242,7 @@ export default defineComponent({
       const rewards = getRewards(operatorAddress);
 
       const stakingDenomRewards = rewards.filter(
-        (reward) => reward.denom === network.stakingDenom
+        (reward) => reward.denom === network.value.stakingDenom
       );
 
       return stakingDenomRewards.length > 0 ? stakingDenomRewards[0].amount : 0
@@ -252,7 +252,7 @@ export default defineComponent({
       const rewards = getRewards(operatorAddress);
 
       return rewards.find((reward) =>
-        reward.denom === network.stakingDenom && reward.amount > 0.000001
+        reward.denom === network.value.stakingDenom && reward.amount > 0.000001
       ) !== undefined;
     };
 

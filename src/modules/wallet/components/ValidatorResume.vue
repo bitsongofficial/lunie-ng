@@ -43,7 +43,7 @@
             {{ bigFigureOrPercent(validator.votingPower) }}
           </p>
 
-          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(validator.tokens) }} BTSG</label>
+          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(validator.tokens) }} {{ network.stakingDenom }}</label>
         </div>
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">SELF STAKE</label>
@@ -67,9 +67,10 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { Delegation, Validator } from 'src/models';
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, computed } from 'vue';
 import { bigFigureOrPercent, shortDecimals } from 'src/common/numbers';
 import ValidatorStatus from 'src/components/ValidatorStatus.vue';
+import { useStore } from 'src/store';
 
 export default defineComponent({
   name: 'ValidatorResume',
@@ -91,10 +92,13 @@ export default defineComponent({
     }
   },
   setup() {
+    const store = useStore();
     const quasar = useQuasar();
+    const network = computed(() => store.state.authentication.network);
 
     return {
       quasar,
+      network,
       bigFigureOrPercent,
       shortDecimals
     }

@@ -44,15 +44,31 @@
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
           </q-list>
 
-          <q-item class="connection-item q-mt-auto">
-            <q-item-section>
-              <div class="row items-center justify-between">
-                <label class="text-white text-h5">Bitsong-2b</label>
-
-                <label class="text-accent-4 text-h5 q-ml-xs q-mt-none">connected</label>
+          <q-select
+            v-model="network"
+            rounded
+            standout
+            map-options
+            :options="networks"
+            bg-color="transparent-white"
+            color="transparent-white"
+            label-color="primary"
+            class="full-width medium q-mt-auto connection-item"
+            no-error-icon
+            hide-bottom-space
+            :options-cover="false"
+          >
+            <template v-slot:selected-item="{ opt }">
+              <div class="row items-center cursor-pointer">
+                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
               </div>
-            </q-item-section>
-          </q-item>
+            </template>
+            <template v-slot:option="{ itemProps, opt }">
+              <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
+                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
+              </q-item>
+            </template>
+          </q-select>
         </q-drawer>
       </div>
 
@@ -79,7 +95,7 @@ import { useStore } from 'src/store';
 import MenuLink from 'src/components/MenuLink.vue';
 import { useQuasar } from 'quasar';
 import { formatAddress } from 'src/common/address';
-import { network } from 'src/constants';
+import { networks } from 'src/constants';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -94,14 +110,21 @@ export default defineComponent({
     const back = computed(() => router.currentRoute.value.meta.back === true);
     const session = computed(() => store.state.authentication.session);
     const address = computed(() => formatAddress(store.state.authentication.session?.address));
+    const network = computed({
+      get: () => store.state.authentication.network,
+      set: async (value) => {
+        await store.dispatch('authentication/changeNetwork', value);
+      }
+    });
+
     const explorerURL = computed(() => {
       const session = store.state.authentication.session;
 
       if (session) {
-        return `${network.explorerURL}account/${session.address}`;
+        return `${network.value.explorerURL}account/${session.address}`;
       }
 
-      return network.explorerURL;
+      return network.value.explorerURL;
     });
 
     const responsiveWatch = watch(
@@ -130,7 +153,8 @@ export default defineComponent({
       router,
       leftDrawer,
       back,
-      network
+      network,
+      networks
     }
   }
 });
@@ -164,10 +188,10 @@ export default defineComponent({
 
 .connection-item {
   margin-bottom: 40px;
-  background: $alternative-2;
-  border-radius: 20px;
-  padding: 12px 26px;
-  min-height: 40px;
+}
+
+.network-item {
+  padding: 16px 24px;
 }
 
 .drawer-container {

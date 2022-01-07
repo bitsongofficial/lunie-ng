@@ -1,9 +1,9 @@
+import Store from 'src/store';
 import { bech32 } from 'bech32';
 import { Validator } from 'src/models';
 import { Bech32 } from '@cosmjs/encoding';
-import { network } from 'src/constants';
 
-export const isValidAddress = (address: string, requiredPrefix: string = network.addressPrefix): boolean => {
+export const isValidAddress = (address: string, requiredPrefix: string = Store.state.authentication.network.addressPrefix): boolean => {
   try {
     const { prefix, data } = Bech32.decode(address);
 

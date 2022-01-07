@@ -96,7 +96,6 @@ import { useDialogPluginComponent } from 'quasar';
 import { Balance, MessageTypes, Reward, SessionType, Validator } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, ref, computed, PropType } from 'vue';
-import { network } from 'src/constants';
 import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { getRewardsValidators } from 'src/common/ledger';
@@ -122,6 +121,7 @@ export default defineComponent({
     const error = ref<string>();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const network = computed(() => store.state.authentication.network);
 
     const availableCoins = computed(() => {
       return balance.value ? new BigNumber(balance.value.available).toString() : '0';

@@ -9,7 +9,7 @@ import {
 import { getSigner } from './signer';
 import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx } from './messages';
 import { getCoinLookup } from 'src/common/network';
-import { network } from 'src/constants';
+import Store from 'src/store';
 
 export const getFees = (transactionType: string, feeDenom: string) => {
   const { gasEstimate, feeOptions } = getNetworkFee(transactionType)
@@ -42,7 +42,6 @@ export const createSignBroadcast = async ({
   message,
   senderAddress,
   accountInfo,
-  network,
   signingType,
   password,
   feeDenom,
@@ -74,16 +73,16 @@ export const createSignBroadcast = async ({
 
   switch(messageType) {
     case MessageTypes.SEND:
-      messages.push(SendTx(senderAddress, message, network));
+      messages.push(SendTx(senderAddress, message, Store.state.authentication.network));
       break;
     case MessageTypes.STAKE:
-      messages.push(StakeTx(senderAddress, message, network));
+      messages.push(StakeTx(senderAddress, message, Store.state.authentication.network));
       break;
     case MessageTypes.UNSTAKE:
-      messages.push(UnstakeTx(senderAddress, message, network));
+      messages.push(UnstakeTx(senderAddress, message, Store.state.authentication.network));
       break;
     case MessageTypes.RESTAKE:
-      messages.push(RestakeTx(senderAddress, message, network));
+      messages.push(RestakeTx(senderAddress, message, Store.state.authentication.network));
       break;
     case MessageTypes.VOTE:
       const vote = VoteTx(senderAddress, message);
@@ -94,7 +93,7 @@ export const createSignBroadcast = async ({
 
       break;
     case MessageTypes.DEPOSIT:
-      const deposit = DepositTx(senderAddress, message, network);
+      const deposit = DepositTx(senderAddress, message, Store.state.authentication.network);
 
       if (deposit) {
         messages.push(deposit);
@@ -110,13 +109,13 @@ export const createSignBroadcast = async ({
   const stdFee = {
     amount: coins(
       Number(transactionData.fee ? transactionData.fee[0].amount : 0),
-      transactionData.fee ? transactionData.fee[0].denom : 'BTSG'
+      transactionData.fee ? transactionData.fee[0].denom : Store.state.authentication.network.stakingDenom
     ),
     gas: transactionData.gasEstimate || '350000',
   };
 
   const client = await SigningStargateClient.connectWithSigner(
-    network.rpcURL,
+    Store.state.authentication.network.rpcURL,
     signer
   );
 
@@ -139,7 +138,7 @@ export const pollTxInclusion = async (txHash: string, iteration = 0): Promise<un
   let txFound = false;
 
   try {
-    await fetch(`${network.apiURL}/txs/${txHash}`).then((res) => {
+    await fetch(`${Store.state.authentication.network.apiURL}/txs/${txHash}`).then((res) => {
       if (res.status === 200) {
         txFound = true
       }

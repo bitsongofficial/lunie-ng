@@ -132,7 +132,7 @@
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Success!</h3>
 
-          <p class="text-h4 text-half-transparent-white">You have successfully send your BTSGs.</p>
+          <p class="text-h4 text-half-transparent-white">You have successfully send your {{ network.stakingDenom }}s.</p>
 
           <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             See your transaction
@@ -156,7 +156,6 @@ import { useDialogPluginComponent } from 'quasar';
 import { Balance, MessageTypes } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, ref, computed } from 'vue';
-import { network } from 'src/constants';
 import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
@@ -179,6 +178,7 @@ export default defineComponent({
     const error = ref<string>();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const network = computed(() => store.state.authentication.network);
 
     const availableCoins = computed(() => {
       return balance.value ? new BigNumber(balance.value.available).toString() : '0';
@@ -198,7 +198,7 @@ export default defineComponent({
           memo: memo.value,
           amounts: [{
             amount: amount.value,
-            denom: network.stakingDenom
+            denom: network.value.stakingDenom
           }],
         };
 

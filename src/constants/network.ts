@@ -1,5 +1,6 @@
 import { NetworkConfig } from 'src/models';
 
+// Default network
 export const network: NetworkConfig = {
   id: 'bitsong-2b',
   name: 'BitSong Mainnet',
@@ -40,3 +41,5 @@ export const network: NetworkConfig = {
   icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
   localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
 };
+
+export const networks: NetworkConfig[] = [network];
