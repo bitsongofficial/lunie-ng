@@ -30,7 +30,7 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="validators-table-row cursor-pointer" @click="rowClick(props.row)" :props="props">
-        <q-td key="id" class="text-white" :props="props">
+        <q-td key="id" class="text-white id-cell" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ props.rowIndex + 1 }}
           </p>
@@ -50,7 +50,7 @@
           </div>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
-          <validator-status :status="props.row.status" />
+          <validator-status :status="props.row.status" small />
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
@@ -69,8 +69,8 @@
           <p class="text-subtitle2 q-my-none">
             {{ bigFigureOrPercent(props.row.votingPower) }}
           </p>
-          <p class="text-subtitle2 q-my-none">
-            {{ shortDecimals(props.row.tokens) }} BTSG
+          <p class="text-overline text-half-transparent-white q-my-none">
+            {{ shortDecimals(props.row.tokens) }} {{ network.stakingDenom }}
           </p>
         </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
@@ -257,6 +257,7 @@ export default defineComponent({
     };
 
     return {
+      network,
       pagination,
       columns,
       visibleColumns,
@@ -288,6 +289,14 @@ export default defineComponent({
   padding-top: 21px;
   padding-bottom: 21px;
   border: none;
+
+  &:first-of-type {
+    width: 60px;
+  }
+}
+
+.id-cell {
+  width: 60px;
 }
 
 .validators-table-row {

@@ -111,6 +111,7 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
           // But, currently, Keplr extension manages only one address/public key pair.
           // XXX: This line is needed to set the sender address for SigningCosmosClient.
           const accounts = await offlineSigner.getAccounts();
+
           commit('setAccounts', accounts);
 
           commit('setInitialized');

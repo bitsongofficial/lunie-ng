@@ -3,7 +3,7 @@
     <proposal-status v-if="proposal" :status="proposal.status" />
 
     <div class="row proposal-header justify-between">
-      <div class="column">
+      <div class="column col-12 col-md-9">
         <h2 class="title text-body-large text-weight-medium text-white">
           {{ proposal?.title }}
         </h2>
@@ -13,7 +13,7 @@
         </p>
       </div>
 
-      <div class="column items-end q-ml-auto" v-if="proposal">
+      <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
         <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
           deposit
         </q-btn>

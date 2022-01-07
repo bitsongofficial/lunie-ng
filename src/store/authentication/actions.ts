@@ -1,5 +1,5 @@
 import { ActionTree } from 'vuex';
-import { NetworkConfig, Session } from 'src/models';
+import { NetworkConfig, Session, SessionType } from 'src/models';
 import { StateInterface } from '../index';
 import { AuthenticationStateInterface } from './state';
 import { api } from 'src/boot/axios';
@@ -16,11 +16,20 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       throw error;
     }
   },
-  async changeNetwork({ commit, dispatch, state}, network: NetworkConfig) {
+  async changeNetwork({ commit, dispatch, state, rootState }, network: NetworkConfig) {
     try {
       commit('setNetwork', network);
       api.defaults.baseURL = network.apiURL;
-      await dispatch('signIn', state.session);
+
+      if (state.session && state.session.sessionType === SessionType.KEPLR) {
+        await dispatch('keplr/init', 0, { root: true });
+        await dispatch('signIn', {
+          sessionType: SessionType.KEPLR,
+          address: rootState.keplr.accounts[0].address,
+        });
+      } else {
+        await dispatch('signIn', state.session);
+      }
     } catch (error) {
       console.error(error);
       throw error;
