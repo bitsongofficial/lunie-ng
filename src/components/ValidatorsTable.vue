@@ -56,8 +56,8 @@
           <p class="text-subtitle2 q-my-none">
             {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : '--' }}
           </p>
-          <p class="text-subtitle2 q-my-none" v-if="hasRewards(props.row.operatorAddress)">
-            + {{ bigFigureOrShortDecimals(filterStakingDenomReward(props.row.operatorAddress)) }}
+          <p class="text-subtitle2 q-my-none text-positive" v-if="hasRewards(props.row.operatorAddress)">
+            + {{ filterStakingDenomReward(props.row.operatorAddress) }}
           </p>
         </q-td>
         <q-td key="rewards" class="text-subtitle2 text-white" :props="props">

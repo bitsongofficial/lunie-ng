@@ -13,8 +13,11 @@
         </p>
       </div>
 
-      <div class="column items-end q-ml-auto">
-        <q-btn class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+      <div class="column items-end q-ml-auto" v-if="proposal">
+        <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+          deposit
+        </q-btn>
+        <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
           vote
         </q-btn>
 
@@ -70,6 +73,9 @@ import { percent } from 'src/common/numbers';
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
 import ProposalStatus from 'src/components/ProposalStatus.vue';
+import { useQuasar } from 'quasar';
+import DepositDialog from 'src/components/DepositDialog.vue';
+import VoteDialog from 'src/components/VoteDialog.vue';
 
 export default defineComponent({
   name: 'Proposal',
@@ -85,6 +91,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
     const proposalID = parseInt(props.id);
@@ -107,6 +114,28 @@ export default defineComponent({
       return [];
     });
 
+    const openDepositDialog = () => {
+      quasar.dialog({
+        component: DepositDialog,
+        componentProps: {
+          proposalId: proposal.value?.proposalId
+        },
+        fullWidth: true,
+        maximized: true,
+      });
+    }
+
+    const openVoteDialog = () => {
+      quasar.dialog({
+        component: VoteDialog,
+        componentProps: {
+          proposalId: proposal.value?.proposalId
+        },
+        fullWidth: true,
+        maximized: true,
+      });
+    }
+
     onMounted(async () => {
       if (proposal.value === undefined) {
         await router.replace({ name: 'wallet' });
@@ -119,6 +148,8 @@ export default defineComponent({
       entries,
       href: window.location.href,
       percent,
+      openDepositDialog,
+      openVoteDialog,
       ...useClipboard()
     }
   }

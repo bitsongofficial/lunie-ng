@@ -16,7 +16,7 @@ export const SendTx = (senderAddress: string, { to, amounts }: TransactionReques
     typeUrl: '/cosmos.bank.v1beta1.MsgSend',
     value: {
       fromAddress: senderAddress,
-      toAddress: to?.operatorAddress,
+      toAddress: to,
       amount: amounts ? amounts.map((amount) => Coin(amount, network.coinLookup)) : [],
     },
   }
@@ -28,7 +28,7 @@ export const StakeTx = (senderAddress: string, { to, amount }: TransactionReques
     typeUrl: '/cosmos.staking.v1beta1.MsgDelegate',
     value: MsgDelegate.fromPartial({
       delegatorAddress: senderAddress,
-      validatorAddress: to?.operatorAddress,
+      validatorAddress: to,
       amount: Coin(amount, network.coinLookup),
     }),
   };
@@ -40,7 +40,7 @@ export const RestakeTx = (senderAddress: string, { from, to, amount }: Transacti
     value: MsgBeginRedelegate.fromPartial({
       delegatorAddress: senderAddress,
       validatorSrcAddress: from?.operatorAddress,
-      validatorDstAddress: to?.operatorAddress,
+      validatorDstAddress: to,
       amount: Coin(amount, network.coinLookup),
     }),
   };
@@ -62,7 +62,7 @@ export const ClaimRewardsTx = (senderAddress: string, { froms }: TransactionRequ
     typeUrl: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
     value: MsgWithdrawDelegatorReward.fromPartial({
       delegatorAddress: senderAddress,
-      validatorAddress: valAddr.operatorAddress,
+      validatorAddress: valAddr,
     }),
   })) : [];
 }
@@ -73,7 +73,7 @@ export const VoteTx = (senderAddress: string, { proposalId, voteOption }: Transa
       typeUrl: '/cosmos.gov.v1beta1.MsgVote',
       value: MsgVote.fromPartial({
         voter: senderAddress,
-        proposalId: Long.fromNumber(proposalId),
+        proposalId: Long.fromString(proposalId),
         option: voteOption,
       }),
     };
@@ -88,7 +88,7 @@ export const DepositTx = (senderAddress: string, { proposalId, amount }: Transac
       typeUrl: '/cosmos.gov.v1beta1.MsgDeposit',
       value: MsgDeposit.fromPartial({
         depositor: senderAddress,
-        proposalId: Long.fromNumber(proposalId),
+        proposalId: Long.fromString(proposalId),
         amount: [coin]
       }),
     };

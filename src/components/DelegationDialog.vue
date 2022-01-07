@@ -127,6 +127,7 @@
               :rules="[
                 val => !!val || 'Required field',
                 val => !isNaN(val) || 'Amount must be a decimal value',
+                val => gtnZero(val) || 'Amount must be a greater then zero',
                 val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
                 val => !isNegative(val) || 'Amount must be greater then zero'
               ]"
@@ -191,7 +192,7 @@ import { useStore } from 'src/store';
 import { defineComponent, ref, computed, PropType } from 'vue';
 import { network } from 'src/constants';
 import { BigNumber } from 'bignumber.js';
-import { compareBalance, isNegative, isNaN } from 'src/common/numbers';
+import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'DelegationDialog',
@@ -284,7 +285,7 @@ export default defineComponent({
       try {
         const request = {
           type: props.type,
-          to: to.value,
+          to: to.value?.operatorAddress,
           from: from.value,
           amount: {
             amount: amount.value,
@@ -323,6 +324,7 @@ export default defineComponent({
       compareBalance,
       isNegative,
       isNaN,
+      gtnZero,
       onDialogHide,
       onSubmit
     }

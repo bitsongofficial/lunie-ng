@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Reward, ValidatorWithReward } from 'src/models';
 import { LedgerSigner } from '@bitsongjs/sdk';
 import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Transport from '@ledgerhq/hw-transport';
 import { getHDPath } from './hdpath';
 import { network } from 'src/constants';
+import { Dictionary, reduce } from 'lodash';
 
 export async function getLedger(ledgerTransport: Transport | undefined) {
   const interactiveTimeout = 120_000;
@@ -52,25 +54,29 @@ export async function getLedger(ledgerTransport: Transport | undefined) {
 }
 
 // limitation of the Ledger Nano S: if top5 is true, we pick the top 5 rewards and inform the user.
-/* export function getRewardsValidators(rewards, top5) {
-  const rewardsPerValidatorObject = rewards.reduce((all, reward) => {
+export function getRewardsValidators(rewards: Reward[], top5: boolean) {
+  const rewardsPerValidatorObject = reduce<Reward, Dictionary<number>>(rewards, (all, reward) => {
     return {
       ...all,
       [reward.validator.operatorAddress]:
         Number(reward.amount) +
         (Number(all[reward.validator.operatorAddress]) || 0),
     }
-  }, {})
-  const rewardsPerValidatorAddresses = Object.keys(rewardsPerValidatorObject)
-  const rewardsPerValidatorArray = []
+  }, {});
+
+  const rewardsPerValidatorAddresses = Object.keys(rewardsPerValidatorObject);
+  const rewardsPerValidatorArray: ValidatorWithReward[] = [];
+
   rewardsPerValidatorAddresses.forEach((validatorAddress, index) => {
     rewardsPerValidatorArray.push({
       validator: validatorAddress,
       totalRewardAmount: Object.values(rewardsPerValidatorObject)[index],
     })
-  })
+  });
+
   const rewardsValidators = rewardsPerValidatorArray
     .sort((a, b) => b.totalRewardAmount - a.totalRewardAmount)
-    .map((rewardPerValidator) => rewardPerValidator.validator)
-  return top5 ? rewardsValidators.slice(0, 5) : rewardsValidators
-} */
+    .map((rewardPerValidator) => rewardPerValidator.validator);
+
+  return top5 ? rewardsValidators.slice(0, 5) : rewardsValidators;
+}

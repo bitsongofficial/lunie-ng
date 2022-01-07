@@ -34,12 +34,12 @@ export interface WalletSignData {
 export interface TransactionRequest {
   type: MessageTypes;
   memo?: string;
-  proposalId?: number;
+  proposalId?: string;
   voteOption?: number;
   password?: string;
-  to?: Validator;
+  to?: string;
   from?: Validator;
-  froms?: Validator[];
+  froms?: string[];
   amounts?: Coin[];
   amount: Coin;
 }

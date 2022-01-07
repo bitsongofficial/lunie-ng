@@ -5,7 +5,7 @@
         Your Balances
       </h2>
 
-      <q-btn class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
+      <q-btn @click="openClaimDialog" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
         {{ !quasar.screen.lt.md ? 'CLAIM REWARDS' : 'CLAIM' }}
       </q-btn>
     </div>
@@ -43,6 +43,7 @@ import { Validator } from 'src/models';
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
+import ClaimDialog from 'src/components/ClaimDialog.vue';
 
 export default defineComponent({
   name: 'Portfolio',
@@ -61,12 +62,21 @@ export default defineComponent({
     const validatorsOfUndelegations = computed(() => store.getters['data/validatorsOfUndelegations'] as Validator[]);
     const undelegationsLoaded = computed(() => store.state.data.undelegationsLoaded);
 
+    const openClaimDialog = () => {
+      quasar.dialog({
+        component: ClaimDialog,
+        fullWidth: true,
+        maximized: true,
+      });
+    }
+
     return {
       validatorsOfDelegations,
       delegationsLoaded,
       validatorsOfUndelegations,
       undelegationsLoaded,
       quasar,
+      openClaimDialog
     }
   }
 });

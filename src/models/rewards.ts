@@ -16,6 +16,11 @@ export interface Reward {
   validator: Validator;
 }
 
+export interface ValidatorWithReward {
+  validator: string;
+  totalRewardAmount: number;
+}
+
 export interface RewardWithAddress {
   validator_address: string;
   reward: Coin[];

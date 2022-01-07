@@ -100,3 +100,9 @@ export const isNaN = (amount: string): boolean => {
 
   return number.isNaN();
 }
+
+export const gtnZero = (amount: string): boolean => {
+  const number = new BigNumber(amount);
+
+  return number.gt(0);
+}

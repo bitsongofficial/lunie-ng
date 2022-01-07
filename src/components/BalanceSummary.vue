@@ -35,7 +35,7 @@
         </p>
       </div>
 
-      <q-btn class="send-btn btn-medium text-h6 col-12 col-md-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
+      <q-btn @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
         SEND <q-icon class="balance-icon rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="half-transparent-white" />
       </q-btn>
     </div>
@@ -49,6 +49,7 @@ import { bigFigureOrShortDecimals } from 'src/common/numbers';
 import { Balance } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, computed } from 'vue';
+import SendDialog from './SendDialog.vue';
 
 export default defineComponent({
   name: 'BalanceSummary',
@@ -69,10 +70,19 @@ export default defineComponent({
       return null;
     });
 
+    const openSendDialog = () => {
+      quasar.dialog({
+        component: SendDialog,
+        fullWidth: true,
+        maximized: true,
+      });
+    }
+
     return {
       rewards,
       balance,
       quasar,
+      openSendDialog
     }
   }
 });

@@ -18,6 +18,19 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       };
     }, {});
   },
+  totalRewardsPerDenomByValidator() {
+    return (rewards: Reward[]) => {
+      return reduce<Reward, Dictionary<number>>(rewards, (all, reward) => {
+        const amount = new BigNumber(reward.amount);
+        const rewardDenom = new BigNumber(all[reward.denom] || 0);
+
+        return {
+          ...all,
+          [reward.denom]: amount.plus(rewardDenom).toNumber()
+        };
+      }, {});
+    };
+  },
   currentBalance({ balances }) {
     const balance = [...balances].pop();
 

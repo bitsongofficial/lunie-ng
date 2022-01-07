@@ -7,7 +7,7 @@
     </h5>
 
     <div class="row items-center justify-center full-width">
-      <q-btn class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
+      <q-btn @click="openClaimDialog" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>
@@ -19,7 +19,8 @@ import { network } from 'src/constants';
 import { useStore } from 'src/store';
 import { defineComponent, computed, PropType } from 'vue';
 import { Validator } from 'src/models';
-import { bigFigureOrShortDecimals } from 'src/common/numbers';
+import { useQuasar } from 'quasar';
+import ClaimDialog from 'src/components/ClaimDialog.vue';
 
 export default defineComponent({
   name: 'ValidatorRewards',
@@ -30,6 +31,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const quasar = useQuasar();
     const store = useStore();
     const rewards = computed(() => store.state.data.rewards);
 
@@ -42,11 +44,23 @@ export default defineComponent({
 
       const amount = stakingDenomRewards.length > 0 ? stakingDenomRewards[0].amount : 0;
 
-      return bigFigureOrShortDecimals(amount);
+      return amount;
     });
+
+    const openClaimDialog = () => {
+      quasar.dialog({
+        component: ClaimDialog,
+        componentProps: {
+          validator: props.validator,
+        },
+        fullWidth: true,
+        maximized: true,
+      });
+    }
 
     return {
       stakingDenomReward,
+      openClaimDialog
     }
   }
 });
