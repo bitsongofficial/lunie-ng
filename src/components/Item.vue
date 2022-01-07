@@ -87,7 +87,7 @@ export default defineComponent({
     padding-right: 37px;
   }
 
-  &:hover {
+  &:not(.disabled):hover {
     & .details-btn {
       &:not(.reverse) {
         background-color: $accent-2 !important;

@@ -5,8 +5,8 @@
       'items-center': !quasar.screen.lt.md
     }">
       <div class="balance-section column no-wrap col-12 col-md-2">
-        <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium">
-          TOTAL BTSG
+        <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
+          TOTAL {{ network.stakingDenom }}
         </h3>
 
         <p class="balance-subtitle text-body-extra-large text-white q-my-none">
@@ -58,6 +58,8 @@ export default defineComponent({
     const quasar = useQuasar();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const network = computed(() => store.state.authentication.network);
+
     const rewards = computed(() => {
       const totalRewardsPerDenom = store.getters['data/totalRewardsPerDenom'] as Dictionary<number>;
 
@@ -79,6 +81,7 @@ export default defineComponent({
     }
 
     return {
+      network,
       rewards,
       balance,
       quasar,

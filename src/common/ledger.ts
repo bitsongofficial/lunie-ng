@@ -5,8 +5,8 @@ import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Transport from '@ledgerhq/hw-transport';
 import { getHDPath } from './hdpath';
-import { network } from 'src/constants';
 import { Dictionary, reduce } from 'lodash';
+import Store from 'src/store';
 
 export async function getLedger(ledgerTransport: Transport | undefined) {
   const interactiveTimeout = 120_000;
@@ -45,8 +45,8 @@ export async function getLedger(ledgerTransport: Transport | undefined) {
       // @ts-ignore
       ledgerAppName: 'BitSong',
       testModeAllowed: true,
-      hdPaths: [getHDPath(network.HDPath)],
-      prefix: network.addressPrefix,
+      hdPaths: [getHDPath(Store.state.authentication.network.HDPath)],
+      prefix: Store.state.authentication.network.addressPrefix,
     });
 
     return { ledger, transport };

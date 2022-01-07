@@ -1,34 +1,12 @@
 <template>
   <item clickable reverse details v-ripple :to="'/proposals/' + proposal.id">
-    <div class="row items-center">
-      <div class="col-12 col-md-8" :class="{
-        'row items-center': !quasar.screen.lt.md,
-        'column reverse items-start': quasar.screen.lt.md,
-      }">
-        <h4 class="title text-white text-weight-medium q-my-none">{{ proposal.title }}</h4>
+    <div class="col-12 col-md-8" :class="{
+      'row items-center': !quasar.screen.lt.md,
+      'column reverse items-start': quasar.screen.lt.md,
+    }">
+      <h4 class="title text-white text-weight-medium q-my-none">{{ proposal.title }}</h4>
 
-        <proposal-status :status="proposal.status" />
-      </div>
-
-      <q-space />
-
-      <div class="row items-center col-12 col-md-auto">
-        <div class="section row items-center" v-if="proposal.tally.totalVotedPercentage !== -1">
-          <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
-            voted
-          </p>
-
-          <p class="text-h4 text-weight-medium text-white q-my-none">{{ percent(proposal.tally.totalVotedPercentage) }}</p>
-        </div>
-
-        <div class="section row items-center">
-          <p class="section-title text-uppercase text-h6 text-weight-medium text-primary q-my-none">
-            quorum
-          </p>
-
-          <p class="text-h4 text-weight-medium text-white q-my-none">{{ percent(proposal.detailedVotes.votingQuorum) }}</p>
-        </div>
-      </div>
+      <proposal-status :status="proposal.status" />
     </div>
   </item>
 </template>

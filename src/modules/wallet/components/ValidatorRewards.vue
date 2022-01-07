@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import { network } from 'src/constants';
 import { useStore } from 'src/store';
 import { defineComponent, computed, PropType } from 'vue';
 import { Validator } from 'src/models';
@@ -34,6 +33,7 @@ export default defineComponent({
     const quasar = useQuasar();
     const store = useStore();
     const rewards = computed(() => store.state.data.rewards);
+    const network = computed(() => store.state.authentication.network);
 
     const validatorReward = computed(() => rewards.value.filter(
       ({ validator }) => validator.operatorAddress === props.validator.operatorAddress)
@@ -41,7 +41,7 @@ export default defineComponent({
 
     const stakingDenomReward = computed(() => {
       const stakingDenomRewards = validatorReward.value.filter(
-        (reward) => reward.denom === network.stakingDenom
+        (reward) => reward.denom === network.value.stakingDenom
       );
 
       const amount = stakingDenomRewards.length > 0 ? stakingDenomRewards[0].amount : 0;

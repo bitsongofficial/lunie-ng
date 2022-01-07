@@ -17,7 +17,6 @@ import {
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
-import { network } from 'src/constants';
 import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
@@ -79,9 +78,9 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       }
     }
   },
-  async getFirstBlock ({ commit }) {
+  async getFirstBlock ({ commit, rootState }) {
     try {
-      const block = await getBlock(network.minBlockHeight);
+      const block = await getBlock(rootState.authentication.network.minBlockHeight);
       commit('setFirstBlock', block);
 
       return block;
@@ -338,19 +337,19 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         const accountInfo = await dispatch('getAccountInfo', session.address) as AccountInfo;
 
         const { type, memo } = data;
-        const HDPath = network.HDPath;
+        const HDPath = rootState.authentication.network.HDPath;
 
         const hashResult = await createSignBroadcast({
           messageType: type,
           message: data,
           senderAddress: session.address,
           accountInfo,
-          network,
+          network: rootState.authentication.network,
           signingType: session.sessionType,
           password: data.password ?? '',
           HDPath,
           memo: memo ?? '',
-          feeDenom: network.stakingDenom,
+          feeDenom: rootState.authentication.network.stakingDenom,
           chainId: block.chainId,
           ledgerTransport: rootState.ledger.transport
         })

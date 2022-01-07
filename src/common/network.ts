@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { AppCurrency } from '@keplr-wallet/types';
-import { network } from 'src/constants';
+import Store from 'src/store';
 
 export const getCoinLookup = (denom: string, coinLookupDenomType = 'chainDenom') => {
-  return network.coinLookup.find(
+  return Store.state.authentication.network.coinLookup.find(
     // @ts-ignore
     (coin) => coin[coinLookupDenomType] === denom
   );
 }
 
 export const lunieCoinToKeplrCoin = (denom: string): AppCurrency | undefined =>  {
-  const coinLookup = network.coinLookup.find(
+  const coinLookup = Store.state.authentication.network.coinLookup.find(
     (coin) => coin.viewDenom === denom
   );
 
@@ -26,7 +26,7 @@ export const lunieCoinToKeplrCoin = (denom: string): AppCurrency | undefined => 
         .split('.')[1].length,
       // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
       // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-      coinGeckoId: network.coinGeckoId,
+      coinGeckoId: Store.state.authentication.network.coinGeckoId,
     }
   }
 }

@@ -190,7 +190,6 @@ import { useDialogPluginComponent } from 'quasar';
 import { Balance, MessageTypes, Validator } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, ref, computed, PropType } from 'vue';
-import { network } from 'src/constants';
 import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 
@@ -263,6 +262,7 @@ export default defineComponent({
       return true;
     }));
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const network = computed(() => store.state.authentication.network);
 
     const availableCoins = computed(() => {
       if (props.type === MessageTypes.UNSTAKE || props.type === MessageTypes.RESTAKE) {
@@ -290,7 +290,7 @@ export default defineComponent({
           from: from.value,
           amount: {
             amount: amount.value,
-            denom: network.stakingDenom
+            denom: network.value.stakingDenom
           },
         };
 

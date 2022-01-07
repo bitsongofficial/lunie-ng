@@ -41,7 +41,6 @@ import {
   AccountInfo
 } from 'src/models';
 import { chunk, compact, orderBy, reduce } from 'lodash';
-import { network } from 'src/constants';
 import Store from 'src/store';
 import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 import { percentage, setDecimalLength } from 'src/common/numbers';
@@ -254,13 +253,13 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
     // the user might not have liquid staking tokens but have staking tokens delegated
     // if we don't add the staking denom, we would show a 0 total for the staking denom which is wrong
     const hasStakingDenom = coins.find(
-      ({ denom }) => denom === network.stakingDenom
+      ({ denom }) => denom === Store.state.authentication.network.stakingDenom
     );
 
     if (!hasStakingDenom) {
       coins.push({
         amount: new BigNumber(0),
-        denom: network.stakingDenom,
+        denom: Store.state.authentication.network.stakingDenom,
       });
     }
 
@@ -450,7 +449,7 @@ export const getGovernanceOverview = async (topVoters: Validator[]): Promise<Gov
   ])
 
   const stakingCoin = getCoinLookup(
-    network.stakingDenom,
+    Store.state.authentication.network.stakingDenom,
     'viewDenom'
   );
 
@@ -494,7 +493,7 @@ export const getSelfStake = async (validator: Validator): Promise<number> => {
   const hexDelegatorAddressFromOperator = decodeB32(validator.operatorAddress)
   const delegatorAddressFromOperator = encodeB32(
     hexDelegatorAddressFromOperator,
-    network.addressPrefix
+    Store.state.authentication.network.addressPrefix
   );
 
   try {

@@ -1,10 +1,14 @@
 import { useQuasar } from 'quasar';
+import { computed } from 'vue';
 import { MessageTypes, Validator } from 'src/models';
 import DelegationDialog from 'src/components/DelegationDialog.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
+import { useStore } from 'src/store';
 
 export const useDelegatorActions = () => {
+  const store = useStore();
   const quasar = useQuasar();
+  const network = computed(() => store.state.authentication.network);
 
   const openClaimDialog = (validator: Validator) => {
     quasar.dialog({
@@ -27,7 +31,7 @@ export const useDelegatorActions = () => {
         amountLabel: 'Amount to delegate',
         submit: 'Delegate',
         successTitle: 'Successfully delegate',
-        successSubtitle: 'You have successfully delegated your BTSGs.',
+        successSubtitle: `You have successfully delegated your ${network.value.stakingDenom}s.`,
         defaultTo: validator
       },
       fullWidth: true,
@@ -46,7 +50,7 @@ export const useDelegatorActions = () => {
         amountLabel: 'Amount to undelegate',
         submit: 'Undelegate',
         successTitle: 'Successfully undelegated',
-        successSubtitle: 'You have successfully undelegated your BTSGs.',
+        successSubtitle: `You have successfully undelegated your ${network.value.stakingDenom}s.`,
         defaultFrom: validator
       },
       fullWidth: true,
@@ -64,7 +68,7 @@ export const useDelegatorActions = () => {
         amountLabel: 'Amount to redelegate',
         submit: 'Redelegate',
         successTitle: 'Successfully redelegated',
-        successSubtitle: 'You have successfully redelegated your BTSGs.',
+        successSubtitle: `You have successfully redelegated your ${network.value.stakingDenom}s.`,
         defaultFrom: validator
       },
       fullWidth: true,
