@@ -53,8 +53,8 @@ export default defineComponent({
       if (validator.value === undefined) {
         await router.replace({ name: 'wallet' });
       } else {
-        store.dispatch('data/getValidatorDelegations', validator.value).catch(err => console.error(err));
-        store.dispatch('data/getValidatorSelfStake', validator.value).catch(err => console.error(err));
+        await store.dispatch('data/getValidatorDelegations', validator.value);
+        await store.dispatch('data/getValidatorSelfStake', validator.value);
       }
     });
 

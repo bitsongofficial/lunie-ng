@@ -70,13 +70,13 @@
         </q-form>
 
         <div class="success col column fit" v-else>
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="accent" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Success!</h3>
 
           <p class="text-h4 text-half-transparent-white">You have successfully deposited your BTSGs.</p>
 
-          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
+          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             See your transaction
           </q-btn>
         </div>
@@ -118,6 +118,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
     const amount = ref<string>('0');
+    const hash = ref<string>();
     const success = ref<boolean>(false);
     const error = ref<string>();
 
@@ -144,8 +145,9 @@ export default defineComponent({
           },
         };
 
-        await store.dispatch('data/signTransaction', request);
+        const hashres = await store.dispatch('data/signTransaction', request) as string;
 
+        hash.value = hashres;
         success.value = true;
       } catch (err) {
         console.error(err);
@@ -159,6 +161,7 @@ export default defineComponent({
     }
 
     return {
+      hash,
       error,
       loading,
       availableCoins,
@@ -235,6 +238,8 @@ export default defineComponent({
 .success-icon {
   margin-top: 23px;
   margin-bottom: 45px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .success {

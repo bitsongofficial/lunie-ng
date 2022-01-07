@@ -53,7 +53,7 @@
         </q-form>
 
         <div class="success col column fit" v-else>
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="accent" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Success!</h3>
 
@@ -199,6 +199,8 @@ export default defineComponent({
 .success-icon {
   margin-top: 23px;
   margin-bottom: 45px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .success {

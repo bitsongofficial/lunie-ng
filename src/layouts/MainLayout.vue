@@ -41,7 +41,7 @@
             <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="/portfolio" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" title="Proposals" link="/proposals" />
-            <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="network.explorerURL" external />
+            <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
           </q-list>
 
           <q-item class="connection-item q-mt-auto">
@@ -94,6 +94,15 @@ export default defineComponent({
     const back = computed(() => router.currentRoute.value.meta.back === true);
     const session = computed(() => store.state.authentication.session);
     const address = computed(() => formatAddress(store.state.authentication.session?.address));
+    const explorerURL = computed(() => {
+      const session = store.state.authentication.session;
+
+      if (session) {
+        return `${network.explorerURL}account/${session.address}`;
+      }
+
+      return network.explorerURL;
+    });
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -115,6 +124,7 @@ export default defineComponent({
 
     return {
       address,
+      explorerURL,
       session,
       quasar,
       router,

@@ -72,21 +72,42 @@
             <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
           </div>
 
-          <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Memo</label>
-
-            <q-input
-              v-model="memo"
-              color="transparent-white"
-              label-color="accent-5"
-              bg-color="transparent-white"
-              round
-              standout
-              no-error-icon
-              hide-bottom-space
-              class="full-width large"
-            />
+          <div class="field-block column full-width justify-start items-start">
+            <q-btn
+              @click="showAdvanced = !showAdvanced"
+              class="no-hoverable col-auto"
+              toggle-color="primary"
+              flat
+              unelevated
+              :ripple="false"
+              text-color="accent"
+              toggle-text-color="white"
+              padding="0 0 0 11px"
+            >{{ !showAdvanced ? 'Show Advanced' : 'Hide Advanced' }}</q-btn>
           </div>
+
+          <transition
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+            mode="out-in"
+            appear
+          >
+            <div class="field-block column full-width" v-if="showAdvanced">
+              <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Note</label>
+
+              <q-input
+                v-model="memo"
+                color="transparent-white"
+                label-color="accent-5"
+                bg-color="transparent-white"
+                round
+                standout
+                no-error-icon
+                hide-bottom-space
+                class="full-width large"
+              />
+            </div>
+          </transition>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
             <q-btn
@@ -107,13 +128,13 @@
         </q-form>
 
         <div class="success col column fit" v-else>
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="accent" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Success!</h3>
 
           <p class="text-h4 text-half-transparent-white">You have successfully send your BTSGs.</p>
 
-          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
+          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             See your transaction
           </q-btn>
         </div>
@@ -152,7 +173,9 @@ export default defineComponent({
     const to = ref<string>('');
     const memo = ref<string>('');
     const amount = ref<string>('0');
+    const hash = ref<string>();
     const success = ref<boolean>(false);
+    const showAdvanced = ref<boolean>(false);
     const error = ref<string>();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
@@ -179,8 +202,9 @@ export default defineComponent({
           }],
         };
 
-        await store.dispatch('data/signTransaction', request);
+        const hashres = await store.dispatch('data/signTransaction', request) as string;
 
+        hash.value = hashres;
         success.value = true;
       } catch (err) {
         console.error(err);
@@ -194,6 +218,8 @@ export default defineComponent({
     }
 
     return {
+      hash,
+      showAdvanced,
       memo,
       to,
       error,
@@ -273,6 +299,8 @@ export default defineComponent({
 .success-icon {
   margin-top: 23px;
   margin-bottom: 45px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .success {

@@ -1,9 +1,21 @@
 import { useQuasar } from 'quasar';
 import { MessageTypes, Validator } from 'src/models';
 import DelegationDialog from 'src/components/DelegationDialog.vue';
+import ClaimDialog from 'src/components/ClaimDialog.vue';
 
 export const useDelegatorActions = () => {
   const quasar = useQuasar();
+
+  const openClaimDialog = (validator: Validator) => {
+    quasar.dialog({
+      component: ClaimDialog,
+      componentProps: {
+        validator,
+      },
+      fullWidth: true,
+      maximized: true,
+    });
+  }
 
   const openStakeDialog = (validator: Validator) => {
     quasar.dialog({
@@ -63,6 +75,7 @@ export const useDelegatorActions = () => {
   return {
     openStakeDialog,
     openUnstakeDialog,
-    openRestakeDialog
+    openRestakeDialog,
+    openClaimDialog
   }
 }

@@ -8,7 +8,7 @@ export const network: NetworkConfig = {
   website: 'https://bitsong.io',
   apiURL: 'https://lcd.explorebitsong.com',
   rpcURL: 'https://rpc.explorebitsong.com',
-  explorerURL: 'https://explorebitsong.com/',
+  explorerURL: 'https://www.mintscan.io/bitsong/',
   minBlockHeight: 2966151,
   stakingDenom: 'BTSG',
   coinLookup: [

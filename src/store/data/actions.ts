@@ -360,6 +360,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         await pollTxInclusion(hash);
 
         dispatch('refresh').catch(err => console.error(err));
+
+        return hash;
       }
     } catch (err) {
       if (err instanceof Error) {

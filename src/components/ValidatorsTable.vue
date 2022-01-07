@@ -69,6 +69,9 @@
           <p class="text-subtitle2 q-my-none">
             {{ bigFigureOrPercent(props.row.votingPower) }}
           </p>
+          <p class="text-subtitle2 q-my-none">
+            {{ shortDecimals(props.row.tokens) }} BTSG
+          </p>
         </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
@@ -85,13 +88,16 @@
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
+              <q-item class="menu-item" active-class="active" clickable @click="openClaimDialog(props.row)" v-if="getRewards(props.row.operatorAddress).length > 0" v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Claim</q-item-section>
+              </q-item>
               <q-item class="menu-item" active-class="active" clickable v-if="!staking" @click="openStakeDialog(props.row)" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Delegate</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable @click="openRestakeDialog(props.row)" v-close-popup>
+              <q-item class="menu-item" active-class="active" @click="openRestakeDialog(props.row)" :disable="getDelegations(props.row.operatorAddress).length === 0" :clickable="getDelegations(props.row.operatorAddress).length > 0" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Redelegate</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable @click="openUnstakeDialog(props.row)" v-close-popup>
+              <q-item class="menu-item" active-class="active" @click="openUnstakeDialog(props.row)" :disable="getDelegations(props.row.operatorAddress).length === 0" :clickable="getDelegations(props.row.operatorAddress).length > 0" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Undelegate</q-item-section>
               </q-item>
             </q-menu>
@@ -108,7 +114,7 @@ import { Validator } from 'src/models';
 import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import { bigFigureOrPercent, bigFigureOrShortDecimals } from 'src/common/numbers';
+import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
 import { fromNow } from 'src/common/date';
 import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 import { network } from 'src/constants';
@@ -175,7 +181,7 @@ export default defineComponent({
       },
       {
         name: 'rewards',
-        label: 'Rewards',
+        label: 'APR',
         align: 'center',
         field: 'rewards',
       },
@@ -228,6 +234,10 @@ export default defineComponent({
       return rewards.value.filter(({ validator }) => validator.operatorAddress === operatorAddress);
     }
 
+    const getDelegations = (operatorAddress: string) => {
+      return store.state.data.delegations.filter(({ validator }) => validator.operatorAddress === operatorAddress);
+    }
+
     const filterStakingDenomReward = (operatorAddress: string) => {
       const rewards = getRewards(operatorAddress);
 
@@ -250,12 +260,14 @@ export default defineComponent({
       pagination,
       columns,
       visibleColumns,
+      getDelegations,
       hasRewards,
       filterStakingDenomReward,
       rowClick,
       getRewards,
       bigFigureOrPercent,
       bigFigureOrShortDecimals,
+      shortDecimals,
       fromNow,
       ...useDelegatorActions(),
     }

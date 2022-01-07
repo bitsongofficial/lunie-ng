@@ -43,13 +43,13 @@
             {{ bigFigureOrPercent(validator.votingPower) }}
           </p>
 
-          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(selfStake) }} BTSG</label>
+          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(validator.tokens) }} BTSG</label>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">TOTAL STAKE</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">SELF STAKE</label>
 
           <p class="text-body-large text-white q-my-none">
-            {{ shortDecimals(validator.tokens) }}
+            {{ shortDecimals(selfStake) }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">
