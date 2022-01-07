@@ -10,7 +10,7 @@
           <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ address }}</h5>
         </div>
 
-        <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="copyAddressToClipboard">
+        <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="onCopy(validator.operatorAddress)">
           COPY
         </q-btn>
       </div>
@@ -56,13 +56,13 @@
 </template>
 
 <script lang="ts">
-import { copyToClipboard, useQuasar } from 'quasar';
 import { percent } from 'src/common/numbers';
-import { notifySuccess } from 'src/common/notify';
 import { fromNow } from 'src/common/date';
 import { Validator } from 'src/models';
 import { defineComponent, PropType, computed } from 'vue';
 import { useStore } from 'src/store';
+import { useClipboard } from 'src/hooks';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'ValidatorAddress',
@@ -73,27 +73,18 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
     const quasar = useQuasar();
+    const store = useStore();
     const address = computed(() => props.validator.operatorAddress);
     const userAddress = computed(() => store.state.authentication.session?.address);
-
-    const copyAddressToClipboard = async () => {
-      try {
-        await copyToClipboard(props.validator.operatorAddress);
-        notifySuccess('Text has been copied to the clipboard!');
-      } catch (error) {
-        console.error(error);
-      }
-    }
 
     return {
       quasar,
       address,
       userAddress,
-      copyAddressToClipboard,
       percent,
-      fromNow
+      fromNow,
+      ...useClipboard()
     };
   }
 });

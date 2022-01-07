@@ -14,14 +14,16 @@
           <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
-        <q-item class="profile-item" clickable to="/authentication" v-if="session">
+        <q-item class="profile-item" clickable v-if="session" @click="onCopy(session?.address)">
           <q-item-section class="column">
             <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
             <label class="text-white text-body2 no-pointer-events">{{ address }}</label>
           </q-item-section>
 
           <q-item-section side v-if="!quasar.screen.lt.md">
-            <q-icon class="q-ml-md" name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+            <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md">
+              <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+            </q-btn>
           </q-item-section>
         </q-item>
       </q-toolbar>
@@ -96,6 +98,8 @@ import MenuLink from 'src/components/MenuLink.vue';
 import { useQuasar } from 'quasar';
 import { formatAddress } from 'src/common/address';
 import { networks } from 'src/constants';
+import { useClipboard } from 'src/hooks';
+import { SessionType } from 'src/models';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -138,7 +142,15 @@ export default defineComponent({
     );
 
     onMounted(async () => {
-      await store.dispatch('authentication/signIn', session.value);
+      if (session.value && session.value.sessionType === SessionType.KEPLR) {
+        await store.dispatch('keplr/init');
+        await store.dispatch('authentication/signIn', {
+          sessionType: SessionType.KEPLR,
+          address: store.state.keplr.accounts[0].address,
+        });
+      } else {
+        await store.dispatch('authentication/signIn', session.value);
+      }
     });
 
     onUnmounted(() => {
@@ -154,7 +166,8 @@ export default defineComponent({
       leftDrawer,
       back,
       network,
-      networks
+      networks,
+      ...useClipboard()
     }
   }
 });

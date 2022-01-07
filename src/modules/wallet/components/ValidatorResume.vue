@@ -1,8 +1,11 @@
 <template>
   <div class="validator-resume column">
     <div class="row items-center">
-      <q-avatar class="validator-avatar col-auto" size="100px">
-        <img :src="validator.picture">
+      <q-avatar class="validator-avatar col-auto" size="100px" :color="validator.picture ? 'transparent' : 'secondary'">
+        <img :src="validator.picture" v-if="validator.picture">
+        <p class="text-h3 text-uppercase text-white q-my-none" v-else>
+          {{ validator.name[0] }}
+        </p>
       </q-avatar>
 
       <div class="validator-header col-12 col-md">
@@ -128,6 +131,7 @@ export default defineComponent({
 }
 
 .validator-avatar {
+  min-width: 100px;
   margin-right: 35px;
   box-shadow: $black-box-shadow;
 }
