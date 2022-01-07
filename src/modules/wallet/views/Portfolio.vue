@@ -12,25 +12,42 @@
 
     <balance-summary class="balance-summary" />
 
-    <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
-      <div class="section-header row items-center no-wrap">
-        <h2 class="section-title text-body-large text-white">
-          Undelegated
-        </h2>
+    <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      mode="out-in"
+      appear
+    >
+      <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
+        <div class="section-header-small row items-center no-wrap">
+          <h2 class="section-title text-body-large text-white">
+            Undelegated
+          </h2>
+        </div>
+
+        <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded" unstaking />
       </div>
+    </transition>
 
-      <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded" unstaking />
-    </div>
-
-    <div class="section-header row items-center no-wrap">
+    <div class="row items-center no-wrap" :class="{
+      'section-header': validatorsOfDelegations.length === 0,
+      'section-header-small': validatorsOfDelegations.length > 0,
+    }">
       <h2 class="section-title text-body-large text-white">
         Your Delegations
       </h2>
     </div>
 
-    <validators-summary v-if="validatorsOfDelegations.length === 0" />
+    <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      mode="out-in"
+      appear
+    >
+      <validators-summary v-if="validatorsOfDelegations.length === 0" />
 
-    <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+      <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+    </transition>
   </q-page>
 </template>
 
@@ -97,6 +114,11 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     margin-bottom: 34px;
   }
+}
+
+.section-header-small {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .section-title {

@@ -2,13 +2,13 @@
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="body column items-center">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none">Claim</h2>
+        <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">Claim</h2>
 
         <q-btn
           unelevated
           rounded
           text-color="white"
-          class="close no-hoverable"
+          class="close no-hoverable q-ml-auto"
           padding="2px"
           @click="close"
         >
@@ -70,11 +70,11 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Successful withdrawal!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful withdrawal!</h3>
 
-          <p class="text-h4 text-half-transparent-white">You have successfully withdrawn your rewards.</p>
+          <p class="text-h4 text-half-transparent-white text-center">You have successfully withdrawn your rewards.</p>
 
-          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
+          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             See your transaction
           </q-btn>
         </div>
@@ -83,9 +83,9 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Error!</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
-        <p class="text-h4 text-half-transparent-white">{{ error }}</p>
+        <p class="text-h4 text-half-transparent-white text-center">{{ error }}</p>
       </div>
     </q-card>
   </q-dialog>

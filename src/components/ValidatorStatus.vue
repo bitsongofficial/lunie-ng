@@ -1,5 +1,7 @@
 <template>
-  <q-chip class="status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" text-color="white" :color="color">
+  <q-chip class="status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" :class="{
+    'small': small
+  }" text-color="white" :color="color">
     {{ status }}
   </q-chip>
 </template>
@@ -15,6 +17,10 @@ export default defineComponent({
     status: {
       type: String as PropType<ValidatorStatus>,
       required: true
+    },
+    small: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -33,5 +39,9 @@ export default defineComponent({
   padding-right: 12px;
   min-height: 22px;
   border-radius: 25px;
+
+  &.small {
+    font-size: 10px;
+  }
 }
 </style>
