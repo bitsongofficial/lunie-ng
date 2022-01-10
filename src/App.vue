@@ -2,20 +2,34 @@
   <router-view />
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { useStore } from 'src/store';
+import { SessionType } from './models';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const store = useStore();
+    const session = computed(() => store.state.authentication.session);
 
-    window.addEventListener('keplr_keystorechange', async () => {
-      await store.dispatch('keplr/init');
-      await store.dispatch('authentication/signIn', {
-        sessionType: 'keplr',
-        address: store.state.keplr.accounts[0].address,
-      });
+    const init = async () => {
+      if (session.value && session.value.sessionType === SessionType.KEPLR) {
+        await store.dispatch('keplr/init');
+        await store.dispatch('authentication/signIn', {
+          sessionType: SessionType.KEPLR,
+          address: store.state.keplr.accounts[0].address,
+        });
+      } else {
+        await store.dispatch('authentication/signIn', session.value);
+      }
+    }
+
+    window.addEventListener('keplr_keystorechange', () => {
+      init().catch(err => console.error(err));
+    });
+
+    onMounted(() => {
+      init().catch(err => console.error(err));
     });
   }
 })

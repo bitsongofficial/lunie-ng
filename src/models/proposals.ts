@@ -62,7 +62,10 @@ export interface GovParamsResponse {
 export interface ProposalRaw {
   readonly id: string;
   readonly proposal_status: string;
-  readonly final_tally_result: Tally;
+  readonly final_tally_result: Tally | {
+    readonly tally: Tally;
+  };
+  readonly tally: Tally;
   readonly submit_time: string;
   readonly total_deposit: readonly Coin[];
   readonly deposit_end_time: string;

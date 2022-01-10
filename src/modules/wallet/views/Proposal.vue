@@ -57,7 +57,7 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <pre class="description-block text-half-transparent-white text-h5" v-html="proposal?.description"></pre>
+    <pre class="description-block text-half-transparent-white text-h5" v-html="description"></pre>
   </q-page>
 </template>
 
@@ -69,11 +69,12 @@ import { useRouter } from 'vue-router';
 import { getMappedTimeline, getMappedVotes } from 'src/common/chart';
 import { useClipboard } from 'src/hooks';
 import { percent } from 'src/common/numbers';
+import { useQuasar } from 'quasar';
+import { marked } from 'marked';
 
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
 import ProposalStatus from 'src/components/ProposalStatus.vue';
-import { useQuasar } from 'quasar';
 import DepositDialog from 'src/components/DepositDialog.vue';
 import VoteDialog from 'src/components/VoteDialog.vue';
 
@@ -96,7 +97,12 @@ export default defineComponent({
     const router = useRouter();
     const proposalID = parseInt(props.id);
 
-    const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
+    const proposal = computed(() => {
+      console.log(store.state.data.proposals.find(el => el.id === proposalID));
+      return store.state.data.proposals.find(el => el.id === proposalID);
+    });
+
+    const description = computed(() => marked(proposal.value?.description ?? '', { sanitize: true }));
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value) {
@@ -144,6 +150,7 @@ export default defineComponent({
 
     return {
       proposal,
+      description,
       dataset,
       entries,
       href: window.location.href,

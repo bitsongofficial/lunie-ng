@@ -308,14 +308,23 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
     ProposalRawStatus.PROPOSAL_STATUS_REJECTED
   ].includes(proposal.status);
 
-  const votes = dataAvailable ? await getVotes(proposal) : []
-  const deposits = dataAvailable ? await getDeposits(proposal) : []
-  let tally = proposal.final_tally_result;
+  const votes = dataAvailable ? await getVotes(proposal) : [];
+  const deposits = dataAvailable ? await getDeposits(proposal) : [];
+
+  let tally = proposal.final_tally_result as Tally;
 
   if (!votingComplete) {
-    const response = await api.get<Tally>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`);
+    const response = await api.get<Tally | { tally: Tally; }>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`);
 
-    tally = response.data;
+    const resultKeys = Object.keys(response.data);
+
+    console.log(response.data, resultKeys, resultKeys.includes('tally'));
+
+    if (resultKeys.includes('tally')) {
+      tally = (response.data as { tally: Tally; }).tally;
+    } else {
+      tally = response.data as Tally;
+    }
   }
 
   const totalVotingParticipation = new BigNumber(tally.yes)
@@ -336,6 +345,8 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
     }, 0)
     :
     0;
+
+  console.log(tally, new BigNumber(tally.yes), totalVotingParticipation.toString());
 
   return {
     deposits: formattedDeposits,

@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue';
+import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import MenuLink from 'src/components/MenuLink.vue';
@@ -99,7 +99,6 @@ import { useQuasar } from 'quasar';
 import { formatAddress } from 'src/common/address';
 import { networks } from 'src/constants';
 import { useClipboard } from 'src/hooks';
-import { SessionType } from 'src/models';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -140,18 +139,6 @@ export default defineComponent({
         immediate: true,
       }
     );
-
-    onMounted(async () => {
-      if (session.value && session.value.sessionType === SessionType.KEPLR) {
-        await store.dispatch('keplr/init');
-        await store.dispatch('authentication/signIn', {
-          sessionType: SessionType.KEPLR,
-          address: store.state.keplr.accounts[0].address,
-        });
-      } else {
-        await store.dispatch('authentication/signIn', session.value);
-      }
-    });
 
     onUnmounted(() => {
       responsiveWatch();
