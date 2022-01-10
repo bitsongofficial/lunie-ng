@@ -6,33 +6,35 @@
     }">
       <div class="balance-section column no-wrap col-12 col-md-2">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
-          TOTAL {{ network.stakingDenom }}
+          TOTAL ({{ network.stakingDenom }})
         </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none">
+        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
           {{ balance ? balance.total : 0 }}
         </p>
+        <q-skeleton width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
       </div>
       <div class="balance-section column no-wrap col-12 col-md-2">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-          REWARDS
+          REWARDS ({{ network.stakingDenom }})
         </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="rewards !== null">
-          {{ rewards }} {{ balance?.denom }}
-        </p>
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-else>
-          0
-        </p>
+        <template v-if="!loadingBalance">
+          <p class="balance-subtitle text-body-extra-large text-white q-my-none">
+            {{ rewards }}
+          </p>
+        </template>
+        <q-skeleton class="q-mx-auto" width="80px" height="36px" dark v-else></q-skeleton>
       </div>
       <div class="balance-section column no-wrap col-12 col-md-2">
         <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-          AVAILABLE
+          AVAILABLE ({{ network.stakingDenom }})
         </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none">
+        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
           {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
         </p>
+        <q-skeleton class="q-mx-auto" width="80px" height="36px" dark v-else></q-skeleton>
       </div>
 
       <q-btn @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
@@ -58,6 +60,7 @@ export default defineComponent({
     const quasar = useQuasar();
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
     const network = computed(() => store.state.authentication.network);
 
     const rewards = computed(() => {
@@ -66,10 +69,16 @@ export default defineComponent({
       if (totalRewardsPerDenom && balance.value) {
         const amount = totalRewardsPerDenom[balance.value.denom];
 
-        return amount > 0.001 ? bigFigureOrShortDecimals(amount) : null;
+        if (amount === 0) {
+          return '0';
+        }
+
+        if (amount > 0.001) {
+          return bigFigureOrShortDecimals(amount);
+        }
       }
 
-      return null;
+      return '< 1';
     });
 
     const openSendDialog = () => {
@@ -81,6 +90,7 @@ export default defineComponent({
     }
 
     return {
+      loadingBalance,
       network,
       rewards,
       balance,

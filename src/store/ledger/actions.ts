@@ -6,6 +6,7 @@ import { LedgerStateInterface } from './state'
 const actions: ActionTree<LedgerStateInterface, StateInterface> = {
   async init({ commit, state }) {
     try {
+      commit('authentication/setLoading', true, { root: true });
       commit('setLoading', true);
       commit('setError', undefined);
 
@@ -25,6 +26,7 @@ const actions: ActionTree<LedgerStateInterface, StateInterface> = {
       }
     } finally {
       commit('setLoading', false);
+      commit('authentication/setLoading', false, { root: true });
     }
   },
 }

@@ -23,9 +23,10 @@
     </div>
 
     <q-list class="proposals-list">
-      <transition-group enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+      <template v-if="!loading" >
         <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
-      </transition-group>
+      </template>
+      <proposal-item v-for="index in 6" :key="index" loading v-else />
     </q-list>
   </q-page>
 </template>
@@ -33,9 +34,10 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import { proposalsTypeOptions } from 'src/constants';
-import ProposalItem from 'src/components/ProposalItem.vue';
 import { useStore } from 'src/store';
 import { ProposalStatus } from 'src/models';
+
+import ProposalItem from 'src/components/ProposalItem.vue';
 
 export default defineComponent({
   name: 'Proposals',
@@ -54,7 +56,10 @@ export default defineComponent({
       return store.state.data.proposals;
     });
 
+    const loading = computed(() => !store.state.data.proposalsLoaded || store.state.data.loading);
+
     return {
+      loading,
       proposals,
       type,
       options: proposalsTypeOptions.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-subtitle2' }))

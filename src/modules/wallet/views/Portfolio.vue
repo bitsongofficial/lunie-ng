@@ -29,12 +29,31 @@
       </div>
     </transition>
 
-    <div class="row items-center no-wrap" :class="{
-      'section-header': validatorsOfDelegations.length === 0,
-      'section-header-small': validatorsOfDelegations.length > 0,
-    }">
+    <div class="undelegation-section">
+      <div class="row items-center no-wrap" :class="{
+        'section-header': validatorsOfDelegations.length === 0,
+        'section-header-small': validatorsOfDelegations.length > 0,
+      }">
+        <h2 class="section-title text-body-large text-white">
+          Your Delegations
+        </h2>
+      </div>
+
+      <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        mode="out-in"
+        appear
+      >
+        <validators-summary v-if="validatorsOfDelegations.length === 0" />
+
+        <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+      </transition>
+    </div>
+
+    <div class="section-header row items-center no-wrap">
       <h2 class="section-title text-body-large text-white">
-        Your Delegations
+        Chain Stats
       </h2>
     </div>
 
@@ -44,9 +63,11 @@
       mode="out-in"
       appear
     >
-      <validators-summary v-if="validatorsOfDelegations.length === 0" />
-
-      <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+      <div class="chain-stats-grid">
+        <chain-stats title="CIRCULATING SUPPLY" :quantity="supplyInfo?.circulatingSupply ?? '0'" :loading="loadingSupplyInfo" />
+        <chain-stats title="TOTAL SUPPLY" :quantity="supplyInfo?.totalSupply ?? '0'" :loading="loadingSupplyInfo" />
+        <chain-stats title="COMMUNITY POOL" :quantity="supplyInfo?.communityPool ?? '0'" :loading="loadingSupplyInfo" />
+      </div>
     </transition>
   </q-page>
 </template>
@@ -55,19 +76,21 @@
 import { defineComponent, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'src/store';
-import { Validator } from 'src/models';
+import { SupplyResponse, Validator } from 'src/models';
 
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
+import ChainStats from 'src/components/ChainStats.vue';
 
 export default defineComponent({
   name: 'Portfolio',
   components: {
     BalanceSummary,
     ValidatorsSummary,
-    ValidatorsTable
+    ValidatorsTable,
+    ChainStats
   },
   setup() {
     const store = useStore();
@@ -81,6 +104,9 @@ export default defineComponent({
     const validatorsOfUndelegations = computed(() => store.getters['data/validatorsOfUndelegations'] as Validator[]);
     const undelegationsLoaded = computed(() => store.state.data.undelegationsLoaded);
 
+    const supplyInfo = computed(() => store.getters['data/supplyInfo'] as SupplyResponse | null);
+    const loadingSupplyInfo = computed(() => store.state.data.loadingSupplyInfo);
+
     const openClaimDialog = () => {
       quasar.dialog({
         component: ClaimDialog,
@@ -90,6 +116,8 @@ export default defineComponent({
     }
 
     return {
+      supplyInfo,
+      loadingSupplyInfo,
       rewards,
       validatorsOfDelegations,
       delegationsLoaded,
@@ -127,6 +155,15 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     padding-left: 32px;
     margin: 0 32px 0 0;
+  }
+}
+
+.chain-stats-grid {
+  display: grid;
+  grid-gap: 32px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

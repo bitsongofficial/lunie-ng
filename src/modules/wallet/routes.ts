@@ -29,6 +29,7 @@ export default [
         component: () => import('./views/Validator.vue'),
         meta: {
           title: 'Validator',
+          parent: '/validators',
           back: true,
         },
         props: true
@@ -47,6 +48,7 @@ export default [
         component: () => import('./views/Proposal.vue'),
         meta: {
           title: 'Proposal',
+          parent: '/proposals',
           back: true,
         },
         props: true

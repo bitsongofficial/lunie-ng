@@ -35,7 +35,7 @@ export default defineComponent({
 
     return {
       canGoBack,
-      router,
+      router
     }
   }
 })

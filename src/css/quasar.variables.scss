@@ -100,8 +100,9 @@ $h3: (size: 36px,  line-height: 46px, letter-spacing: normal, weight: 400) !defa
 $h4: (size: 18px, line-height: 23px, letter-spacing: normal, weight: 400) !default;
 $h5: (size: 15px, line-height: 19px, letter-spacing: normal, weight: 400) !default;
 $h6: (size: 12px, line-height: 15px, letter-spacing: normal,  weight: 400) !default;
-$body-extra-large2: (size: 30px, line-height: normal, letter-spacing: normal, weight: 400) !default;
 $body-extra-large: (size: 27px, line-height: 36px, letter-spacing: normal, weight: 400) !default;
+$body-extra-large2: (size: 30px, line-height: normal, letter-spacing: normal, weight: 400) !default;
+$body-extra-large3: (size: 27px, line-height: normal, letter-spacing: normal, weight: 400) !default;
 $body-large: (size: 24px, line-height: 30px, letter-spacing: normal, weight: 400) !default;
 $body1: (size: 20px, line-height: 25px, letter-spacing: normal, weight: 400) !default;
 $body2: (size: 14px, line-height: 18px, letter-spacing: normal, weight: 400) !default;
@@ -115,6 +116,6 @@ $overline: (size: 13px, line-height: 16px, letter-spacing: normal, weight: 400) 
 $overline-2: (size: 13px, line-height: 24px, letter-spacing: normal, weight: 400) !default;
 $caption: (size: 11px, line-height: 12px, letter-spacing: normal, weight: 400) !default;
 
-$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body6': $body6, 'body-large': $body-large, 'body-extra-large': $body-extra-large, 'body-extra-large2': $body-extra-large2, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption) !default;
+$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body6': $body6, 'body-large': $body-large, 'body-extra-large': $body-extra-large, 'body-extra-large2': $body-extra-large2, 'body-extra-large3': $body-extra-large3, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption) !default;
 
 $typography-font-family: Circular Std, 'Roboto', '-apple-system', 'Helvetica Neue', Helvetica, Arial, sans-serif !default

@@ -71,6 +71,7 @@ import { useClipboard } from 'src/hooks';
 import { percent } from 'src/common/numbers';
 import { useQuasar } from 'quasar';
 import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
 
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
@@ -97,12 +98,9 @@ export default defineComponent({
     const router = useRouter();
     const proposalID = parseInt(props.id);
 
-    const proposal = computed(() => {
-      console.log(store.state.data.proposals.find(el => el.id === proposalID));
-      return store.state.data.proposals.find(el => el.id === proposalID);
-    });
+    const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
 
-    const description = computed(() => marked(proposal.value?.description ?? '', { sanitize: true }));
+    const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '')));
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value) {

@@ -56,7 +56,7 @@
           <p class="text-subtitle2 q-my-none">
             {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : '--' }}
           </p>
-          <p class="text-subtitle2 q-my-none text-positive" v-if="hasRewards(props.row.operatorAddress)">
+          <p class="text-overline q-my-none text-positive" v-if="hasRewards(props.row.operatorAddress)">
             + {{ filterStakingDenomReward(props.row.operatorAddress) }}
           </p>
         </q-td>
@@ -154,7 +154,7 @@ export default defineComponent({
       rowsPerPage: 0
     };
 
-    const columns = [
+    const columns = computed(() => [
       {
         name: 'id',
         label: '',
@@ -175,7 +175,7 @@ export default defineComponent({
       },
       {
         name: 'staked',
-        label: 'Delegated',
+        label: `Delegated (${network.value.stakingDenom})`,
         align: 'center',
         field: 'staked',
       },
@@ -193,7 +193,7 @@ export default defineComponent({
       },
       {
         name: 'unstaked',
-        label: 'Undelegated',
+        label: `Undelegated (${network.value.stakingDenom})`,
         align: 'center',
         field: 'unstaked',
       },
@@ -207,7 +207,7 @@ export default defineComponent({
         name: 'actions',
         align: 'center'
       },
-    ];
+    ]);
 
     const visibleColumns = computed<string[]>(() => {
       if (props.unstaking) {
@@ -304,7 +304,7 @@ export default defineComponent({
   backdrop-filter: blur(60px);
 
   & .q-td {
-    background: $transparent-gray;
+    background: $transparent-gray2;
     border-bottom: none;
     height: 60px;
 

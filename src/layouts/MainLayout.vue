@@ -14,10 +14,11 @@
           <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
-        <q-item class="profile-item" clickable v-if="session" @click="onCopy(session?.address)">
+        <q-item class="profile-item" clickable v-if="session" @click="!loading && session ? onCopy(session.address) : null">
           <q-item-section class="column">
             <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
-            <label class="text-white text-body2 no-pointer-events">{{ address }}</label>
+            <label class="text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
+            <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
           </q-item-section>
 
           <q-item-section side v-if="!quasar.screen.lt.md">
@@ -34,7 +35,7 @@
         <q-drawer class="drawer-menu bg-transparent column" :class="{
           'back': back
         }" :persistent="!quasar.screen.lt.md" :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
-          <q-btn class="back-btn btn-medium" rounded unelevated @click="router.back" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
+          <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
             <q-icon class="rotate-180 q-mr-md" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
             <label class="text-h6 text-white text-uppercase no-pointer-events">back</label>
           </q-btn>
@@ -44,6 +45,7 @@
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" title="Proposals" link="/proposals" />
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
+            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
 
           <q-select
@@ -58,6 +60,7 @@
             class="full-width medium q-mt-auto connection-item"
             no-error-icon
             hide-bottom-space
+            :loading="loadingNetwork"
             :options-cover="false"
           >
             <template v-slot:selected-item="{ opt }">
@@ -92,13 +95,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import MenuLink from 'src/components/MenuLink.vue';
 import { useQuasar } from 'quasar';
 import { formatAddress } from 'src/common/address';
-import { networks } from 'src/constants';
 import { useClipboard } from 'src/hooks';
+import { useChangeNetwork, useBack } from 'src/hooks';
+
+import MenuLink from 'src/components/MenuLink.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -106,19 +109,14 @@ export default defineComponent({
     MenuLink,
   },
   setup() {
+    const { back, goBack } = useBack();
+    const { network, networks, loadingNetwork } = useChangeNetwork(goBack);
     const quasar = useQuasar();
-    const router = useRouter();
     const store = useStore();
     const leftDrawer = ref<boolean>(false);
-    const back = computed(() => router.currentRoute.value.meta.back === true);
     const session = computed(() => store.state.authentication.session);
     const address = computed(() => formatAddress(store.state.authentication.session?.address));
-    const network = computed({
-      get: () => store.state.authentication.network,
-      set: async (value) => {
-        await store.dispatch('authentication/changeNetwork', value);
-      }
-    });
+    const loading = computed(() => store.state.authentication.loading);
 
     const explorerURL = computed(() => {
       const session = store.state.authentication.session;
@@ -129,6 +127,8 @@ export default defineComponent({
 
       return network.value.explorerURL;
     });
+
+    const bridgeURL = computed(() => store.state.authentication.network.bridgeURL);
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -145,16 +145,19 @@ export default defineComponent({
     });
 
     return {
+      bridgeURL,
+      loadingNetwork,
+      network,
+      networks,
+      loading,
       address,
       explorerURL,
       session,
       quasar,
-      router,
       leftDrawer,
       back,
-      network,
-      networks,
-      ...useClipboard()
+      goBack,
+      ...useClipboard(),
     }
   }
 });

@@ -10,6 +10,8 @@ export const network: NetworkConfig = {
   apiURL: 'https://lcd.explorebitsong.com',
   rpcURL: 'https://rpc.explorebitsong.com',
   explorerURL: 'https://www.mintscan.io/bitsong/',
+  bridgeURL: 'https://bridge.bitsong.io/',
+  supplyURL: 'https://supply.bitsong.io/',
   minBlockHeight: 2966151,
   stakingDenom: 'BTSG',
   coinLookup: [
@@ -52,6 +54,7 @@ export const networks: NetworkConfig[] = [
     website: 'https://bitsong.io',
     apiURL: 'https://api.testnet.bitsong.network',
     rpcURL: 'https://rpc.testnet.bitsong.network',
+    supplyURL: 'https://supply.bitsong.io/',
     explorerURL: 'https://www.mintscan.io/bitsong/',
     minBlockHeight: 2966151,
     stakingDenom: 'BTSG',
@@ -76,6 +79,127 @@ export const networks: NetworkConfig[] = [
         feeOptions: [
           {
             denom: 'BTSG',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },
+  {
+    id: 'juno-1',
+    name: 'Juno',
+    description: 'Juno Mainnet',
+    logo: 'logo.svg',
+    website: 'https://junonetwork.io',
+    apiURL: 'https://lcd-juno.itastakers.com',
+    rpcURL: 'https://rpc-juno.itastakers.com',
+    explorerURL: 'https://www.mintscan.io/juno/',
+    supplyURL: 'https://supply.junonetwork.io/',
+    minBlockHeight: 1412200,
+    stakingDenom: 'JUNO',
+    coinLookup: [
+      {
+        viewDenom: 'JUNO',
+        chainDenom: 'ujuno',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'juno',
+    validatorAddressPrefix: 'junovaloper',
+    validatorConsensusaddressPrefix: 'junovalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'juno-network',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'JUNO',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },
+  {
+    id: 'osmosis-1',
+    name: 'Osmosis',
+    description: 'Osmosis Mainnet',
+    logo: 'logo.svg',
+    website: 'https://osmosis.zone',
+    apiURL: 'https://lcd-osmosis.keplr.app',
+    rpcURL: 'https://rpc-osmosis.itastakers.com',
+    explorerURL: 'https://www.mintscan.io/osmosis/',
+    minBlockHeight: 2742000,
+    stakingDenom: 'OSMO',
+    coinLookup: [
+      {
+        viewDenom: 'OSMO',
+        chainDenom: 'uosmo',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'osmo',
+    validatorAddressPrefix: 'osmovaloper',
+    validatorConsensusaddressPrefix: 'osmovalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'osmosis',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'OSMO',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },
+  {
+    id: 'cosmoshub-4',
+    name: 'Cosmos',
+    description: 'Cosmos Mainnet',
+    logo: 'logo.svg',
+    website: 'https://bitsong.io',
+    apiURL: 'https://lcd-cosmoshub.keplr.app',
+    rpcURL: 'https://rpc-cosmoshub.keplr.app',
+    explorerURL: 'https://www.mintscan.io/cosmos/',
+    minBlockHeight: 1,
+    stakingDenom: 'ATOM',
+    coinLookup: [
+      {
+        viewDenom: 'ATOM',
+        chainDenom: 'uatom',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'cosmos',
+    validatorAddressPrefix: 'cosmosvaloper',
+    validatorConsensusaddressPrefix: 'cosmosvalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'cosmos',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'ATOM',
             amount: 0.001,
           },
         ],

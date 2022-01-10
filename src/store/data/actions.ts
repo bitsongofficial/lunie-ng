@@ -12,7 +12,8 @@ import {
   getGovernanceOverview,
   getValidatorDelegations,
   getSelfStake,
-  getAccountInfo
+  getAccountInfo,
+  getSupplyInfo
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
@@ -25,27 +26,32 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async refresh({ dispatch, commit }) {
     try {
-      await dispatch('getValidators');
+      commit('setLoading', true);
+      dispatch('getSupplyInfo').catch(err => console.error(err));
       await dispatch('getFirstBlock');
       await dispatch('getBlock');
+      await dispatch('getValidators');
+
       await dispatch('refreshSession');
-      await dispatch('getProposals');
-      await dispatch('getGovernanceOverview');
+      dispatch('getProposals').catch(err => console.error(err));
+      dispatch('getGovernanceOverview').catch(err => console.error(err));
     } catch (error) {
       console.error(error);
 
-        if (error instanceof Error) {
-          commit(
-            'notifications/add',
-            {
-              type: 'danger',
-              message: 'Refresh failed:' + error.message,
-            },
-            { root: true }
-          );
-        }
+      if (error instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Refresh failed:' + error.message,
+          },
+          { root: true }
+        );
+      }
 
-        throw error;
+      throw error;
+    } finally {
+      commit('setLoading', false);
     }
   },
   async refreshSession({ dispatch, commit, rootState }) {
@@ -55,11 +61,12 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const address = session.address;
 
       try {
+        commit('setLoading', true);
         await dispatch('getBalances', { address });
         await dispatch('getRewards', { address });
+        await dispatch('getValidators');
         await dispatch('getDelegations', address);
         await dispatch('getUndelegations', address);
-        /* await dispatch('getTransactions', { address }); */
       } catch (error) {
         console.error(error);
 
@@ -75,7 +82,33 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         }
 
         throw error;
+      } finally {
+        commit('setLoading', false);
       }
+    }
+  },
+  async getSupplyInfo ({ commit }) {
+    try {
+      commit('setLoadingSupplyInfo', false);
+      const supplyInfo = await getSupplyInfo();
+      commit('setSupplyInfo', supplyInfo);
+
+      return supplyInfo;
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting supply info failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+
+      throw err;
+    } finally {
+      commit('setLoadingSupplyInfo', false);
     }
   },
   async getFirstBlock ({ commit, rootState }) {
@@ -186,7 +219,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setRewardsLoaded', false)
       const rewards = await getRewards(address, getters['validatorsDictionary']);
       commit('setRewards', rewards);
-      commit('setRewardsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -198,6 +230,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setRewardsLoaded', true);
     }
   },
   async getValidators({ commit, dispatch }) {
@@ -205,7 +239,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setValidatorsLoaded', false);
       const validators = await loadValidators();
       commit('setValidators', validators);
-      commit('setValidatorsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -217,6 +250,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setValidatorsLoaded', true);
     }
 
     await dispatch('updateValidatorImages');
@@ -246,7 +281,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const proposals = await getProposals(getters['validatorsDictionary']);
 
       commit('setProposals', proposals);
-      commit('setProposalsLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -258,6 +292,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setProposalsLoaded', true);
     }
   },
   async getGovernanceOverview({ commit, getters }) {
@@ -265,7 +301,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setGovernanceOverviewLoaded', false);
       const governanceOverview = await getGovernanceOverview(getters['topVoters']);
       commit('setGovernanceOverview', governanceOverview);
-      commit('setGovernanceOverviewLoaded', true);
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -277,6 +312,8 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           { root: true }
         );
       }
+    } finally {
+      commit('setGovernanceOverviewLoaded', true);
     }
   },
   async getValidatorDelegations({ commit }, validator: Validator) {

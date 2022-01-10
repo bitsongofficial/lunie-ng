@@ -19,7 +19,7 @@ export default defineComponent({
           sessionType: SessionType.KEPLR,
           address: store.state.keplr.accounts[0].address,
         });
-      } else {
+      } else if (session.value) {
         await store.dispatch('authentication/signIn', session.value);
       }
     }

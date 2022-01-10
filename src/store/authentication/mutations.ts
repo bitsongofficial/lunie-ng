@@ -9,6 +9,12 @@ const mutation: MutationTree<AuthenticationStateInterface> = {
   setNetwork(state, network: NetworkConfig) {
     state.network = network;
   },
+  setLoading(state, loading: boolean) {
+    state.loading = loading;
+  },
+  setChanging(state, changing: boolean) {
+    state.changing = changing;
+  },
 }
 
 export default mutation;

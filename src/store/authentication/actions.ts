@@ -18,6 +18,7 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
   },
   async changeNetwork({ commit, dispatch, state, rootState }, network: NetworkConfig) {
     try {
+      commit('setChanging', true);
       commit('setNetwork', network);
       api.defaults.baseURL = network.apiURL;
 
@@ -27,12 +28,14 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
           sessionType: SessionType.KEPLR,
           address: rootState.keplr.accounts[0].address,
         });
-      } else {
+      } else if (state.session) {
         await dispatch('signIn', state.session);
       }
     } catch (error) {
       console.error(error);
       throw error;
+    } finally {
+      commit('setChanging', false);
     }
   },
 }

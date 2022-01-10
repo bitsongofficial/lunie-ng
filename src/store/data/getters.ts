@@ -71,6 +71,18 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   },
   activeValidators({ validators }) {
     return validators.filter(el => el.status === ValidatorStatus.ACTIVE);
+  },
+  supplyInfo({ supplyInfo }) {
+    if (supplyInfo) {
+      return {
+        ...supplyInfo,
+        circulatingSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.circulatingSupply).toString()) ?? ''} ${supplyInfo.denom}`,
+        communityPool: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.communityPool).toString()) ?? ''} ${supplyInfo.denom}`,
+        totalSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.totalSupply).toString()) ?? ''} ${supplyInfo.denom}`
+      };
+    }
+
+    return null;
   }
 }
 

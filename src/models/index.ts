@@ -17,3 +17,4 @@ export * from './annual-provisions';
 export * from './keybase';
 export * from './wallet';
 export * from './account';
+export * from './supply';

@@ -181,16 +181,22 @@ export const loadValidators = async () => {
     { result: unbondingValidators },
     { result: unbondedValidators },
     { result: unspecifiedValidators },
-    annualProvision,
     pool
   ] = await Promise.all([
     getValidators(ValidatorStatusRequest.BOND_STATUS_BONDED),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDING),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDED),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNSPECIFIED),
-    getAnnualProvision(),
     getPool()
   ]);
+
+  let annualProvision: string | undefined;
+
+  try {
+    annualProvision = await getAnnualProvision();
+  } catch (error) {
+    console.error(error);
+  }
 
   const totalShares = bondedValidators.reduce(
     (sum, { delegator_shares: delegatorShares }) => sum.plus(delegatorShares),
@@ -318,8 +324,6 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
 
     const resultKeys = Object.keys(response.data);
 
-    console.log(response.data, resultKeys, resultKeys.includes('tally'));
-
     if (resultKeys.includes('tally')) {
       tally = (response.data as { tally: Tally; }).tally;
     } else {
@@ -345,8 +349,6 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
     }, 0)
     :
     0;
-
-  console.log(tally, new BigNumber(tally.yes), totalVotingParticipation.toString());
 
   return {
     deposits: formattedDeposits,

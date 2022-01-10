@@ -1,4 +1,4 @@
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
@@ -19,9 +19,13 @@ export interface DataStateInterface {
   governanceOverviewLoaded: boolean;
   validatorDelegations: Delegation[];
   validatorDelegationsLoading: boolean;
+  supplyInfo: SupplyResponse | null;
+  loadingSupplyInfo: boolean;
   selfStakeValidator: number;
   selfStakeValidatorLoading: boolean;
   loadingSignTransaction: boolean;
+  loading: boolean;
+  loadingDataDetails: boolean;
 }
 
 function state (): DataStateInterface {
@@ -46,7 +50,11 @@ function state (): DataStateInterface {
     validatorDelegationsLoading: false,
     selfStakeValidator: 0,
     selfStakeValidatorLoading: false,
-    loadingSignTransaction: false
+    loadingSignTransaction: false,
+    loading: false,
+    loadingDataDetails: false,
+    supplyInfo: null,
+    loadingSupplyInfo: false
   }
 }
 

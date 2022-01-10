@@ -15,7 +15,7 @@
       class="menu-link"
     >
       <q-item-section v-if="icon" avatar>
-        <q-icon :name="icon" :color="isActive || contained(route) ? 'accent-2' : 'accent'" size="20px" />
+        <q-icon :name="icon" :color="newLink || isActive || contained(route) ? 'accent-2' : 'accent'" size="20px" />
       </q-item-section>
 
       <q-item-section>
@@ -33,11 +33,17 @@
     v-else
   >
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" color="accent" size="20px" />
+      <q-icon :name="icon" :color="newLink ? 'accent-2' : 'accent'" size="20px" />
     </q-item-section>
 
     <q-item-section>
       <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
+    </q-item-section>
+
+    <q-item-section v-if="newLink">
+      <q-chip class="status text-uppercase text-weight-medium q-mx-none q-my-none text-body6" text-color="white" color="accent-2">
+        new
+      </q-chip>
     </q-item-section>
   </q-item>
 </template>
@@ -61,6 +67,10 @@ export default defineComponent({
       type: String,
     },
     external: {
+      type: Boolean,
+      default: false,
+    },
+    newLink: {
       type: Boolean,
       default: false,
     }
@@ -100,5 +110,19 @@ export default defineComponent({
       color: $accent-2 !important;
     }
   }
+
+  &:hover {
+    background: $transparent-gray2;
+    color: $white;
+  }
+}
+
+.status {
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: 12px;
+  width: 37px;
+  min-height: 24px;
+  border-radius: 25px;
 }
 </style>
