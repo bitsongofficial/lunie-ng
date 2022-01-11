@@ -89,7 +89,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
   },
   async getSupplyInfo ({ commit }) {
     try {
-      commit('setLoadingSupplyInfo', false);
+      commit('setLoadingSupplyInfo', true);
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
 

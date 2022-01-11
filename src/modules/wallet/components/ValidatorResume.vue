@@ -72,8 +72,9 @@ import { useQuasar } from 'quasar';
 import { Delegation, Validator } from 'src/models';
 import { defineComponent, PropType, computed } from 'vue';
 import { bigFigureOrPercent, shortDecimals } from 'src/common/numbers';
-import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 import { useStore } from 'src/store';
+
+import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 
 export default defineComponent({
   name: 'ValidatorResume',

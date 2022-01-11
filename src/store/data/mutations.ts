@@ -76,6 +76,7 @@ const mutation: MutationTree<DataStateInterface> = {
     state.supplyInfo = supplyInfo;
   },
   resetSessionData(state) {
+    state.supplyInfo = null;
     state.balances = [];
     state.rewards = [];
     state.delegations = []

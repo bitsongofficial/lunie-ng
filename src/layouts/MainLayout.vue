@@ -34,7 +34,7 @@
       <div class="drawer-container container">
         <q-drawer class="drawer-menu bg-transparent column" :class="{
           'back': back
-        }" :persistent="!quasar.screen.lt.md" :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
+        }" :persistent="true" show-if-above :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
           <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
             <q-icon class="rotate-180 q-mr-md" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
             <label class="text-h6 text-white text-uppercase no-pointer-events">back</label>
@@ -113,7 +113,7 @@ export default defineComponent({
     const { network, networks, loadingNetwork } = useChangeNetwork(goBack);
     const quasar = useQuasar();
     const store = useStore();
-    const leftDrawer = ref<boolean>(false);
+    const leftDrawer = ref<boolean>(true);
     const session = computed(() => store.state.authentication.session);
     const address = computed(() => formatAddress(store.state.authentication.session?.address));
     const loading = computed(() => store.state.authentication.loading);
