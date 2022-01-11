@@ -9,7 +9,6 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
   async init ({ commit, dispatch, rootState }, trys: number) {
     commit('setError', undefined);
     commit('setLoading', true);
-    commit('authentication/setLoading', true, { root: true });
 
     // sometimes the page loads quicker the keplr is available
     // so we try again for a couple of times but give up at somepoint
@@ -119,9 +118,9 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
         }
       } catch (error) {
         commit('setError', (error as Error).message);
+        throw error;
       } finally {
         commit('setLoading', false);
-        commit('authentication/setLoading', false, { root: true });
       }
     }
   }

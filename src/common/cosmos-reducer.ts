@@ -110,7 +110,7 @@ export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[]
   );
 
   const total = isStakingDenom
-    ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake)
+    ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake).toString()
     : lunieCoin.amount;
 
   return {

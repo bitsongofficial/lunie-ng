@@ -14,12 +14,14 @@
       </div>
 
       <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
-        <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-          deposit
-        </q-btn>
-        <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-          vote
-        </q-btn>
+        <template v-if="session && session.sessionType !== 'explore'">
+          <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+            deposit
+          </q-btn>
+          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+            vote
+          </q-btn>
+        </template>
 
         <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
           Copy link
@@ -98,6 +100,8 @@ export default defineComponent({
     const router = useRouter();
     const proposalID = parseInt(props.id);
 
+    const session = computed(() => store.state.authentication.session);
+
     const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
 
     const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '')));
@@ -147,6 +151,7 @@ export default defineComponent({
     });
 
     return {
+      session,
       proposal,
       description,
       dataset,

@@ -1,6 +1,6 @@
 <template>
   <q-page class="portfolio">
-    <div class="section-header row items-center no-wrap">
+    <div class="section-header row items-center">
       <h2 class="section-title text-body-large text-white">
         Your Balances
       </h2>
@@ -8,6 +8,16 @@
       <q-btn @click="openClaimDialog" :disable="rewards.length === 0" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
         {{ !quasar.screen.lt.md ? 'CLAIM REWARDS' : 'CLAIM' }}
       </q-btn>
+
+      <div class="section-balance row items-center section-balance">
+        <h3 class="section-total q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
+          TOTAL ({{ network.stakingDenom }})
+        </h3>
+        <h2 class="text-body-large text-white" v-if="!loadingBalance">
+          {{ balance ? balance.total : 0 }}
+        </h2>
+        <q-skeleton width="92px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+      </div>
     </div>
 
     <balance-summary class="balance-summary" />
@@ -76,7 +86,7 @@
 import { defineComponent, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'src/store';
-import { SupplyResponse, Validator } from 'src/models';
+import { SupplyResponse, Validator, Balance } from 'src/models';
 
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
@@ -96,6 +106,8 @@ export default defineComponent({
     const store = useStore();
     const quasar = useQuasar();
 
+    const network = computed(() => store.state.authentication.network);
+
     const rewards = computed(() => store.state.data.rewards);
 
     const validatorsOfDelegations = computed(() => store.getters['data/validatorsOfDelegations'] as Validator[]);
@@ -107,6 +119,9 @@ export default defineComponent({
     const supplyInfo = computed(() => store.getters['data/supplyInfo'] as SupplyResponse | null);
     const loadingSupplyInfo = computed(() => store.state.data.loadingSupplyInfo);
 
+    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
+
     const openClaimDialog = () => {
       quasar.dialog({
         component: ClaimDialog,
@@ -116,6 +131,9 @@ export default defineComponent({
     }
 
     return {
+      network,
+      balance,
+      loadingBalance,
       supplyInfo,
       loadingSupplyInfo,
       rewards,
@@ -173,5 +191,18 @@ export default defineComponent({
 
 .undelegation-section {
   margin-bottom: 62px;
+}
+
+.section-balance {
+  padding-right: 0;
+  margin-left: auto;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    padding-right: 46px;
+  }
+}
+
+.section-total {
+  margin-right: 12px;
 }
 </style>

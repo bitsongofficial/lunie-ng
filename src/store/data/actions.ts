@@ -13,12 +13,15 @@ import {
   getValidatorDelegations,
   getSelfStake,
   getAccountInfo,
-  getSupplyInfo
+  getSupplyInfo,
+  getPool,
+  getInflation
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
 import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
+import { getAPR } from 'src/common/numbers';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -87,13 +90,11 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       }
     }
   },
-  async getSupplyInfo ({ commit }) {
+  async getSupplyInfo({ commit, dispatch }) {
     try {
       commit('setLoadingSupplyInfo', true);
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
-
-      return supplyInfo;
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -109,6 +110,36 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       throw err;
     } finally {
       commit('setLoadingSupplyInfo', false);
+
+      await dispatch('getAPR');
+    }
+  },
+  async getAPR({ commit, state }) {
+    try {
+      commit('setLoadingAPR', true);
+
+      if (state.supplyInfo) {
+        const pool = await getPool();
+        const inflation = await getInflation();
+        const apr = getAPR(state.supplyInfo.chainSupply, inflation.inflation, pool.pool.bonded_tokens);
+
+        commit('setApr', apr.toString());
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting APR failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
+
+      throw err;
+    } finally {
+      commit('setLoadingAPR', false);
     }
   },
   async getFirstBlock ({ commit, rootState }) {

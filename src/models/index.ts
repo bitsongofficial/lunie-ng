@@ -18,3 +18,4 @@ export * from './keybase';
 export * from './wallet';
 export * from './account';
 export * from './supply';
+export * from './inflaction';

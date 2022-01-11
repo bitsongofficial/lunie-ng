@@ -26,6 +26,8 @@ export interface DataStateInterface {
   loadingSignTransaction: boolean;
   loading: boolean;
   loadingDataDetails: boolean;
+  apr: string;
+  loadingApr: boolean;
 }
 
 function state (): DataStateInterface {
@@ -54,7 +56,9 @@ function state (): DataStateInterface {
     loading: false,
     loadingDataDetails: false,
     supplyInfo: null,
-    loadingSupplyInfo: false
+    loadingSupplyInfo: false,
+    apr: '0',
+    loadingApr: false
   }
 }
 

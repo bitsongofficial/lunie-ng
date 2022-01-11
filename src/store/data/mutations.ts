@@ -1,6 +1,6 @@
 import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
-import { MutationTree } from 'vuex'
-import { DataStateInterface } from './state'
+import { MutationTree } from 'vuex';
+import { DataStateInterface } from './state';
 
 const mutation: MutationTree<DataStateInterface> = {
   setFirstBlock(state, firstBlock: BlockReduced) {
@@ -75,14 +75,22 @@ const mutation: MutationTree<DataStateInterface> = {
   setSupplyInfo(state, supplyInfo: SupplyResponse) {
     state.supplyInfo = supplyInfo;
   },
+  setLoadingAPR(state, loadingApr: boolean) {
+    state.loadingApr = loadingApr;
+  },
+  setApr(state, apr: string) {
+    state.apr = apr;
+  },
   resetSessionData(state) {
     state.supplyInfo = null;
+    state.apr = '0';
     state.balances = [];
     state.rewards = [];
     state.delegations = []
     state.undelegations = []
     state.rewards = [];
     state.validators = [];
+    state.proposals = [];
   },
 }
 

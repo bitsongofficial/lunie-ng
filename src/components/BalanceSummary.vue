@@ -4,40 +4,44 @@
       'q-gutter-y-md': quasar.screen.lt.md,
       'items-center': !quasar.screen.lt.md
     }">
-      <div class="balance-section column no-wrap col-12 col-md-2">
-        <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
-          TOTAL ({{ network.stakingDenom }})
-        </h3>
+      <div class="row col-12 col-md-8 justify-between q-mr-auto">
+        <div class="balance-section column no-wrap col-12 col-md-auto">
+          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+            APR
+          </h3>
 
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
-          {{ balance ? balance.total : 0 }}
-        </p>
-        <q-skeleton width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
-      </div>
-      <div class="balance-section column no-wrap col-12 col-md-2">
-        <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-          REWARDS ({{ network.stakingDenom }})
-        </h3>
+          <template v-if="!loadingApr">
+            <p class="balance-subtitle text-body-extra-large text-white q-my-none">
+              {{ apr }}
+            </p>
+          </template>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+        </div>
+        <div class="balance-section column no-wrap col-12 col-md-auto">
+          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+            REWARDS ({{ network.stakingDenom }})
+          </h3>
 
-        <template v-if="!loadingBalance">
-          <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-            {{ rewards }}
+          <template v-if="!loadingBalance">
+            <p class="balance-subtitle text-body-extra-large text-white q-my-none">
+              {{ rewards }}
+            </p>
+          </template>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+        </div>
+        <div class="balance-section column no-wrap col-12 col-md-auto">
+          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+            AVAILABLE ({{ network.stakingDenom }})
+          </h3>
+
+          <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
+            {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
           </p>
-        </template>
-        <q-skeleton class="q-mx-auto" width="80px" height="36px" dark v-else></q-skeleton>
-      </div>
-      <div class="balance-section column no-wrap col-12 col-md-2">
-        <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-          AVAILABLE ({{ network.stakingDenom }})
-        </h3>
-
-        <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
-          {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
-        </p>
-        <q-skeleton class="q-mx-auto" width="80px" height="36px" dark v-else></q-skeleton>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+        </div>
       </div>
 
-      <q-btn @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
+      <q-btn v-if="session && session.sessionType !== 'explore'" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
         SEND <q-icon class="balance-icon rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="half-transparent-white" />
       </q-btn>
     </div>
@@ -59,6 +63,11 @@ export default defineComponent({
     const store = useStore();
     const quasar = useQuasar();
 
+    const session = computed(() => store.state.authentication.session);
+
+    const apr = computed(() => store.getters['data/getAprInfo'] as string);
+    const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading);
+
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
     const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
     const network = computed(() => store.state.authentication.network);
@@ -66,7 +75,7 @@ export default defineComponent({
     const rewards = computed(() => {
       const totalRewardsPerDenom = store.getters['data/totalRewardsPerDenom'] as Dictionary<number>;
 
-      if (totalRewardsPerDenom && balance.value) {
+      if (totalRewardsPerDenom && Object.keys(totalRewardsPerDenom).length > 0 && balance.value) {
         const amount = totalRewardsPerDenom[balance.value.denom];
 
         if (amount === 0) {
@@ -75,10 +84,12 @@ export default defineComponent({
 
         if (amount > 0.001) {
           return bigFigureOrShortDecimals(amount);
+        } else {
+          return '< 1';
         }
       }
 
-      return '< 1';
+      return '0';
     });
 
     const openSendDialog = () => {
@@ -90,6 +101,9 @@ export default defineComponent({
     }
 
     return {
+      session,
+      apr,
+      loadingApr,
       loadingBalance,
       network,
       rewards,
@@ -115,33 +129,17 @@ export default defineComponent({
 }
 
 .balance-section {
+  margin-bottom: 12px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 0;
+  }
+
   & .balance-title,
   & .balance-subtitle {
     text-overflow: ellipsis;
     overflow: hidden;
     text-align: center;
-  }
-
-  &:nth-child(1) {
-    & .balance-title,
-    & .balance-subtitle {
-      @media screen and (min-width: $breakpoint-md-min) {
-        text-align: left;
-      }
-    }
-  }
-
-  &:nth-child(2) {
-    @media screen and (min-width: $breakpoint-md-min) {
-      margin-left: auto;
-      margin-right: 250px;
-    }
-  }
-
-  &:nth-child(3) {
-    @media screen and (min-width: $breakpoint-md-min) {
-      margin-right: auto;
-    }
   }
 }
 

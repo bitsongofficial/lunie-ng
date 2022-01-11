@@ -35,6 +35,8 @@ $dark: #1D1D1D;
 
 $transparent-secondary: transparentize($secondary, 0.3);
 
+$transparent-accent: transparentize($accent, 0.5);
+
 $accent-linear-gradient: linear-gradient(0deg, $accent, $accent), rgba(255, 255, 255, 0.2);
 $alternative-linear-gradient: linear-gradient(0deg, $alternative, $alternative), $white;
 $alternative-3-linear-gradient: linear-gradient(0deg, $alternative-3, $alternative-3), transparentize($white, 0.8);
