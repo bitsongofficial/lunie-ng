@@ -95,6 +95,17 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setLoadingSupplyInfo', true);
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
+
+      if (!supplyInfo) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting supply info failed: endpoint undefined',
+          },
+          { root: true }
+        );
+      }
     } catch (err) {
       if (err instanceof Error) {
         commit(

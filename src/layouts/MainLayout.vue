@@ -14,52 +14,22 @@
           <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
         </q-toolbar-title>
 
-        <div class="row actions items-center no-wrap">
-          <q-item class="profile-item" clickable v-if="session" @click="!loading && session ? onCopy(session.address) : null">
-            <q-item-section class="column">
-              <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
-              <label class="text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
-              <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
-            </q-item-section>
+        <q-item class="profile-item" clickable v-if="session" @click="!loading && session ? onCopy(session.address) : null">
+          <q-item-section class="column">
+            <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
+            <label class="text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
+            <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
+          </q-item-section>
 
-            <q-item-section side v-if="!quasar.screen.lt.md">
-              <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md">
-                <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
-              </q-btn>
-            </q-item-section>
-          </q-item>
-          <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md" v-else>
-            <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
-          </q-btn>
-
-          <q-select
-            v-if="!quasar.screen.lt.md"
-            v-model="network"
-            rounded
-            standout
-            map-options
-            :options="networks"
-            bg-color="transparent-white"
-            color="transparent-white"
-            label-color="primary"
-            class="extra-large q-mt-auto q-ml-md"
-            no-error-icon
-            hide-bottom-space
-            :loading="loadingNetwork"
-            :options-cover="false"
-          >
-            <template v-slot:selected-item="{ opt }">
-              <div class="row items-center cursor-pointer">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
-              </div>
-            </template>
-            <template v-slot:option="{ itemProps, opt }">
-              <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
+          <q-item-section side v-if="!quasar.screen.lt.md">
+            <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md">
+              <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+            </q-btn>
+          </q-item-section>
+        </q-item>
+        <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md" v-else>
+          <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -83,7 +53,6 @@
 
           <q-select
             v-model="network"
-            v-if="quasar.screen.lt.md"
             rounded
             standout
             map-options
@@ -108,10 +77,6 @@
               </q-item>
             </template>
           </q-select>
-
-          <q-btn v-if="session" @click="signOut" class="full-width logout-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="transparent-accent" text-color="white" padding="12px 24px 10px 26px">
-            Sign Out
-          </q-btn>
         </q-drawer>
       </div>
 
@@ -168,7 +133,7 @@ export default defineComponent({
       return network.value.explorerURL;
     });
 
-    const bridgeURL = computed(() => store.state.authentication.network.bridgeURL);
+    const bridgeURL = computed(() => 'https://bridge.bitsong.io/');
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -262,15 +227,6 @@ export default defineComponent({
 }
 
 .connection-item {
-  margin-bottom: 16px;
-}
-
-.logout-btn {
-  height: auto;
   margin-bottom: 40px;
-
-  @media screen and (min-width: $breakpoint-md-min) {
-    margin-top: auto;
-  }
 }
 </style>
