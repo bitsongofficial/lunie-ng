@@ -1,6 +1,6 @@
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, UnbondingDelegation, Validator } from 'src/models';
-import { MutationTree } from 'vuex'
-import { DataStateInterface } from './state'
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { MutationTree } from 'vuex';
+import { DataStateInterface } from './state';
 
 const mutation: MutationTree<DataStateInterface> = {
   setFirstBlock(state, firstBlock: BlockReduced) {
@@ -66,12 +66,31 @@ const mutation: MutationTree<DataStateInterface> = {
   setLoadingSignTransaction(state, loadingSignTransaction: boolean) {
     state.loadingSignTransaction = loadingSignTransaction;
   },
+  setLoading(state, loading: boolean) {
+    state.loading = loading;
+  },
+  setLoadingSupplyInfo(state, loading: boolean) {
+    state.loadingSupplyInfo = loading;
+  },
+  setSupplyInfo(state, supplyInfo: SupplyResponse) {
+    state.supplyInfo = supplyInfo;
+  },
+  setLoadingAPR(state, loadingApr: boolean) {
+    state.loadingApr = loadingApr;
+  },
+  setApr(state, apr: string) {
+    state.apr = apr;
+  },
   resetSessionData(state) {
+    state.supplyInfo = null;
+    state.apr = '0';
     state.balances = [];
     state.rewards = [];
     state.delegations = []
     state.undelegations = []
     state.rewards = [];
+    state.validators = [];
+    state.proposals = [];
   },
 }
 

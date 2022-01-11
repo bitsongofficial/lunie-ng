@@ -79,12 +79,20 @@
   color: $gray3 !important;
 }
 
+.text-transparent-accent {
+  color: $transparent-accent !important;
+}
+
 .bg-blur {
   backdrop-filter: blur(20px);
 }
 
 .bg-transparent-secondary {
-  color: $transparent-secondary !important;
+  background: $transparent-secondary !important;
+}
+
+.bg-transparent-accent {
+  background: $transparent-accent !important;
 }
 
 .bg-gradient {
@@ -128,4 +136,8 @@
 
 .text-untransform {
   text-transform: none;
+}
+
+.text-underline {
+  text-decoration: underline;
 }

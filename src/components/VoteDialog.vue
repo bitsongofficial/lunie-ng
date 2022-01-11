@@ -55,18 +55,18 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Success!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Success!</h3>
 
-          <p class="text-h4 text-half-transparent-white">You have successfully voted the proposal.</p>
+          <p class="text-h4 text-half-transparent-white text-center">You have successfully voted the proposal.</p>
         </div>
       </template>
 
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm">Error!</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
-        <p class="text-h4 text-half-transparent-white">{{ error }}</p>
+        <p class="text-h4 text-half-transparent-white text-center">{{ error }}</p>
       </div>
     </q-card>
   </q-dialog>

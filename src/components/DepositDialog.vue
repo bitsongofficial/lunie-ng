@@ -48,7 +48,7 @@
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins.toFormat() }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
           </div>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -121,12 +121,10 @@ export default defineComponent({
     const success = ref<boolean>(false);
     const error = ref<string>();
 
-    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const balance = computed(() => store.getters['data/currentRawBalance'] as Balance | undefined);
     const network = computed(() => store.state.authentication.network);
 
-    const availableCoins = computed(() => {
-      return balance.value ? new BigNumber(balance.value.available).toString() : '0';
-    });
+    const availableCoins = computed(() => new BigNumber(balance.value ? balance.value.available : '0'));
 
     const loading = computed(() => store.state.data.loadingSignTransaction);
 

@@ -42,7 +42,11 @@ declare module '@vue/runtime-core' {
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key');
 
-const plugins: Plugin<StateInterface>[] = [createPersistedState()];
+const plugins: Plugin<StateInterface>[] = [
+  createPersistedState({
+    paths: ['authentication', 'data', 'keplr', 'ledger']
+  }),
+];
 
 if (!!process.env.DEBUGGING) {
   plugins.push(createLogger());

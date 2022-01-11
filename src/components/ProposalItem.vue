@@ -1,12 +1,14 @@
 <template>
-  <item clickable reverse details v-ripple :to="'/proposals/' + proposal.id">
+  <item :clickable="proposal !== undefined" reverse details v-ripple :to="!loading && proposal ? '/proposals/' + proposal.id : '/'" :disable="!proposal">
     <div class="col-12 col-md-8" :class="{
       'row items-center': !quasar.screen.lt.md,
       'column reverse items-start': quasar.screen.lt.md,
     }">
-      <h4 class="title text-white text-weight-medium q-my-none">{{ proposal.title }}</h4>
+      <h4 class="title text-white text-weight-medium q-my-none" v-if="proposal && !loading">{{ proposal.title }}</h4>
+      <q-skeleton class="title-skeleton" type="text" width="100%" height="23px" square dark v-else></q-skeleton>
 
-      <proposal-status :status="proposal.status" />
+      <proposal-status :status="proposal.status" v-if="proposal && !loading"/>
+      <q-skeleton class="status" type="QBadge" width="69px" height="24px" dark v-else></q-skeleton>
     </div>
   </item>
 </template>
@@ -27,8 +29,11 @@ export default defineComponent({
   },
   props: {
     proposal: {
-      type: Object as PropType<Proposal>,
-      required: true
+      type: Object as PropType<Proposal>
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {
@@ -52,12 +57,17 @@ export default defineComponent({
   }
 }
 
-.title {
+.title,
+.title-skeleton {
   margin-bottom: 8px;
 
   @media screen and (min-width: $breakpoint-md-min) {
     margin-bottom: 0;
   }
+}
+
+.title-skeleton {
+  max-width: 260px;
 }
 
 .section {

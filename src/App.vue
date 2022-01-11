@@ -2,7 +2,7 @@
   <router-view />
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useStore } from 'src/store';
 
 export default defineComponent({
@@ -11,11 +11,11 @@ export default defineComponent({
     const store = useStore();
 
     window.addEventListener('keplr_keystorechange', async () => {
-      await store.dispatch('keplr/init');
-      await store.dispatch('authentication/signIn', {
-        sessionType: 'keplr',
-        address: store.state.keplr.accounts[0].address,
-      });
+      await store.dispatch('authentication/init');
+    });
+
+    onMounted(() => {
+      store.dispatch('authentication/init').catch(err => console.error(err));
     });
   }
 })

@@ -28,6 +28,7 @@ export interface NetworkConfig {
   apiURL: string;
   rpcURL: string;
   explorerURL: string;
+  supplyURL?: string;
   minBlockHeight: number;
   stakingDenom: string;
   coinLookup: CoinLookUp[],

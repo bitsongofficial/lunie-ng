@@ -110,7 +110,7 @@ export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[]
   );
 
   const total = isStakingDenom
-    ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake)
+    ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake).toString()
     : lunieCoin.amount;
 
   return {
@@ -308,7 +308,15 @@ function getTotalVotePercentage(proposal: ProposalRaw, totalBondedTokens: string
 export const tallyReducer = (proposal: ProposalRaw, tally: Tally, totalBondedTokens: string): TallyWithExtra => {
   // if the proposal is out of voting, use the final result for the tally
   if (proposalFinalized(proposal)) {
-    tally = proposal.final_tally_result
+    const resultKeys = Object.keys(proposal.final_tally_result);
+
+    if (proposal.tally) {
+      tally = proposal.tally;
+    } else if (resultKeys.includes('tally')) {
+      tally = (proposal.final_tally_result as { readonly tally: Tally; }).tally;
+    } else {
+      tally = proposal.final_tally_result as Tally;
+    }
   }
 
   const totalVoted = getStakingCoinViewAmount(

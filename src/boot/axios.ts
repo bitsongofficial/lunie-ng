@@ -10,8 +10,15 @@ const api = axios.create({
   responseType: 'json',
 });
 
+const external = axios.create({
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  responseType: 'json',
+});
+
 export default boot(() => {
   api.defaults.baseURL = Store.state.authentication.network.apiURL;
 });
 
-export { api };
+export { api, external };

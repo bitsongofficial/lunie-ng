@@ -14,12 +14,14 @@
       </div>
 
       <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
-        <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-          deposit
-        </q-btn>
-        <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-          vote
-        </q-btn>
+        <template v-if="session && session.sessionType !== 'explore'">
+          <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+            deposit
+          </q-btn>
+          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+            vote
+          </q-btn>
+        </template>
 
         <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
           Copy link
@@ -57,7 +59,7 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <pre class="description-block text-half-transparent-white text-h5" v-html="proposal?.description"></pre>
+    <pre class="description-block text-half-transparent-white text-h5" v-html="description"></pre>
   </q-page>
 </template>
 
@@ -69,11 +71,13 @@ import { useRouter } from 'vue-router';
 import { getMappedTimeline, getMappedVotes } from 'src/common/chart';
 import { useClipboard } from 'src/hooks';
 import { percent } from 'src/common/numbers';
+import { useQuasar } from 'quasar';
+import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
 
 import VoteCard from 'src/components/VoteCard.vue';
 import Timeline from 'src/components/Timeline.vue';
 import ProposalStatus from 'src/components/ProposalStatus.vue';
-import { useQuasar } from 'quasar';
 import DepositDialog from 'src/components/DepositDialog.vue';
 import VoteDialog from 'src/components/VoteDialog.vue';
 
@@ -96,7 +100,11 @@ export default defineComponent({
     const router = useRouter();
     const proposalID = parseInt(props.id);
 
+    const session = computed(() => store.state.authentication.session);
+
     const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
+
+    const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '')));
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value) {
@@ -143,7 +151,9 @@ export default defineComponent({
     });
 
     return {
+      session,
       proposal,
+      description,
       dataset,
       entries,
       href: window.location.href,

@@ -38,7 +38,8 @@ import {
   StakingDelegationResponse,
   ValidatorsDelegationResponse,
   AccountResponse,
-  AccountInfo
+  AccountInfo,
+  InflationResponse
 } from 'src/models';
 import { chunk, compact, orderBy, reduce } from 'lodash';
 import Store from 'src/store';
@@ -169,6 +170,12 @@ export const getPool = async () => {
   return response.data;
 }
 
+export const getInflation = async () => {
+  const response = await api.get<InflationResponse>('cosmos/mint/v1beta1/inflation');
+
+  return response.data;
+}
+
 export const getCommunityPool = async () => {
   const response = await api.get<CommunityPoolResponse>('cosmos/distribution/v1beta1/community_pool');
 
@@ -181,16 +188,22 @@ export const loadValidators = async () => {
     { result: unbondingValidators },
     { result: unbondedValidators },
     { result: unspecifiedValidators },
-    annualProvision,
     pool
   ] = await Promise.all([
     getValidators(ValidatorStatusRequest.BOND_STATUS_BONDED),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDING),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDED),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNSPECIFIED),
-    getAnnualProvision(),
     getPool()
   ]);
+
+  let annualProvision: string | undefined;
+
+  try {
+    annualProvision = await getAnnualProvision();
+  } catch (error) {
+    console.error(error);
+  }
 
   const totalShares = bondedValidators.reduce(
     (sum, { delegator_shares: delegatorShares }) => sum.plus(delegatorShares),
@@ -308,14 +321,21 @@ export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: Tally
     ProposalRawStatus.PROPOSAL_STATUS_REJECTED
   ].includes(proposal.status);
 
-  const votes = dataAvailable ? await getVotes(proposal) : []
-  const deposits = dataAvailable ? await getDeposits(proposal) : []
-  let tally = proposal.final_tally_result;
+  const votes = dataAvailable ? await getVotes(proposal) : [];
+  const deposits = dataAvailable ? await getDeposits(proposal) : [];
+
+  let tally = proposal.final_tally_result as Tally;
 
   if (!votingComplete) {
-    const response = await api.get<Tally>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`);
+    const response = await api.get<Tally | { tally: Tally; }>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/tally`);
 
-    tally = response.data;
+    const resultKeys = Object.keys(response.data);
+
+    if (resultKeys.includes('tally')) {
+      tally = (response.data as { tally: Tally; }).tally;
+    } else {
+      tally = response.data as Tally;
+    }
   }
 
   const totalVotingParticipation = new BigNumber(tally.yes)

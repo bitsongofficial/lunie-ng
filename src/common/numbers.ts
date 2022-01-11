@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { getStakingCoinViewAmount } from './cosmos-reducer';
 
 const language = 'en';
 
@@ -105,4 +106,12 @@ export const gtnZero = (amount: string): boolean => {
   const number = new BigNumber(amount);
 
   return number.gt(0);
+}
+
+export const getAPR = (supply: string, inflation: string, bondedTokens: string) => {
+  const supplyNumber = new BigNumber(supply);
+  const inflationNumber = new BigNumber(inflation);
+  const bondedTokensNumber = new BigNumber(getStakingCoinViewAmount(bondedTokens));
+
+  return (supplyNumber.multipliedBy(inflationNumber)).div(bondedTokensNumber);
 }

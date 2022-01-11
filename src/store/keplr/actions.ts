@@ -118,6 +118,7 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
         }
       } catch (error) {
         commit('setError', (error as Error).message);
+        throw error;
       } finally {
         commit('setLoading', false);
       }

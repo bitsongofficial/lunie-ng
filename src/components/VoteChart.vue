@@ -78,6 +78,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .vote-chart {
+  background-color: $transparent-gray;
+  backdrop-filter: blur(60px);
   position: relative;
   height: 10px;
   border-radius: 30px;

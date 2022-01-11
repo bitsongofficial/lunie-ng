@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
-import { bigFigureOrShortDecimals } from 'src/common/numbers';
+import { bigFigureOrShortDecimals, percent } from 'src/common/numbers';
 import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
 import { Validator, ValidatorMap, Reward, ValidatorStatus } from 'src/models';
 
@@ -42,6 +42,11 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     }
   },
+  currentRawBalance({ balances }) {
+    const balance = [...balances].pop();
+
+    return balance;
+  },
   validatorsDictionary({ validators }): ValidatorMap {
     return keyBy(validators, 'operatorAddress');
   },
@@ -71,6 +76,21 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   },
   activeValidators({ validators }) {
     return validators.filter(el => el.status === ValidatorStatus.ACTIVE);
+  },
+  supplyInfo({ supplyInfo }) {
+    if (supplyInfo) {
+      return {
+        ...supplyInfo,
+        circulatingSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.circulatingSupply).toString()) ?? ''} ${supplyInfo.denom}`,
+        communityPool: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.communityPool).toString()) ?? ''} ${supplyInfo.denom}`,
+        totalSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.totalSupply).toString()) ?? ''} ${supplyInfo.denom}`
+      };
+    }
+
+    return null;
+  },
+  getAprInfo({ apr }) {
+    return percent(new BigNumber(apr).toFixed(4));
   }
 }
 
