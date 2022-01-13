@@ -37,7 +37,7 @@
 
     <div class="container position-relative">
       <div class="drawer-container container">
-        <q-drawer class="drawer-menu bg-transparent column" :class="{
+        <q-drawer class="drawer-menu bg-transparent column no-wrap" :class="{
           'back': back
         }" :persistent="true" show-if-above :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
           <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
@@ -200,6 +200,7 @@ export default defineComponent({
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 8px;
+  margin: 16px;
 }
 
 .actions {
