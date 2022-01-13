@@ -36,6 +36,8 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
   },
   async init({ dispatch, commit, state, rootState }) {
     try {
+      await dispatch('data/resetSessionData', undefined, { root: true });
+
       if (state.session && state.session.sessionType === SessionType.KEPLR) {
         await dispatch('keplr/init', 0, { root: true });
         await dispatch('signIn', {

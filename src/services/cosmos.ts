@@ -39,7 +39,8 @@ import {
   ValidatorsDelegationResponse,
   AccountResponse,
   AccountInfo,
-  InflationResponse
+  InflationResponse,
+  BankSupplyResponse
 } from 'src/models';
 import { chunk, compact, orderBy, reduce } from 'lodash';
 import Store from 'src/store';
@@ -162,6 +163,12 @@ export const getAnnualProvision = async () => {
   const response = await api.get<AnnualProvisionsResponse>('cosmos/mint/v1beta1/annual_provisions');
 
   return response.data.annual_provisions;
+}
+
+export const getSupply = async () => {
+  const response = await api.get<BankSupplyResponse>('cosmos/bank/v1beta1/supply');
+
+  return response.data;
 }
 
 export const getPool = async () => {

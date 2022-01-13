@@ -24,7 +24,10 @@
 
     <q-list class="proposals-list">
       <template v-if="!loading" >
-        <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
+        <template v-if="proposals.length > 0">
+          <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
+        </template>
+        <proposals-summary @click="type = undefined" v-else></proposals-summary>
       </template>
       <proposal-item v-for="index in 6" :key="index" loading v-else />
     </q-list>
@@ -38,11 +41,13 @@ import { useStore } from 'src/store';
 import { ProposalStatus } from 'src/models';
 
 import ProposalItem from 'src/components/ProposalItem.vue';
+import ProposalsSummary from 'src/components/ProposalsSummary.vue';
 
 export default defineComponent({
   name: 'Proposals',
   components: {
     ProposalItem,
+    ProposalsSummary
   },
   setup() {
     const store = useStore();

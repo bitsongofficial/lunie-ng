@@ -7,7 +7,7 @@ const mutation: MutationTree<AuthenticationStateInterface> = {
     state.session = session;
   },
   setNetwork(state, network: NetworkConfig) {
-    state.network = network;
+    state.network = Object.assign({ supplyURL: undefined } , network);
   },
   setLoading(state, loading: boolean) {
     state.loading = loading;

@@ -15,13 +15,17 @@ import {
   getAccountInfo,
   getSupplyInfo,
   getPool,
-  getInflation
+  getInflation,
+  getSupply,
+  getCommunityPool
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
 import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
 import { getAPR } from 'src/common/numbers';
+import { getCoinLookup } from 'src/common/network';
+import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -125,17 +129,34 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       await dispatch('getAPR');
     }
   },
-  async getAPR({ commit, state }) {
+  async getAPR({ commit, rootState }) {
     try {
       commit('setLoadingAPR', true);
 
-      if (state.supplyInfo) {
-        const pool = await getPool();
-        const inflation = await getInflation();
-        const apr = getAPR(state.supplyInfo.chainSupply, inflation.inflation, pool.pool.bonded_tokens);
+      const totalSupply = await getSupply();
+      const communityPool = await getCommunityPool();
 
-        commit('setApr', apr.toString());
-      }
+      commit('setSupply', totalSupply.supply);
+      commit('setCommunityPool', communityPool.pool);
+
+      const supplyCoin = getCoinLookup(
+        rootState.authentication.network.stakingDenom,
+        'viewDenom'
+      );
+
+      const supplyChainDenom = supplyCoin?.chainDenom;
+      const chainSupplyTotal = totalSupply.supply.find(el => el.denom === supplyChainDenom);
+      const chainSupplyCoin = getStakingCoinViewAmount(chainSupplyTotal ? chainSupplyTotal.amount : '0')
+
+      const chainSupply = chainSupplyCoin.toString();
+
+      const pool = await getPool();
+      const inflation = await getInflation();
+      const apr = getAPR(chainSupply, inflation.inflation, pool.pool.bonded_tokens);
+
+      commit('setApr', apr.toString());
+      commit('setPool', pool.pool);
+      commit('setInflation', inflation.inflation);
     } catch (err) {
       if (err instanceof Error) {
         commit(

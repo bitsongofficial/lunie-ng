@@ -1,4 +1,5 @@
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { Coin } from '@cosmjs/stargate';
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
@@ -26,8 +27,12 @@ export interface DataStateInterface {
   loadingSignTransaction: boolean;
   loading: boolean;
   loadingDataDetails: boolean;
+  supply: Coin[];
+  communityPool: Coin[];
   apr: string;
   loadingApr: boolean;
+  inflation: string | null;
+  pool: Pool | null;
 }
 
 function state (): DataStateInterface {
@@ -57,8 +62,12 @@ function state (): DataStateInterface {
     loadingDataDetails: false,
     supplyInfo: null,
     loadingSupplyInfo: false,
+    supply: [],
+    communityPool: [],
     apr: '0',
-    loadingApr: false
+    loadingApr: false,
+    inflation: null,
+    pool: null
   }
 }
 
