@@ -442,17 +442,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         return hash;
       }
     } catch (err) {
-      if (err instanceof Error) {
-        commit(
-          'notifications/add',
-          {
-            type: 'danger',
-            message: 'Getting validator self stake failed:' + err.message,
-          },
-          { root: true }
-        );
-      }
-
       throw err;
     } finally {
       commit('setLoadingSignTransaction', false);

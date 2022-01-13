@@ -7,13 +7,13 @@
     </h5>
 
     <div class="btns row items-center justify-evenly q-gutter-sm">
-      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
         delegate
       </q-btn>
-      <q-btn :disable="!hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
         undelegate
       </q-btn>
-      <q-btn :disable="!hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
         redelegate
       </q-btn>
     </div>
@@ -39,6 +39,7 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const delegations = computed(() => store.state.data.delegations);
+    const session = computed(() => store.state.authentication.session);
 
     const hasDelegations = computed(() => {
       return delegations.value.filter(({ validator }) => validator.operatorAddress === props.validator.operatorAddress).length > 0;
@@ -55,6 +56,7 @@ export default defineComponent({
     });
 
     return {
+      session,
       delegated,
       hasDelegations,
       ...useDelegatorActions(),

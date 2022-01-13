@@ -4,7 +4,7 @@ import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
 import { bigFigureOrShortDecimals, percent } from 'src/common/numbers';
 import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
-import { Validator, ValidatorMap, Reward, ValidatorStatus } from 'src/models';
+import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus } from 'src/models';
 
 const getters: GetterTree<DataStateInterface, StateInterface> = {
   totalRewardsPerDenom({ rewards }) {
@@ -76,6 +76,9 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   },
   activeValidators({ validators }) {
     return validators.filter(el => el.status === ValidatorStatus.ACTIVE);
+  },
+  votingProposalsCount({ proposals }) {
+    return proposals.filter(el => el.status === ProposalStatus.VOTING).length;
   },
   supplyInfo({ supplyInfo }) {
     if (supplyInfo) {

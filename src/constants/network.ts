@@ -176,7 +176,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://lcd-cosmoshub.keplr.app',
     rpcURL: 'https://rpc-cosmoshub.keplr.app',
     explorerURL: 'https://www.mintscan.io/cosmos/',
-    minBlockHeight: 1,
+    minBlockHeight: 9054000,
     stakingDenom: 'ATOM',
     coinLookup: [
       {
@@ -205,6 +205,46 @@ export const networks: NetworkConfig[] = [
       },
     },
     icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },
+  {
+    id: 'chihuahua-1',
+    name: 'Chihuahua',
+    description: 'Chihuahua Mainnet',
+    logo: 'logo.svg',
+    website: 'https://chihuahua.wtf',
+    apiURL: 'https://api.chihuahua.wtf',
+    rpcURL: 'https://rpc.chihuahua.wtf',
+    explorerURL: 'https://www.mintscan.io/chihuahua/',
+    minBlockHeight: 1,
+    stakingDenom: 'HUAHUA',
+    coinLookup: [
+      {
+        viewDenom: 'HUAHUA',
+        chainDenom: 'uhuahua',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'chihuahua',
+    validatorAddressPrefix: 'chihuahuavaloper',
+    validatorConsensusaddressPrefix: 'chihuahuavalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'chihuahua-token',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'HUAHUA',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/22485/small/logo_transparent_notext.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   }
 ];

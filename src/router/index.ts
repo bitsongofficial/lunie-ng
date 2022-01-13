@@ -1,4 +1,4 @@
-/* import Store from 'src/store'; */
+import Store from 'src/store';
 import {
   createMemoryHistory,
   createRouter,
@@ -23,11 +23,9 @@ const Router = createRouter({
   )
 });
 
-/* Router.beforeEach((to, _, next) => {
+Router.beforeEach((to, _, next) => {
   const logged = Store.state.authentication.session !== undefined;
   const match = to.matched.find(el => el.name === 'login');
-
-  console.log(to);
 
   if (!logged && !match) {
     if (to.fullPath !== '/') {
@@ -37,14 +35,14 @@ const Router = createRouter({
     return next({ name: 'authentication' });
   }
 
-  const defaultRoute = { name: 'wallet' };
+  /* const defaultRoute = { name: 'wallet' };
 
   if (logged && (match || to.path === '/')) {
     return next(defaultRoute);
-  }
+  } */
 
   return next();
-}); */
+});
 
 Router.afterEach(to => {
   const title = Array.isArray(to.meta.title) ? to.meta.title.join(' - ') : to.meta.title as string;

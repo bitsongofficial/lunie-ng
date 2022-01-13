@@ -23,6 +23,7 @@ $accent-5: #9494B9;
 $alternative: #313150;
 $alternative-2: #23223B;
 $alternative-3: #303046;
+$alternative-4: #27273E;
 
 $white: #fff;
 $transparent-white: transparentize($white, 0.85);
@@ -36,6 +37,7 @@ $dark: #1D1D1D;
 $transparent-secondary: transparentize($secondary, 0.3);
 
 $transparent-accent: transparentize($accent, 0.5);
+$transparent-accent-3: transparentize($accent-3, 0.5);
 
 $accent-linear-gradient: linear-gradient(0deg, $accent, $accent), rgba(255, 255, 255, 0.2);
 $alternative-linear-gradient: linear-gradient(0deg, $alternative, $alternative), $white;
@@ -117,7 +119,8 @@ $subtitle2: (size: 16px, line-height: 20px, letter-spacing: normal, weight: 400)
 $overline: (size: 13px, line-height: 16px, letter-spacing: normal, weight: 400) !default;
 $overline-2: (size: 13px, line-height: 24px, letter-spacing: normal, weight: 400) !default;
 $caption: (size: 11px, line-height: 12px, letter-spacing: normal, weight: 400) !default;
+$caption-2: (size: 10px, line-height: 12px, letter-spacing: normal, weight: 400) !default;
 
-$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body6': $body6, 'body-large': $body-large, 'body-extra-large': $body-extra-large, 'body-extra-large2': $body-extra-large2, 'body-extra-large3': $body-extra-large3, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption) !default;
+$headings: ('h1': $h1, 'h2': $h2, 'h3': $h3, 'h4': $h4, 'h5': $h5, 'h6': $h6, 'subtitle1': $subtitle1, 'subtitle2': $subtitle2, 'body1': $body1, 'body2': $body2, 'body3': $body3, 'body4': $body4, 'body5': $body5, 'body6': $body6, 'body-large': $body-large, 'body-extra-large': $body-extra-large, 'body-extra-large2': $body-extra-large2, 'body-extra-large3': $body-extra-large3, 'overline': $overline,'overline-2': $overline-2, 'caption': $caption, 'caption-2': $caption-2) !default;
 
 $typography-font-family: Circular Std, 'Roboto', '-apple-system', 'Helvetica Neue', Helvetica, Arial, sans-serif !default

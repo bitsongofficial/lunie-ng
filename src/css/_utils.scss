@@ -47,6 +47,18 @@
   background: $accent-2 !important;
 }
 
+.bg-accent-3 {
+  background: $accent-3 !important;
+}
+
+.bg-alternative-4 {
+  background: $alternative-4 !important;
+}
+
+.bg-transparent-accent-3 {
+  background: $transparent-accent-3 !important;
+}
+
 .bg-alternative-linear-gradient {
   background: $alternative-linear-gradient !important;
 }
@@ -77,6 +89,10 @@
 
 .text-gray3 {
   color: $gray3 !important;
+}
+
+.text-alternative-4 {
+  color: $alternative-4 !important;
 }
 
 .text-transparent-accent {

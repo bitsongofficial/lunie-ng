@@ -7,7 +7,7 @@
     </h5>
 
     <div class="row items-center justify-center full-width">
-      <q-btn @click="openClaimDialog" :disable="validatorReward.length === 0" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
+      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>
@@ -34,6 +34,7 @@ export default defineComponent({
     const store = useStore();
     const rewards = computed(() => store.state.data.rewards);
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
 
     const validatorReward = computed(() => rewards.value.filter(
       ({ validator }) => validator.operatorAddress === props.validator.operatorAddress)
@@ -61,6 +62,7 @@ export default defineComponent({
     }
 
     return {
+      session,
       validatorReward,
       stakingDenomReward,
       openClaimDialog

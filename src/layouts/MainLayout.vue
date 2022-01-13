@@ -7,11 +7,13 @@
             <q-icon name="svguse:icons.svg#menu|0 0 20 14" color="white" size="24px" />
           </q-btn>
 
-          <q-avatar class="toolbar-avatar" v-if="!quasar.screen.lt.md">
-            <img src="~assets/logo.svg">
-          </q-avatar>
+          <q-btn class="no-hoverable" :ripple="false" flat unelevated padding="0" to="/portfolio">
+            <q-avatar class="toolbar-avatar" v-if="!quasar.screen.lt.md">
+              <img src="~assets/logo.svg">
+            </q-avatar>
 
-          <p class="text-body-large text-weight-medium text-white q-my-none" v-if="!quasar.screen.lt.md">wallet</p>
+            <p class="text-body-large text-weight-medium text-white q-my-none text-capitalize" v-if="!quasar.screen.lt.md">wallet</p>
+          </q-btn>
         </q-toolbar-title>
 
         <q-item class="profile-item" clickable v-if="session" @click="!loading && session ? onCopy(session.address) : null">
@@ -22,13 +24,13 @@
           </q-item-section>
 
           <q-item-section side v-if="!quasar.screen.lt.md">
-            <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md">
-              <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+            <q-btn @click.stop="" dense color="transparent-accent-3" unelevated round to="/authentication" class="q-ml-md">
+              <q-icon name="svguse:icons.svg#reload|0 0 17 14" color="white" size="16px" />
             </q-btn>
           </q-item-section>
         </q-item>
-        <q-btn @click.stop="" dense flat round to="/authentication" class="q-ml-md" v-else>
-          <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="white" size="16px" />
+        <q-btn @click.stop="" dense color="transparent-accent-3" unelevated round to="/authentication" class="q-ml-md" v-else>
+          <q-icon name="svguse:icons.svg#reload|0 0 17 14" color="white" size="16px" />
         </q-btn>
       </q-toolbar>
     </q-header>
@@ -46,7 +48,7 @@
           <q-list class="menu-links">
             <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="/portfolio" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
-            <menu-link icon="svguse:icons.svg#like|0 0 18 18" title="Proposals" link="/proposals" />
+            <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" title="Proposals" link="/proposals" />
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
             <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
@@ -68,12 +70,12 @@
           >
             <template v-slot:selected-item="{ opt }">
               <div class="row items-center cursor-pointer">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
+                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
               </div>
             </template>
             <template v-slot:option="{ itemProps, opt }">
               <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
+                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
               </q-item>
             </template>
           </q-select>
@@ -122,6 +124,7 @@ export default defineComponent({
     const session = computed(() => store.state.authentication.session);
     const address = computed(() => formatAddress(store.state.authentication.session?.address));
     const loading = computed(() => store.state.authentication.loading);
+    const votingProposalsCount = computed(() => store.getters['data/votingProposalsCount'] as number);
 
     const explorerURL = computed(() => {
       const session = store.state.authentication.session;
@@ -159,6 +162,7 @@ export default defineComponent({
     }
 
     return {
+      votingProposalsCount,
       bridgeURL,
       loadingNetwork,
       network,

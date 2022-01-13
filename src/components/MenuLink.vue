@@ -21,6 +21,8 @@
       <q-item-section>
         <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
       </q-item-section>
+
+      <q-badge v-if="count" :label="count" class="status-count text-uppercase text-weight-medium q-mx-none q-my-none text-caption-2" text-color="white" color="info"></q-badge>
     </q-item>
   </router-link>
   <q-item
@@ -37,13 +39,11 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
-    </q-item-section>
+      <div class="row no-wrap items-center">
+        <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
 
-    <q-item-section v-if="newLink">
-      <q-chip class="status text-uppercase text-weight-medium q-mx-none q-my-none text-body6" text-color="white" color="accent-2">
-        new
-      </q-chip>
+        <q-icon class="external-icon" name="svguse:icons.svg#external|0 0 10 10" color="white" size="14px" />
+      </div>
     </q-item-section>
   </q-item>
 </template>
@@ -73,7 +73,10 @@ export default defineComponent({
     newLink: {
       type: Boolean,
       default: false,
-    }
+    },
+    count: {
+      type: Number,
+    },
   },
   setup() {
     const router = useRouter();
@@ -124,5 +127,21 @@ export default defineComponent({
   width: 37px;
   min-height: 24px;
   border-radius: 25px;
+}
+
+.status-count {
+  margin-left: 14px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+.external-icon {
+  margin-left: 12px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 </style>

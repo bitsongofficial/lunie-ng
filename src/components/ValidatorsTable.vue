@@ -147,6 +147,7 @@ export default defineComponent({
     const router = useRouter();
     const rewards = computed(() => store.state.data.rewards);
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
 
     const pagination = {
       sortBy: 'votingPower',
@@ -199,7 +200,7 @@ export default defineComponent({
       },
       {
         name: 'time',
-        label: 'Time',
+        label: 'Remaining Time',
         align: 'center',
         field: 'time',
       },
@@ -210,15 +211,17 @@ export default defineComponent({
     ]);
 
     const visibleColumns = computed<string[]>(() => {
+      const extra = !session.value || (session.value && session.value.sessionType !== 'keplr') ? [] : ['actions'];
+
       if (props.unstaking) {
         return ['id', 'name', 'unstaked', 'time'];
       }
 
       if (props.staking) {
-        return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', 'actions'];
+        return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', ...extra];
       }
 
-      return ['id', 'name', 'status', 'rewards', 'votingPower', 'actions'];
+      return ['id', 'name', 'status', 'rewards', 'votingPower', ...extra];
     });
 
     const rowClick = async (row: LooseDictionary) => {
