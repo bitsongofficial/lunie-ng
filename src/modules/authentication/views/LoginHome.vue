@@ -15,6 +15,7 @@
       no-error-icon
       hide-bottom-space
       :loading="loadingNetwork"
+      :disable="loadingNetwork"
       :options-cover="false"
     >
       <template v-slot:selected-item="{ opt }">
@@ -31,6 +32,7 @@
 
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
+      <item clickable details v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
       <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
@@ -40,7 +42,6 @@
           </q-chip>
         </template>
       </item>
-      <item clickable details v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
       <item clickable v-ripple class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">

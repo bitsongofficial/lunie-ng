@@ -18,6 +18,7 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       throw error;
     } finally {
       commit('setLoading', false);
+      commit('setChanging', false);
     }
   },
   async changeNetwork({ commit, dispatch }, network: NetworkConfig) {

@@ -6,7 +6,7 @@ import { networks } from 'src/constants';
 export const useChangeNetwork = (onChange?: () => Promise<void>) => {
   const store = useStore();
   const router = useRouter();
-  const loadingNetwork = computed(() => store.state.authentication.changing);
+  const loadingNetwork = computed(() => store.state.authentication.changing || store.state.authentication.loading);
 
   const network = computed({
     get: () => store.state.authentication.network,

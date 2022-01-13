@@ -67,6 +67,7 @@
             no-error-icon
             hide-bottom-space
             :loading="loadingNetwork"
+            :disable="loadingNetwork"
             :options-cover="false"
           >
             <template v-slot:selected-item="{ opt }">

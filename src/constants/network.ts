@@ -136,6 +136,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://lcd-osmosis.keplr.app',
     rpcURL: 'https://rpc-osmosis.itastakers.com',
     explorerURL: 'https://www.mintscan.io/osmosis/',
+    supplyURL: undefined,
     minBlockHeight: 2742000,
     stakingDenom: 'OSMO',
     coinLookup: [
@@ -176,6 +177,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://lcd-cosmoshub.keplr.app',
     rpcURL: 'https://rpc-cosmoshub.keplr.app',
     explorerURL: 'https://www.mintscan.io/cosmos/',
+    supplyURL: undefined,
     minBlockHeight: 9054000,
     stakingDenom: 'ATOM',
     coinLookup: [
@@ -217,6 +219,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc.chihuahua.wtf',
     explorerURL: 'https://www.mintscan.io/chihuahua/',
     minBlockHeight: 1,
+    supplyURL: undefined,
     stakingDenom: 'HUAHUA',
     coinLookup: [
       {
