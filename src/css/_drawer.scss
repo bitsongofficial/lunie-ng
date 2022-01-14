@@ -29,6 +29,10 @@
     padding-left: 0;
   }
 
+  @media screen and (max-height: 760px) {
+    padding-top: 37px;
+  }
+
   &.back {
     padding-top: 60px;
   }

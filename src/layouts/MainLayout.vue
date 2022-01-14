@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, onUnmounted } from 'vue';
+import { defineComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { formatAddress } from 'src/common/address';
@@ -118,7 +118,7 @@ export default defineComponent({
   },
   setup() {
     const { back, goBack } = useBack();
-    const { network, networks, loadingNetwork } = useChangeNetwork(goBack);
+    const { network, networks, loadingNetwork } = useChangeNetwork(true, goBack);
     const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
@@ -152,6 +152,14 @@ export default defineComponent({
 
     onUnmounted(() => {
       responsiveWatch();
+    });
+
+    window.addEventListener('keplr_keystorechange', async () => {
+      await store.dispatch('authentication/init');
+    });
+
+    onMounted(() => {
+      store.dispatch('authentication/init').catch(err => console.error(err));
     });
 
     const signOut = async () => {
@@ -200,7 +208,7 @@ export default defineComponent({
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 8px;
-  margin: 16px;
+  margin-bottom: 16px;
 }
 
 .actions {

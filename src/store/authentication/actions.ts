@@ -21,13 +21,15 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       commit('setChanging', false);
     }
   },
-  async changeNetwork({ commit, dispatch }, network: NetworkConfig) {
+  async changeNetwork({ commit, dispatch }, { network, refresh }: { network: NetworkConfig, refresh: boolean }) {
     try {
       commit('setChanging', true);
       commit('setNetwork', network);
       api.defaults.baseURL = network.apiURL;
 
-      await dispatch('init');
+      if (refresh) {
+        await dispatch('init');
+      }
     } catch (error) {
       console.error(error);
       throw error;
