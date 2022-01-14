@@ -42,7 +42,7 @@ export const setDecimalLength = (value: string | number | BigNumber, length: num
 }
 
 export const shortDecimals = (value: string | number | BigNumber) => {
-  return setDecimalLength(value, 6)
+  return setDecimalLength(value, 3)
 }
 
 export const bigFigureOrShortDecimals = (number: string | number | BigNumber) => {
