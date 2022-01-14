@@ -10,7 +10,7 @@
             TOTAL ({{ network.stakingDenom }})
           </h3>
 
-          <template v-if="!loadingBalance">
+          <template v-if="!loadingBalance && !loading">
             <p class="balance-subtitle text-body-extra-large text-white q-my-none">
               {{ balance ? balance.total : 0 }}
             </p>
@@ -22,7 +22,7 @@
             REWARDS ({{ network.stakingDenom }})
           </h3>
 
-          <template v-if="!loadingBalance">
+          <template v-if="!loadingBalance && !loading">
             <p class="balance-subtitle text-body-extra-large text-white q-my-none">
               {{ rewards }}
             </p>
@@ -34,7 +34,7 @@
             AVAILABLE ({{ network.stakingDenom }})
           </h3>
 
-          <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance">
+          <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance && !loading">
             {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
           </p>
           <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
@@ -64,6 +64,7 @@ export default defineComponent({
     const quasar = useQuasar();
 
     const session = computed(() => store.state.authentication.session);
+    const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
     const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
@@ -100,6 +101,7 @@ export default defineComponent({
     return {
       session,
       loadingBalance,
+      loading,
       network,
       rewards,
       balance,

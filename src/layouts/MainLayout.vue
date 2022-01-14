@@ -47,6 +47,7 @@
 
           <q-list class="menu-links">
             <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="/portfolio" />
+            <menu-link icon="svguse:icons.svg#assets|0 0 17 18" title="Assets" link="/assets" />
             <menu-link icon="svguse:icons.svg#stats|0 0 20 12" title="Stats" link="/stats" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" title="Proposals" link="/proposals" />

@@ -16,8 +16,8 @@ import {
   getSupplyInfo,
   getPool,
   getInflation,
-  getSupply,
-  getCommunityPool
+  getCommunityPool,
+  getSupplyByDenom
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
@@ -122,31 +122,34 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
     try {
       commit('setLoadingAPR', true);
 
-      const totalSupply = await getSupply();
-      const communityPool = await getCommunityPool();
-
-      commit('setSupply', totalSupply.supply);
-      commit('setCommunityPool', communityPool.pool);
-
       const supplyCoin = getCoinLookup(
         rootState.authentication.network.stakingDenom,
         'viewDenom'
       );
 
-      const supplyChainDenom = supplyCoin?.chainDenom;
-      const chainSupplyTotal = totalSupply.supply.find(el => el.denom === supplyChainDenom);
+      const chainSupplyTotal = await getSupplyByDenom(supplyCoin ? supplyCoin.chainDenom : '');
+      const communityPool = await getCommunityPool();
+
+      commit('setSupply', chainSupplyTotal);
+      commit('setCommunityPool', communityPool.pool);
+
       const chainSupplyCoin = getStakingCoinViewAmount(chainSupplyTotal ? chainSupplyTotal.amount : '0')
 
       const chainSupply = chainSupplyCoin.toString();
 
       const pool = await getPool();
       const inflation = await getInflation();
-      const apr = getAPR(chainSupply, inflation.inflation, pool.pool.bonded_tokens);
 
-      commit('setApr', apr.toString());
+      if (chainSupplyTotal) {
+        const apr = getAPR(chainSupply, inflation.inflation, pool.pool.bonded_tokens);
+
+        commit('setApr', apr.toString());
+      }
+
       commit('setPool', pool.pool);
       commit('setInflation', inflation.inflation);
     } catch (err) {
+      console.error(err);
       if (err instanceof Error) {
         commit(
           'notifications/add',

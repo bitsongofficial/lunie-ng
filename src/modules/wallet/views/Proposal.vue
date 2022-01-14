@@ -35,25 +35,27 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Vote</h3>
 
       <div class="row items-center">
-        <div class="row items-center" v-if="proposal.tally.totalVotedPercentage !== -1">
+        <div class="row items-center" v-if="proposal.tally && proposal.tally.totalVotedPercentage !== -1">
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
-          <p class="text-h4 text-white text-weight-medium q-my-none">{{ percent(proposal.tally.totalVotedPercentage) }}</p>
+          <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.tally ? percent(proposal.tally.totalVotedPercentage) : 'N/A' }}</p>
         </div>
 
         <div class="row items-center q-ml-md">
           <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
-          <p class="text-h4 text-white text-weight-medium q-my-none">{{ percent(proposal.detailedVotes.votingQuorum) }}</p>
+          <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.detailedVotes ? percent(proposal.detailedVotes.votingQuorum) : 'N/A' }}</p>
         </div>
       </div>
     </div>
 
     <vote-card class="section" :dataset="dataset" v-if="dataset.length > 0" />
 
-    <div class="section-header row items-center justify-between">
-      <h3 class="text-h4 text-weight-medium text-white q-my-none">Timeline</h3>
-    </div>
+    <template v-if="entries.length > 0">
+      <div class="section-header row items-center justify-between">
+        <h3 class="text-h4 text-weight-medium text-white q-my-none">Timeline</h3>
+      </div>
 
-    <timeline class="section" :entries="entries" />
+      <timeline class="section" :entries="entries" />
+    </template>
 
     <div class="section-header row items-center justify-between">
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
@@ -107,7 +109,7 @@ export default defineComponent({
     const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '')));
 
     const dataset = computed<ChartData[]>(() => {
-      if (proposal.value) {
+      if (proposal.value && proposal.value.detailedVotes) {
         return getMappedVotes(proposal.value.detailedVotes);
       }
 
@@ -115,7 +117,7 @@ export default defineComponent({
     });
 
     const entries = computed<TimelineData[]>(() => {
-      if (proposal.value) {
+      if (proposal.value && proposal.value.detailedVotes) {
         return getMappedTimeline(proposal.value.detailedVotes);
       }
 

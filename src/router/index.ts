@@ -47,7 +47,7 @@ Router.beforeEach((to, _, next) => {
 Router.afterEach(to => {
   const title = Array.isArray(to.meta.title) ? to.meta.title.join(' - ') : to.meta.title as string;
   window.document.documentElement.scrollTop = 0;
-  window.document.title = `${title}`;
+  window.document.title = `Bitsong – ${title}`;
 });
 
 export default Router;

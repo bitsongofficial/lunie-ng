@@ -88,7 +88,7 @@ const mutation: MutationTree<DataStateInterface> = {
   setInflation(state, inflation: string) {
     state.inflation = inflation;
   },
-  setSupply(state, supply: Coin[]) {
+  setSupply(state, supply: Coin) {
     state.supply = supply;
   },
   setCommunityPool(state, communityPool: Coin[]) {
@@ -97,10 +97,10 @@ const mutation: MutationTree<DataStateInterface> = {
   resetSessionData(state) {
     state.supplyInfo = null;
     state.inflation = null;
-    state.supply = [];
+    state.supply = null;
     state.communityPool = [];
     state.pool = null;
-    state.apr = '0';
+    state.apr = null;
     state.balances = [];
     state.rewards = [];
     state.delegations = []

@@ -13,3 +13,7 @@ export interface SupplyResponse {
 export interface BankSupplyResponse extends PaginationResponse {
   supply: Coin[];
 }
+
+export interface BankSupplyDenomResponse extends PaginationResponse {
+  amount: Coin;
+}

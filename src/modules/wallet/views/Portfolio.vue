@@ -18,23 +18,6 @@
       mode="out-in"
       appear
     >
-      <div class="undelegation-section" v-if="balances.length > 0">
-        <div class="section-header-small row items-center no-wrap">
-          <h2 class="section-title text-body-large text-white">
-            Your Assets
-          </h2>
-        </div>
-
-        <balances-table :rows="balances" :loading="!balancesLoaded" />
-      </div>
-    </transition>
-
-    <transition
-      enter-active-class="animated fadeIn"
-      leave-active-class="animated fadeOut"
-      mode="out-in"
-      appear
-    >
       <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
         <div class="section-header-small row items-center no-wrap">
           <h2 class="section-title text-body-large text-white">
@@ -42,7 +25,7 @@
           </h2>
         </div>
 
-        <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded" unstaking />
+        <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded || loading" unstaking />
       </div>
     </transition>
 
@@ -64,7 +47,7 @@
       >
         <validators-summary v-if="validatorsOfDelegations.length === 0" />
 
-        <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+        <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded || loading" staking v-else />
       </transition>
     </div>
   </q-page>
@@ -74,11 +57,10 @@
 import { defineComponent, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'src/store';
-import { Balance, Validator } from 'src/models';
+import { Validator } from 'src/models';
 
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
-import BalancesTable from 'src/components/BalancesTable.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
 
@@ -87,8 +69,7 @@ export default defineComponent({
   components: {
     BalanceSummary,
     ValidatorsSummary,
-    ValidatorsTable,
-    BalancesTable
+    ValidatorsTable
   },
   setup() {
     const store = useStore();
@@ -96,9 +77,7 @@ export default defineComponent({
 
     const rewards = computed(() => store.state.data.rewards);
     const session = computed(() => store.state.authentication.session);
-
-    const balances = computed(() => store.getters['data/balances'] as Balance[]);
-    const balancesLoaded = computed(() => store.state.data.balancesLoaded);
+    const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     const validatorsOfDelegations = computed(() => store.getters['data/validatorsOfDelegations'] as Validator[]);
     const delegationsLoaded = computed(() => store.state.data.delegationsLoaded);
@@ -115,9 +94,8 @@ export default defineComponent({
     }
 
     return {
+      loading,
       session,
-      balances,
-      balancesLoaded,
       rewards,
       validatorsOfDelegations,
       delegationsLoaded,

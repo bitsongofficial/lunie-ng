@@ -33,10 +33,14 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     };
   },
   balances({ balances }, _getters, { authentication }) {
-    return balances.filter(
-      balance => balance.denom !== authentication.network.stakingDenom
-    ).map(
+    return sortBy(balances, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
       balance => {
+        if (balance.denom === authentication.network.stakingDenom) {
+          return ({
+            ...balance,
+          });
+        }
+
         const total = getStakingCoinViewAmount(new BigNumber(balance.total).toString());
         const available = getStakingCoinViewAmount(new BigNumber(balance.available).toString());
 
@@ -98,13 +102,9 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     return proposals.filter(el => el.status === ProposalStatus.VOTING).length;
   },
   getTotalSupply({ supply }) {
-    if (supply.length > 0) {
-      let total = new BigNumber('0');
-
-      supply.forEach(coin => {
-        const amount = getStakingCoinViewAmount(coin ? coin.amount : '0');
-        total = total.plus(new BigNumber(amount));
-      });
+    if (supply) {
+      const amount = getStakingCoinViewAmount(supply ? supply.amount : '0');
+      const total = new BigNumber(amount);
 
       return total.toString();
     }
@@ -144,7 +144,7 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     }
   },
   getAprInfo({ apr }) {
-    return percent(new BigNumber(apr).toFixed(4));
+    return apr ? percent(new BigNumber(apr).toFixed(4)) : null;
   },
   getInflation({ inflation }) {
     if (inflation) {

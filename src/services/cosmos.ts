@@ -1,21 +1,21 @@
+import { Vote, Deposit } from './../models/proposals';
+import { Coin } from '@cosmjs/stargate';
+import { DelegationWithBalance } from './../models/delegations';
 import { api } from 'src/boot/axios';
 import { BigNumber } from 'bignumber.js';
 import { BlockResponse } from '@cosmjs/launchpad';
 import { blockReducer, coinReducer, delegationReducer, rewardReducer, undelegationReducer, balanceReducer, validatorReducer, depositReducer, voteReducer, proposalReducer, getStakingCoinViewAmount, topVoterReducer } from 'src/common/cosmos-reducer';
 import {
   PoolResponse,
-  BalanceResponse,
   PaginationResponse,
   BlockReduced,
   ValidatorStatus,
   Validator,
-  DelegationResponse,
   DenomTraceResponse,
   ClientStateResponse,
   RewardsResponse,
   Reward,
   BalanceCoin,
-  UnbondingDelegationResponse,
   UnbondingDelegationFlat,
   UnbondingDelegationRaw,
   Delegation,
@@ -23,14 +23,11 @@ import {
   ValidatorStatusRequest,
   AnnualProvisionsResponse,
   ValidatorResponse,
-  ProposalResponse,
   GovParamsResponse,
   TallyParams,
   DepositParams,
   ProposalRaw,
   ProposalRawStatus,
-  VoteResponse,
-  DepositResponse,
   ValidatorMap,
   DetailedVote,
   CommunityPoolResponse,
@@ -40,7 +37,7 @@ import {
   AccountResponse,
   AccountInfo,
   InflationResponse,
-  BankSupplyResponse
+  BankSupplyDenomResponse
 } from 'src/models';
 import { chunk, compact, orderBy, reduce } from 'lodash';
 import Store from 'src/store';
@@ -48,6 +45,7 @@ import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 import { percentage, setDecimalLength } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { decodeB32, encodeB32 } from 'src/common/address';
+import { urlSafeEncode } from 'src/common/b64';
 
 const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized from null in golang
 
@@ -61,28 +59,33 @@ export const getBlock = async (blockHeight: number | undefined = undefined): Pro
   }
 };
 
-export const queryAutoPaginate = async <T extends PaginationResponse>(url: string) => {
+export const queryAutoPaginate = async <K>(url: string) => {
   try {
-    const response = await api.get<T>(url);
-    const paginatedData = response.data;
+    let data: K[] = [];
+    let response = await api.get<PaginationResponse>(url);
+    const keys = Object.keys(response.data);
+    const fieldIndex = keys.indexOf('pagination') ? 0 : 1;
+    const fieldName = keys[fieldIndex];
+    data = response.data[fieldName] as K[];
 
-    /* while (response.data.pagination !== null && response.data.pagination.next_key !== null) {
-      const data = await api.get<T>(url + `?pagination.key=${urlSafeEncode(response.data.pagination.next_key)}`);
-      paginatedData = paginatedData.concat(data.data.pagination);
-    } */
+    while (response.data.pagination && response.data.pagination.next_key !== null) {
+      response = await api.get<PaginationResponse>(url + `?pagination.key=${urlSafeEncode(response.data.pagination.next_key)}`);
 
-    return paginatedData;
+      data.concat(response.data[fieldName] as K[]);
+    }
+
+    return data;
   } catch (error) {
     throw error;
   }
 }
 
 export const getDelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
-  const delegations = await queryAutoPaginate<DelegationResponse>(
+  const delegations = await queryAutoPaginate<DelegationWithBalance>(
     `cosmos/staking/v1beta1/delegations/${address}`
   );
 
-  const delegationsReduced = delegations.delegation_responses.length ? delegations.delegation_responses.map((delegation) =>
+  const delegationsReduced = delegations.length ? delegations.map((delegation) =>
     delegationReducer(
       delegation,
       validatorsDictionary[delegation.delegation.validator_address],
@@ -94,9 +97,9 @@ export const getDelegationsForDelegator = async (address: string, validatorsDict
 }
 
 export const getUndelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
-  const response = await queryAutoPaginate<UnbondingDelegationResponse>(`cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`);
+  const response = await queryAutoPaginate<UnbondingDelegationRaw>(`cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`);
 
-  const undelegations = response ? response.unbonding_responses : [];
+  const undelegations = response ? response : [];
 
   // undelegations come in a nested format { validator_address, delegator_address, entries }
   // we flatten the format to be able to easier iterate over the list
@@ -166,9 +169,15 @@ export const getAnnualProvision = async () => {
 }
 
 export const getSupply = async () => {
-  const response = await api.get<BankSupplyResponse>('cosmos/bank/v1beta1/supply');
+  const response = await queryAutoPaginate<Coin>('cosmos/bank/v1beta1/supply/');
 
-  return response.data;
+  return response;
+}
+
+export const getSupplyByDenom = async (denom: string) => {
+  const response = await api.get<BankSupplyDenomResponse>(`cosmos/bank/v1beta1/supply/${denom}`);
+
+  return response.data.amount;
 }
 
 export const getPool = async () => {
@@ -238,9 +247,9 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
   }
 
   try {
-    const balancesResponse = await queryAutoPaginate<BalanceResponse>(`cosmos/bank/v1beta1/balances/${address}`);
+    const balancesResponse = await queryAutoPaginate<Coin>(`cosmos/bank/v1beta1/balances/${address}`);
 
-    const balances = balancesResponse ? balancesResponse.balances : [];
+    const balances = balancesResponse ? balancesResponse : [];
 
     const coins = await Promise.all(
       balances.map((balance) => {
@@ -310,15 +319,15 @@ const dataExistsInThisChain = (timestamp: string | number) => {
 }
 
 const getVotes = async (proposal: ProposalRaw) => {
-  const response = await queryAutoPaginate<VoteResponse>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/votes`);
+  const response = await queryAutoPaginate<Vote>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/votes`);
 
-  return response.votes;
+  return response;
 }
 
 const getDeposits = async (proposal: ProposalRaw) => {
-  const response = await queryAutoPaginate<DepositResponse>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/deposits`);
+  const response = await queryAutoPaginate<Deposit>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/deposits`);
 
-  return response.deposits;
+  return response;
 }
 
 export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: TallyParams, depositParams: DepositParams, validators: ValidatorMap): Promise<DetailedVote> => {
@@ -444,19 +453,25 @@ export const getProposals = async (validators: ValidatorMap) => {
     { tally_params: tallyParams },
     { deposit_params: depositParams },
   ] = await Promise.all([
-    queryAutoPaginate<ProposalResponse>('cosmos/gov/v1beta1/proposals'),
+    queryAutoPaginate<ProposalRaw>('cosmos/gov/v1beta1/proposals'),
     getPool(),
     getTallying(),
     getDeposit()
   ]);
 
-  if (!Array.isArray(proposalsResponse.proposals)) {
+  if (!Array.isArray(proposalsResponse)) {
     return [];
   }
 
   const proposals = await Promise.all(
-    proposalsResponse.proposals.map(async (proposal) => {
-      const detailedVotes = await getDetailedVotes(proposal, tallyParams, depositParams, validators);
+    proposalsResponse.map(async (proposal) => {
+      let detailedVotes: DetailedVote | null = null;
+
+      try {
+        detailedVotes = await getDetailedVotes(proposal, tallyParams, depositParams, validators);
+      } catch (error) {
+        console.error(error);
+      }
 
       return proposalReducer(
         proposal,

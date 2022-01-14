@@ -114,4 +114,9 @@
     <path d="M14.5203 1.12402H3.52031C2.30529 1.12402 1.32031 2.109 1.32031 3.32402V20.924C1.32031 22.139 2.30529 23.124 3.52031 23.124H14.5203C15.7353 23.124 16.7203 22.139 16.7203 20.924V3.32402C16.7203 2.109 15.7353 1.12402 14.5203 1.12402Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M9.02344 18.7236H9.03444" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
+  <symbol id="assets" width="17" height="18" viewBox="0 0 17 18" fill="none">
+    <path d="M8.2 5.8C12.1764 5.8 15.4 4.72548 15.4 3.4C15.4 2.07452 12.1764 1 8.2 1C4.22355 1 1 2.07452 1 3.4C1 4.72548 4.22355 5.8 8.2 5.8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15.4 9C15.4 10.328 12.2 11.4 8.2 11.4C4.2 11.4 1 10.328 1 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 3.40039V14.6004C1 15.9284 4.2 17.0004 8.2 17.0004C12.2 17.0004 15.4 15.9284 15.4 14.6004V3.40039" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

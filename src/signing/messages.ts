@@ -105,6 +105,13 @@ export function Coin({ amount, denom }: StargateCoin, coinLookup: CoinLookUp[]) 
         .toFixed(),
       denom: lookup.chainDenom,
     };
+  } else {
+    return {
+      amount: new BigNumber(amount)
+        .dividedBy('1e-6')
+        .toFixed(),
+      denom
+    };
   }
 }
 

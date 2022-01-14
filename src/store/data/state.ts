@@ -27,9 +27,9 @@ export interface DataStateInterface {
   loadingSignTransaction: boolean;
   loading: boolean;
   loadingDataDetails: boolean;
-  supply: Coin[];
+  supply: Coin | null;
   communityPool: Coin[];
-  apr: string;
+  apr: string | null;
   loadingApr: boolean;
   inflation: string | null;
   pool: Pool | null;
@@ -62,9 +62,9 @@ function state (): DataStateInterface {
     loadingDataDetails: false,
     supplyInfo: null,
     loadingSupplyInfo: false,
-    supply: [],
+    supply: null,
     communityPool: [],
-    apr: '0',
+    apr: null,
     loadingApr: false,
     inflation: null,
     pool: null

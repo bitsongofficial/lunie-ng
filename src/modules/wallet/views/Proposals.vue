@@ -25,7 +25,11 @@
     <q-list class="proposals-list">
       <template v-if="!loading" >
         <template v-if="proposals.length > 0">
-          <proposal-item v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" />
+          <q-virtual-scroll :items="proposals">
+            <template v-slot="{ item }">
+              <proposal-item :key="item.id" :proposal="item" />
+            </template>
+          </q-virtual-scroll>
         </template>
         <proposals-summary @click="type = undefined" v-else></proposals-summary>
       </template>

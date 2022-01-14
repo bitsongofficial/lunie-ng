@@ -163,10 +163,10 @@ export interface Proposal {
   status: ProposalStatus;
   statusBeginTime: string | undefined;
   statusEndTime: string | undefined;
-  tally: TallyWithExtra;
+  tally: TallyWithExtra | null;
   deposit: string | number | BigNumber;
   summary: string;
-  detailedVotes: DetailedVote;
+  detailedVotes: DetailedVote | null;
 }
 
 export interface GovernanceOverview {

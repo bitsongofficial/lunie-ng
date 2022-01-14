@@ -39,7 +39,7 @@ export const getMappedTimeline = (details: DetailedVote): TimelineData[] => {
       return ({
         label: el.title,
         active: el.time ? !compareNow(el.time) : false,
-        subtitle: el.time ? `${fromNow(el.time)} ago` : '--'
+        subtitle: el.time ? `${fromNow(el.time)} ago` : 'N/A'
       });
     }
   });

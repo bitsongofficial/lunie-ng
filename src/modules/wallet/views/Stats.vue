@@ -40,12 +40,14 @@ export default defineComponent({
     const store = useStore();
 
     const supplyInfo = computed(() => store.getters['data/supplyInfo'] as SupplyResponse | null);
-    const loadingSupplyInfo = computed(() => store.state.data.loadingSupplyInfo);
+    const loadingSupplyInfo = computed(
+      () => store.state.data.loadingSupplyInfo || store.state.data.loadingApr || store.state.authentication.loading || store.state.authentication.changing
+    );
 
-    const apr = computed(() => store.getters['data/getAprInfo'] as string);
+    const apr = computed(() => store.getters['data/getAprInfo'] as string | null);
     const inflation = computed(() => store.getters['data/getInflation'] as string | null);
     const bondedTokens = computed(() => store.getters['data/getBondedTokens'] as string | null);
-    const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading || store.state.authentication.loading);
+    const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading || store.state.authentication.loading || store.state.authentication.changing);
 
     return {
       inflation,

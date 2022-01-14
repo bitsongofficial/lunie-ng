@@ -12,6 +12,7 @@
     :rows-per-page-options="[0]"
     :bordered="false"
     hide-pagination
+    virtual-scroll
   >
     <template v-slot:no-data>
       <h5 class="text-half-transparent-white text-weight-medium">No assets available</h5>
@@ -30,11 +31,6 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="balances-table-row cursor-pointer" :props="props">
-        <q-td key="id" class="text-white id-cell" :props="props">
-          <p class="text-subtitle2 q-my-none">
-            {{ props.rowIndex + 1 }}
-          </p>
-        </q-td>
         <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
             <p class="balance-name q-my-none text-subtitle2">
@@ -57,7 +53,7 @@
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" clickable disable v-close-popup>
+              <q-item class="menu-item" active-class="active" disable v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Send</q-item-section>
               </q-item>
             </q-menu>
@@ -71,9 +67,9 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue';
 import { Balance } from 'src/models';
+import { useQuasar } from 'quasar';
+import SendDialog from './SendDialog.vue';
 import { useStore } from 'src/store';
-import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
-import { fromNow } from 'src/common/date';
 
 export default defineComponent({
   name: 'BalancesTable',
@@ -89,21 +85,16 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const quasar = useQuasar();
+
     const network = computed(() => store.state.authentication.network);
 
     const pagination = {
-      sortBy: 'votingPower',
       descending: true,
       rowsPerPage: 0
     };
 
     const columns = computed(() => [
-      {
-        name: 'id',
-        label: '',
-        align: 'center',
-        field: 'id'
-      },
       {
         name: 'name',
         label: 'Name',
@@ -128,17 +119,24 @@ export default defineComponent({
       },
     ]);
 
-    const visibleColumns = computed<string[]>(() => ['id', 'name', 'total', 'available', 'actions']);
+    const visibleColumns = computed<string[]>(() => ['name', 'total', 'available', 'actions']);
+
+    const openSendDialog = (balance: Balance) => {
+      quasar.dialog({
+        component: SendDialog,
+        componentProps: {
+          denom: balance.denom === network.value.stakingDenom ? undefined : balance.denom,
+        },
+        fullWidth: true,
+        maximized: true
+      });
+    }
 
     return {
-      network,
       pagination,
       columns,
       visibleColumns,
-      bigFigureOrPercent,
-      bigFigureOrShortDecimals,
-      shortDecimals,
-      fromNow
+      openSendDialog
     }
   }
 });

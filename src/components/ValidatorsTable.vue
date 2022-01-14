@@ -54,7 +54,7 @@
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : '--' }}
+            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : 'N/A' }}
           </p>
           <p class="text-overline q-my-none text-positive" v-if="hasRewards(props.row.operatorAddress)">
             + {{ filterStakingDenomReward(props.row.operatorAddress) }}
@@ -62,7 +62,7 @@
         </q-td>
         <q-td key="rewards" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : '--' }}
+            {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="votingPower" class="text-subtitle2 text-white" :props="props">
@@ -75,12 +75,12 @@
         </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? bigFigureOrShortDecimals(props.row.undelegation.amount) : '--' }}
+            {{ props.row.undelegation ? bigFigureOrShortDecimals(props.row.undelegation.amount) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? fromNow(props.row.undelegation.endTime) : '--' }}
+            {{ props.row.undelegation ? fromNow(props.row.undelegation.endTime) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="actions" :props="props">

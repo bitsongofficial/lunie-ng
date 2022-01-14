@@ -33,10 +33,10 @@
         'q-col-gutter-md': quasar.screen.lt.md
       }">
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">REWARDS</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">APR</label>
 
           <p class="text-body-large text-white q-my-none">
-            {{ validator.expectedReturns ? bigFigureOrPercent(validator.expectedReturns) : '--' }}
+            {{ validator.expectedReturns ? bigFigureOrPercent(validator.expectedReturns) : 'N/A' }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">

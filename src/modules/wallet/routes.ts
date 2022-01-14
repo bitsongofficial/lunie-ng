@@ -16,6 +16,14 @@ export default [
         },
       },
       {
+        path: 'assets',
+        name: 'assets',
+        component: () => import('./views/Assets.vue'),
+        meta: {
+          title: 'Assets'
+        },
+      },
+      {
         path: 'Stats',
         name: 'stats',
         component: () => import('./views/Stats.vue'),
