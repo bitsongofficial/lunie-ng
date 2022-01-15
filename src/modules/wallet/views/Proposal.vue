@@ -61,7 +61,7 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <pre class="description-block text-half-transparent-white text-h5" v-html="description"></pre>
+    <pre class="proposal-description description-block text-half-transparent-white text-h5" v-html="description"></pre>
   </q-page>
 </template>
 
@@ -106,7 +106,7 @@ export default defineComponent({
 
     const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
 
-    const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '')));
+    const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '').replace(/\\n/gm, '\n')));
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value && proposal.value.detailedVotes) {
