@@ -32,7 +32,7 @@
 
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
-      <item clickable details v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
+      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
       <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
@@ -42,7 +42,7 @@
           </q-chip>
         </template>
       </item>
-      <item clickable v-ripple class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
+      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
             <label class="text-center full-width">
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
@@ -100,7 +100,10 @@ export default defineComponent({
       }
     };
 
+    const keplrAvailable = computed(() => window.keplr);
+
     return {
+      keplrAvailable,
       keplrSignIn,
       ...useChangeNetwork(false)
     }

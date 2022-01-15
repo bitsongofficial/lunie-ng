@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="bg-secondary" view="hHh lpR fff">
+  <q-layout class="bg-secondary" view="hhh lpR fff">
     <q-header class="header bg-transparent text-white">
       <q-toolbar class="header-toolbar container bg-transparent justify-between items-end">
         <q-toolbar-title class="text-body1 row items-center q-pt-sm">

@@ -148,6 +148,7 @@ export default defineComponent({
 
   &::v-deep(.q-table) {
     border-spacing: 0 6px;
+    padding-bottom: 20px;
   }
 }
 
