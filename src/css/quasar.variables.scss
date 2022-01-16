@@ -98,7 +98,7 @@ $breakpoint-lg-max: (map-get($sizes, "xl") - 0.02) !default;
 
 $breakpoint-xl-min: map-get($sizes, "xl") !default;
 
-$h1: (size: 6rem, line-height: 6rem, letter-spacing: normal, weight: 300) !default;
+$h1: (size: 40px, line-height: normal, letter-spacing: normal, weight: 400) !default;
 $h2: (size: 38px, line-height: 48px, letter-spacing: normal, weight: 400) !default;
 $h3: (size: 36px,  line-height: 46px, letter-spacing: normal, weight: 400) !default;
 $h4: (size: 18px, line-height: 23px, letter-spacing: normal, weight: 400) !default;
