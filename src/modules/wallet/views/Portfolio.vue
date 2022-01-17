@@ -5,19 +5,9 @@
         Your Balances
       </h2>
 
-      <q-btn @click="openClaimDialog" :disable="rewards.length === 0" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
+      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
         {{ !quasar.screen.lt.md ? 'CLAIM REWARDS' : 'CLAIM' }}
       </q-btn>
-
-      <div class="section-balance row items-center section-balance">
-        <h3 class="section-total q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
-          TOTAL ({{ network.stakingDenom }})
-        </h3>
-        <h2 class="text-body-large text-white" v-if="!loadingBalance">
-          {{ balance ? balance.total : 0 }}
-        </h2>
-        <q-skeleton width="92px" height="36px" animation-speed="700" dark v-else></q-skeleton>
-      </div>
     </div>
 
     <balance-summary class="balance-summary" />
@@ -35,7 +25,7 @@
           </h2>
         </div>
 
-        <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded" unstaking />
+        <validators-table :rows="validatorsOfUndelegations" :loading="!undelegationsLoaded || loading" unstaking />
       </div>
     </transition>
 
@@ -57,28 +47,9 @@
       >
         <validators-summary v-if="validatorsOfDelegations.length === 0" />
 
-        <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded" staking v-else />
+        <validators-table :rows="validatorsOfDelegations" :loading="!delegationsLoaded || loading" staking v-else />
       </transition>
     </div>
-
-    <div class="section-header row items-center no-wrap">
-      <h2 class="section-title text-body-large text-white">
-        Chain Stats
-      </h2>
-    </div>
-
-    <transition
-      enter-active-class="animated fadeIn"
-      leave-active-class="animated fadeOut"
-      mode="out-in"
-      appear
-    >
-      <div class="chain-stats-grid">
-        <chain-stats title="CIRCULATING SUPPLY" :quantity="supplyInfo?.circulatingSupply ?? '0'" :loading="loadingSupplyInfo" />
-        <chain-stats title="TOTAL SUPPLY" :quantity="supplyInfo?.totalSupply ?? '0'" :loading="loadingSupplyInfo" />
-        <chain-stats title="COMMUNITY POOL" :quantity="supplyInfo?.communityPool ?? '0'" :loading="loadingSupplyInfo" />
-      </div>
-    </transition>
   </q-page>
 </template>
 
@@ -86,41 +57,33 @@
 import { defineComponent, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'src/store';
-import { SupplyResponse, Validator, Balance } from 'src/models';
+import { Validator } from 'src/models';
 
 import BalanceSummary from 'src/components/BalanceSummary.vue';
 import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
-import ChainStats from 'src/components/ChainStats.vue';
 
 export default defineComponent({
   name: 'Portfolio',
   components: {
     BalanceSummary,
     ValidatorsSummary,
-    ValidatorsTable,
-    ChainStats
+    ValidatorsTable
   },
   setup() {
     const store = useStore();
     const quasar = useQuasar();
 
-    const network = computed(() => store.state.authentication.network);
-
     const rewards = computed(() => store.state.data.rewards);
+    const session = computed(() => store.state.authentication.session);
+    const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     const validatorsOfDelegations = computed(() => store.getters['data/validatorsOfDelegations'] as Validator[]);
     const delegationsLoaded = computed(() => store.state.data.delegationsLoaded);
 
     const validatorsOfUndelegations = computed(() => store.getters['data/validatorsOfUndelegations'] as Validator[]);
     const undelegationsLoaded = computed(() => store.state.data.undelegationsLoaded);
-
-    const supplyInfo = computed(() => store.getters['data/supplyInfo'] as SupplyResponse | null);
-    const loadingSupplyInfo = computed(() => store.state.data.loadingSupplyInfo);
-
-    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
-    const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
 
     const openClaimDialog = () => {
       quasar.dialog({
@@ -131,11 +94,8 @@ export default defineComponent({
     }
 
     return {
-      network,
-      balance,
-      loadingBalance,
-      supplyInfo,
-      loadingSupplyInfo,
+      loading,
+      session,
       rewards,
       validatorsOfDelegations,
       delegationsLoaded,

@@ -16,6 +16,22 @@ export default [
         },
       },
       {
+        path: 'assets',
+        name: 'assets',
+        component: () => import('./views/Assets.vue'),
+        meta: {
+          title: 'Assets'
+        },
+      },
+      {
+        path: 'Stats',
+        name: 'stats',
+        component: () => import('./views/Stats.vue'),
+        meta: {
+          title: 'Stats'
+        },
+      },
+      {
         path: 'validators',
         name: 'validators',
         component: () => import('./views/Validators.vue'),

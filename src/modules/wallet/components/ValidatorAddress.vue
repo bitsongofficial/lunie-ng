@@ -17,12 +17,12 @@
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">uptime</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.uptimePercentage ? percent(validator.uptimePercentage) : '--' }}</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.uptimePercentage ? percent(validator.uptimePercentage) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">MAX COMMISSION RATE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxCommission ? percent(validator.maxCommission) : '--' }}</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxCommission ? percent(validator.maxCommission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Validator Since</label>
@@ -39,12 +39,12 @@
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">CURRENT COMMISSION RATE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.commission ? percent(validator.commission) : '--' }}</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.commission ? percent(validator.commission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Max Daily Commission Change</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxChangeCommission ? percent(validator.maxChangeCommission) : '--' }}</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxChangeCommission ? percent(validator.maxChangeCommission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">LAST COMMISSION CHANGE</label>

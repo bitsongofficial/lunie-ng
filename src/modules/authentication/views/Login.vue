@@ -31,7 +31,7 @@ export default defineComponent({
   name: 'Login',
   setup() {
     const router = useRouter();
-    const canGoBack = computed<boolean>(() => router.currentRoute.value.name !== 'choose');
+    const canGoBack = computed<boolean>(() => router.currentRoute.value.name !== 'login-home');
 
     return {
       canGoBack,

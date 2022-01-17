@@ -85,7 +85,7 @@
 
         <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
-        <p class="text-h4 text-half-transparent-white text-center">{{ error }}</p>
+        <p class="text-h4 text-half-transparent-white word-break-break-word text-center">{{ error }}</p>
       </div>
     </q-card>
   </q-dialog>

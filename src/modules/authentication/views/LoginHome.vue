@@ -15,31 +15,48 @@
       no-error-icon
       hide-bottom-space
       :loading="loadingNetwork"
+      :disable="loadingNetwork"
       :options-cover="false"
     >
       <template v-slot:selected-item="{ opt }">
         <div class="row items-center cursor-pointer">
-          <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
+          <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
         </div>
       </template>
       <template v-slot:option="{ itemProps, opt }">
         <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-          <label class="text-white text-body2 cursor-pointer">{{ opt.id }}</label>
+          <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
         </q-item>
       </template>
     </q-select>
 
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
-      <item clickable details disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" />
-      <item clickable details v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
-      <item clickable details to="login/ledger" v-ripple class="q-my-none" leftIcon="svguse:icons.svg#battery|0 0 24 14" title="Ledger Nano" />
+      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
+      <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension">
+        <template v-slot:right>
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+            <label class="text-center full-width">
+              Soon
+            </label>
+          </q-chip>
+        </template>
+      </item>
+      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
+        <template v-slot:right>
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+            <label class="text-center full-width">
+              Soon
+            </label>
+          </q-chip>
+        </template>
+      </item>
     </q-list>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
@@ -83,9 +100,12 @@ export default defineComponent({
       }
     };
 
+    const keplrAvailable = computed(() => window.keplr);
+
     return {
+      keplrAvailable,
       keplrSignIn,
-      ...useChangeNetwork()
+      ...useChangeNetwork(false)
     }
   }
 });
@@ -98,5 +118,13 @@ export default defineComponent({
 
 .subtitle {
   margin-bottom: 48px;
+}
+
+.soon-chip {
+  min-width: 70px;
+  min-height: 36px;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -1,4 +1,5 @@
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { Coin } from '@cosmjs/stargate';
+import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
 import { MutationTree } from 'vuex';
 import { DataStateInterface } from './state';
 
@@ -81,9 +82,25 @@ const mutation: MutationTree<DataStateInterface> = {
   setApr(state, apr: string) {
     state.apr = apr;
   },
+  setPool(state, pool: Pool) {
+    state.pool = pool;
+  },
+  setInflation(state, inflation: string) {
+    state.inflation = inflation;
+  },
+  setSupply(state, supply: Coin) {
+    state.supply = supply;
+  },
+  setCommunityPool(state, communityPool: Coin[]) {
+    state.communityPool = communityPool;
+  },
   resetSessionData(state) {
     state.supplyInfo = null;
-    state.apr = '0';
+    state.inflation = null;
+    state.supply = null;
+    state.communityPool = [];
+    state.pool = null;
+    state.apr = null;
     state.balances = [];
     state.rewards = [];
     state.delegations = []

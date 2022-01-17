@@ -2,18 +2,19 @@
   <div class="validator-delegation column items-center">
     <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">MY DELEGATION</label>
 
-    <h5 class="validator-delegation-amount text-body5 text-white">
+    <h5 class="validator-delegation-amount text-body5 text-white" v-if="!loading">
       {{ delegated }}
     </h5>
+    <q-skeleton type="text" width="160px" height="50px" animation-speed="700" dark square v-else></q-skeleton>
 
     <div class="btns row items-center justify-evenly q-gutter-sm">
-      <q-btn class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
         delegate
       </q-btn>
-      <q-btn :disable="!hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
         undelegate
       </q-btn>
-      <q-btn :disable="!hasDelegations" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
         redelegate
       </q-btn>
     </div>
@@ -32,21 +33,24 @@ export default defineComponent({
   name: 'ValidatorDelegation',
   props: {
     validator: {
-      type: Object as PropType<Validator>,
-      required: true
+      type: Object as PropType<Validator>
     },
+    loading: {
+      type: Boolean
+    }
   },
   setup(props) {
     const store = useStore();
     const delegations = computed(() => store.state.data.delegations);
+    const session = computed(() => store.state.authentication.session);
 
     const hasDelegations = computed(() => {
-      return delegations.value.filter(({ validator }) => validator.operatorAddress === props.validator.operatorAddress).length > 0;
+      return delegations.value.filter(({ validator }) => props.validator && validator.operatorAddress === props.validator.operatorAddress).length > 0;
     });
 
     const delegated = computed(() => {
       const delegation = delegations.value.find(({ validator }) =>
-        validator.operatorAddress === props.validator.operatorAddress
+        props.validator && validator.operatorAddress === props.validator.operatorAddress
       );
 
       const amount = delegation ? new BigNumber(delegation.amount).toString() : '0';
@@ -55,6 +59,7 @@ export default defineComponent({
     });
 
     return {
+      session,
       delegated,
       hasDelegations,
       ...useDelegatorActions(),

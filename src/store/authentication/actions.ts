@@ -18,15 +18,18 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       throw error;
     } finally {
       commit('setLoading', false);
+      commit('setChanging', false);
     }
   },
-  async changeNetwork({ commit, dispatch }, network: NetworkConfig) {
+  async changeNetwork({ commit, dispatch }, { network, refresh }: { network: NetworkConfig, refresh: boolean }) {
     try {
       commit('setChanging', true);
       commit('setNetwork', network);
       api.defaults.baseURL = network.apiURL;
 
-      await dispatch('init');
+      if (refresh) {
+        await dispatch('init');
+      }
     } catch (error) {
       console.error(error);
       throw error;
@@ -36,6 +39,8 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
   },
   async init({ dispatch, commit, state, rootState }) {
     try {
+      await dispatch('data/resetSessionData', undefined, { root: true });
+
       if (state.session && state.session.sessionType === SessionType.KEPLR) {
         await dispatch('keplr/init', 0, { root: true });
         await dispatch('signIn', {

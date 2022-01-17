@@ -54,7 +54,7 @@
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : '--' }}
+            {{ props.row.delegation ? bigFigureOrShortDecimals(props.row.delegation.amount) : 'N/A' }}
           </p>
           <p class="text-overline q-my-none text-positive" v-if="hasRewards(props.row.operatorAddress)">
             + {{ filterStakingDenomReward(props.row.operatorAddress) }}
@@ -62,7 +62,7 @@
         </q-td>
         <q-td key="rewards" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : '--' }}
+            {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="votingPower" class="text-subtitle2 text-white" :props="props">
@@ -75,12 +75,12 @@
         </q-td>
         <q-td key="unstaked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? bigFigureOrShortDecimals(props.row.undelegation.amount) : '--' }}
+            {{ props.row.undelegation ? bigFigureOrShortDecimals(props.row.undelegation.amount) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? fromNow(props.row.undelegation.endTime) : '--' }}
+            {{ props.row.undelegation ? fromNow(props.row.undelegation.endTime) : 'N/A' }}
           </p>
         </q-td>
         <q-td key="actions" :props="props">
@@ -147,6 +147,7 @@ export default defineComponent({
     const router = useRouter();
     const rewards = computed(() => store.state.data.rewards);
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
 
     const pagination = {
       sortBy: 'votingPower',
@@ -199,7 +200,7 @@ export default defineComponent({
       },
       {
         name: 'time',
-        label: 'Time',
+        label: 'Remaining Time',
         align: 'center',
         field: 'time',
       },
@@ -210,15 +211,17 @@ export default defineComponent({
     ]);
 
     const visibleColumns = computed<string[]>(() => {
+      const extra = !session.value || (session.value && session.value.sessionType !== 'keplr') ? [] : ['actions'];
+
       if (props.unstaking) {
         return ['id', 'name', 'unstaked', 'time'];
       }
 
       if (props.staking) {
-        return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', 'actions'];
+        return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', ...extra];
       }
 
-      return ['id', 'name', 'status', 'rewards', 'votingPower', 'actions'];
+      return ['id', 'name', 'status', 'rewards', 'votingPower', ...extra];
     });
 
     const rowClick = async (row: LooseDictionary) => {
@@ -282,6 +285,7 @@ export default defineComponent({
 
   &::v-deep(.q-table) {
     border-spacing: 0 6px;
+    padding-bottom: 20px;
   }
 }
 

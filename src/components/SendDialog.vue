@@ -65,11 +65,11 @@
                 <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
                   MAX
                 </q-btn>
-                <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-primary" v-if="!denom">{{ network.stakingDenom }}</label>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins.toFormat() }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
           </div>
 
           <div class="field-block column full-width justify-start items-start">
@@ -132,7 +132,7 @@
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Success!</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">You have successfully send your {{ network.stakingDenom }}s.</p>
+          <p class="text-h4 text-half-transparent-white text-center">You have successfully send your {{ !denom ? network.stakingDenom : 'coin' }}s.</p>
 
           <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             See your transaction
@@ -145,7 +145,7 @@
 
         <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
-        <p class="text-h4 text-half-transparent-white text-center">{{ error }}</p>
+        <p class="text-h4 text-half-transparent-white text-center word-break-break-word">{{ error }}</p>
       </div>
     </q-card>
   </q-dialog>
@@ -162,10 +162,15 @@ import { isValidAddress } from 'src/common/address';
 
 export default defineComponent({
   name: 'SendDialog',
+  props: {
+    denom: {
+      type: String,
+    }
+  },
   emits: [
     ...useDialogPluginComponent.emits,
   ],
-  setup() {
+  setup(props) {
     const store = useStore();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
@@ -177,10 +182,27 @@ export default defineComponent({
     const showAdvanced = ref<boolean>(false);
     const error = ref<string>();
 
-    const balance = computed(() => store.getters['data/currentRawBalance'] as Balance | undefined);
+    store.commit('data/setLoadingSignTransaction', false);
+
+    const balance = computed(() => {
+      if (!props.denom) {
+        return store.getters['data/currentRawBalance'] as Balance | undefined;
+      }
+
+      const balances = store.state.data.balances;
+
+      return balances.find(el => el.denom === props.denom);
+    });
+
     const network = computed(() => store.state.authentication.network);
 
-    const availableCoins = computed(() => new BigNumber(balance.value ? balance.value.available : '0'));
+    const availableCoins = computed(() => {
+      if (props.denom) {
+        return new BigNumber(balance.value ? balance.value.available : '0').multipliedBy('1e-6');
+      }
+
+      return new BigNumber(balance.value ? balance.value.available : '0');
+    });
 
     const loading = computed(() => store.state.data.loadingSignTransaction);
 
@@ -196,9 +218,11 @@ export default defineComponent({
           memo: memo.value,
           amounts: [{
             amount: amount.value,
-            denom: network.value.stakingDenom
+            denom: props.denom ? props.denom : network.value.stakingDenom
           }],
         };
+
+        console.log(request);
 
         const hashres = await store.dispatch('data/signTransaction', request) as string;
 

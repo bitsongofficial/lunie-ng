@@ -18,3 +18,25 @@
   font-style: normal;
   src: local('Circular Std Bold'), local('CircularStd-Bold'), url('./fonts/CircularStd-Bold.woff2') format('woff2'), url('./fonts/CircularStd-Bold.woff') format('woff');
 }
+
+.proposal-description {
+  & h1 {
+    font-size: 32px;
+    line-height: normal;
+  }
+
+  & h2 {
+    font-size: 28px;
+    line-height: normal;
+  }
+
+  & h3 {
+    font-size: 24px;
+    line-height: normal;
+  }
+
+  & h4 {
+    font-size: 20px;
+    line-height: normal;
+  }
+}

@@ -17,6 +17,7 @@ export interface Pagination {
 }
 
 export interface PaginationResponse {
+  [key: string]: unknown;
   pagination: Pagination;
 }
 

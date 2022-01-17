@@ -390,7 +390,7 @@ const proposalStatusMap = (status: ProposalRawStatus) => {
   }
 }
 
-export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote): Proposal => {
+export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string, detailedVotes: DetailedVote | null): Proposal => {
   const typeStringArray = proposal.content['@type'].split('.')
   const typeString = typeStringArray[typeStringArray.length - 1];
   const type = proposalTypeEnumDictionary[typeString] as ProposalType;
@@ -405,10 +405,10 @@ export const proposalReducer = (proposal: ProposalRaw, totalBondedTokens: string
     status: proposalStatusMap(proposal.status),
     statusBeginTime: proposalBeginTime(proposal),
     statusEndTime: proposalEndTime(proposal),
-    tally: tallyReducer(proposal, detailedVotes.tally, totalBondedTokens),
+    tally: detailedVotes ? tallyReducer(proposal, detailedVotes.tally, totalBondedTokens) : null,
     deposit: getDeposit(proposal),
     summary: getProposalSummary(type),
-    detailedVotes,
+    detailedVotes: detailedVotes ? detailedVotes : null,
   }
 }
 

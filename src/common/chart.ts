@@ -36,10 +36,12 @@ export const getMappedVotes = (details: DetailedVote) => {
 export const getMappedTimeline = (details: DetailedVote): TimelineData[] => {
   const timeline = details.timeline.map((el) => {
     if (el) {
+      const postfix = el.time && !compareNow(el.time) ? 'ago' : 'left';
+
       return ({
         label: el.title,
         active: el.time ? !compareNow(el.time) : false,
-        subtitle: el.time ? `${fromNow(el.time)} ago` : '--'
+        subtitle: el.time ? `${fromNow(el.time)} ${postfix}` : 'N/A'
       });
     }
   });

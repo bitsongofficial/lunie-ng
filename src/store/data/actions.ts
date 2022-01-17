@@ -15,13 +15,17 @@ import {
   getAccountInfo,
   getSupplyInfo,
   getPool,
-  getInflation
+  getInflation,
+  getCommunityPool,
+  getSupplyByDenom
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
 import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
 import { getAPR } from 'src/common/numbers';
+import { getCoinLookup } from 'src/common/network';
+import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -95,17 +99,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setLoadingSupplyInfo', true);
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
-
-      if (!supplyInfo) {
-        commit(
-          'notifications/add',
-          {
-            type: 'danger',
-            message: 'Getting supply info failed: endpoint undefined',
-          },
-          { root: true }
-        );
-      }
     } catch (err) {
       if (err instanceof Error) {
         commit(
@@ -125,18 +118,38 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       await dispatch('getAPR');
     }
   },
-  async getAPR({ commit, state }) {
+  async getAPR({ commit, rootState }) {
     try {
       commit('setLoadingAPR', true);
 
-      if (state.supplyInfo) {
-        const pool = await getPool();
-        const inflation = await getInflation();
-        const apr = getAPR(state.supplyInfo.chainSupply, inflation.inflation, pool.pool.bonded_tokens);
+      const supplyCoin = getCoinLookup(
+        rootState.authentication.network.stakingDenom,
+        'viewDenom'
+      );
+
+      const chainSupplyTotal = await getSupplyByDenom(supplyCoin ? supplyCoin.chainDenom : '');
+      const communityPool = await getCommunityPool();
+
+      commit('setSupply', chainSupplyTotal);
+      commit('setCommunityPool', communityPool.pool);
+
+      const chainSupplyCoin = getStakingCoinViewAmount(chainSupplyTotal ? chainSupplyTotal.amount : '0')
+
+      const chainSupply = chainSupplyCoin.toString();
+
+      const pool = await getPool();
+      const inflation = await getInflation();
+
+      if (chainSupplyTotal) {
+        const apr = getAPR(chainSupply, inflation.inflation, pool.pool.bonded_tokens);
 
         commit('setApr', apr.toString());
       }
+
+      commit('setPool', pool.pool);
+      commit('setInflation', inflation.inflation);
     } catch (err) {
+      console.error(err);
       if (err instanceof Error) {
         commit(
           'notifications/add',
@@ -442,17 +455,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         return hash;
       }
     } catch (err) {
-      if (err instanceof Error) {
-        commit(
-          'notifications/add',
-          {
-            type: 'danger',
-            message: 'Getting validator self stake failed:' + err.message,
-          },
-          { root: true }
-        );
-      }
-
       throw err;
     } finally {
       commit('setLoadingSignTransaction', false);

@@ -4,7 +4,8 @@ import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
 import { bigFigureOrShortDecimals, percent } from 'src/common/numbers';
 import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
-import { Validator, ValidatorMap, Reward, ValidatorStatus } from 'src/models';
+import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus } from 'src/models';
+import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
 
 const getters: GetterTree<DataStateInterface, StateInterface> = {
   totalRewardsPerDenom({ rewards }) {
@@ -30,6 +31,26 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
         };
       }, {});
     };
+  },
+  balances({ balances }, _getters, { authentication }) {
+    return sortBy(balances, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
+      balance => {
+        if (balance.denom === authentication.network.stakingDenom) {
+          return ({
+            ...balance,
+          });
+        }
+
+        const total = getStakingCoinViewAmount(new BigNumber(balance.total).toString());
+        const available = getStakingCoinViewAmount(new BigNumber(balance.available).toString());
+
+        return ({
+          ...balance,
+          total: bigFigureOrShortDecimals(total),
+          available: bigFigureOrShortDecimals(available),
+        });
+      }
+    );
   },
   currentBalance({ balances }) {
     const balance = [...balances].pop();
@@ -77,7 +98,34 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   activeValidators({ validators }) {
     return validators.filter(el => el.status === ValidatorStatus.ACTIVE);
   },
-  supplyInfo({ supplyInfo }) {
+  votingProposalsCount({ proposals }) {
+    return proposals.filter(el => el.status === ProposalStatus.VOTING).length;
+  },
+  getTotalSupply({ supply }) {
+    if (supply) {
+      const amount = getStakingCoinViewAmount(supply ? supply.amount : '0');
+      const total = new BigNumber(amount);
+
+      return total.toString();
+    }
+
+    return null;
+  },
+  getCommunityPool({ communityPool }) {
+    if (communityPool.length > 0) {
+      let total = new BigNumber('0');
+
+      communityPool.forEach(coin => {
+        const amount = getStakingCoinViewAmount(coin ? coin.amount : '0');
+        total = total.plus(new BigNumber(amount));
+      });
+
+      return total.toString();
+    }
+
+    return null;
+  },
+  supplyInfo({ supplyInfo }, getters, { authentication }) {
     if (supplyInfo) {
       return {
         ...supplyInfo,
@@ -85,13 +133,34 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
         communityPool: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.communityPool).toString()) ?? ''} ${supplyInfo.denom}`,
         totalSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.totalSupply).toString()) ?? ''} ${supplyInfo.denom}`
       };
+    } else {
+      const totalSupply = getters['getTotalSupply'] as string | null;
+      const communityPool = getters['getCommunityPool'] as string | null;
+
+      return {
+        totalSupply: totalSupply ? `${bigFigureOrShortDecimals(totalSupply) ?? ''} ${authentication.network.stakingDenom}` : null,
+        communityPool: communityPool ? `${bigFigureOrShortDecimals(communityPool) ?? ''} ${authentication.network.stakingDenom}` : null,
+      }
+    }
+  },
+  getAprInfo({ apr }) {
+    return apr ? percent(new BigNumber(apr).toFixed(4)) : null;
+  },
+  getInflation({ inflation }) {
+    if (inflation) {
+      return percent(new BigNumber(inflation).toFixed(4));
     }
 
     return null;
   },
-  getAprInfo({ apr }) {
-    return percent(new BigNumber(apr).toFixed(4));
-  }
+  getBondedTokens({ pool }, _getters, { authentication }) {
+    if (pool) {
+      const bondedTokensNumber = new BigNumber(getStakingCoinViewAmount(pool.bonded_tokens));
+      return `${bigFigureOrShortDecimals(bondedTokensNumber.toString()) ?? ''} ${authentication.network.stakingDenom}`;
+    }
+
+    return null;
+  },
 }
 
 export default getters

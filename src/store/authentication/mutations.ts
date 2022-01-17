@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { Session, NetworkConfig } from 'src/models';
 import { MutationTree } from 'vuex'
 import { AuthenticationStateInterface } from './state'
@@ -7,7 +8,7 @@ const mutation: MutationTree<AuthenticationStateInterface> = {
     state.session = session;
   },
   setNetwork(state, network: NetworkConfig) {
-    state.network = network;
+    state.network = cloneDeep(network);
   },
   setLoading(state, loading: boolean) {
     state.loading = loading;
