@@ -48,7 +48,8 @@ export default defineComponent({
     const validator = computed(() => store.state.data.validators.find(el => el.id === props.address));
     const validatorDelegations = computed(() => store.state.data.validatorDelegations);
     const selfStakeValidator = computed(() => store.state.data.selfStakeValidator);
-    const loading = computed(() => !store.state.data.validatorsLoaded || store.state.data.loading);
+    const loadingAuth = computed(() => store.state.authentication.loading || store.state.authentication.changing);
+    const loading = computed(() => !store.state.data.validatorsLoaded || store.state.data.loading || loadingAuth.value);
 
     onMounted(async () => {
       if (validator.value === undefined) {

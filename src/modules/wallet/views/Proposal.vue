@@ -63,12 +63,15 @@
       <timeline class="section" :entries="entries" />
     </template>
 
-    <div class="section-header row items-center justify-between">
+    <div class="section-header row items-center justify-between" v-if="!loading && description">
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
+    <div class="section-header row items-center justify-between" v-else-if="loading">
+      <q-skeleton type="text" width="200px" height="30px" animation-speed="700" dark square></q-skeleton>
+    </div>
 
-    <pre class="proposal-description description-block text-half-transparent-white text-h5" v-html="description" v-if="!loading"></pre>
-    <pre class="proposal-description description-block" v-else>
+    <pre class="proposal-description description-block text-half-transparent-white text-h5" v-html="description" v-if="!loading && description"></pre>
+    <pre class="proposal-description description-block" v-else-if="loading">
       <q-skeleton class="q-mb-md" type="text" width="100%" height="20px" animation-speed="700" dark square></q-skeleton>
       <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
       <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
@@ -119,7 +122,8 @@ export default defineComponent({
     const session = computed(() => store.state.authentication.session);
 
     const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
-    const loading = computed(() => !store.state.data.proposalsLoaded || store.state.data.loading);
+    const loadingAuth = computed(() => store.state.authentication.loading || store.state.authentication.changing);
+    const loading = computed(() => !store.state.data.proposalsLoaded || store.state.data.loading || loadingAuth.value);
 
     const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '').replace(/\\n/gm, '\n')));
 
@@ -168,6 +172,7 @@ export default defineComponent({
     });
 
     return {
+      loadingAuth,
       loading,
       session,
       proposal,
