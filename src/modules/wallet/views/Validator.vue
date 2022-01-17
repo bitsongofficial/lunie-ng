@@ -2,15 +2,15 @@
   <q-page class="validator">
     <div class="row grid">
       <validator-resume
-        v-if="validator"
+        :loading="loading"
         :validator="validator"
         :validator-delegations="validatorDelegations"
         :self-stake="selfStakeValidator"
         class="col-12"
       />
 
-      <validator-delegation v-if="validator" :validator="validator" class="col-12 col-md-auto validator-delegation" />
-      <validator-rewards v-if="validator" :validator="validator" class="col-12 col-md-auto validator-rewards" />
+      <validator-delegation :validator="validator" :loading="loading" class="col-12 col-md-auto validator-delegation" />
+      <validator-rewards :validator="validator" :loading="loading" class="col-12 col-md-auto validator-rewards" />
 
       <validator-address v-if="validator" :validator="validator" class="col-12" />
     </div>
@@ -48,6 +48,7 @@ export default defineComponent({
     const validator = computed(() => store.state.data.validators.find(el => el.id === props.address));
     const validatorDelegations = computed(() => store.state.data.validatorDelegations);
     const selfStakeValidator = computed(() => store.state.data.selfStakeValidator);
+    const loading = computed(() => !store.state.data.validatorsLoaded || store.state.data.loading);
 
     onMounted(async () => {
       if (validator.value === undefined) {
@@ -59,6 +60,7 @@ export default defineComponent({
     });
 
     return {
+      loading,
       validator,
       validatorDelegations,
       selfStakeValidator

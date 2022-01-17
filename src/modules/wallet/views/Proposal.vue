@@ -3,7 +3,7 @@
     <proposal-status v-if="proposal" :status="proposal.status" />
 
     <div class="row proposal-header justify-between">
-      <div class="column col-12 col-md-9">
+      <div class="column col-12 col-md-9" v-if="!loading">
         <h2 class="title text-body-large text-weight-medium text-white">
           {{ proposal?.title }}
         </h2>
@@ -11,6 +11,12 @@
         <p class="description text-h5 text-accent">
           {{ proposal?.summary }}
         </p>
+      </div>
+      <div class="column col-12 col-md-9" v-else>
+        <q-skeleton type="QBadge" width="74px" height="24px" animation-speed="700" dark></q-skeleton>
+        <q-skeleton class="title q-mx-auto" type="text" width="260px" height="60px" animation-speed="700" dark square></q-skeleton>
+
+        <q-skeleton class="description q-mx-auto" type="text" width="180px" height="20px" animation-speed="700" dark square></q-skeleton>
       </div>
 
       <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
@@ -61,7 +67,15 @@
       <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
     </div>
 
-    <pre class="proposal-description description-block text-half-transparent-white text-h5" v-html="description"></pre>
+    <pre class="proposal-description description-block text-half-transparent-white text-h5" v-html="description" v-if="!loading"></pre>
+    <pre class="proposal-description description-block" v-else>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="20px" animation-speed="700" dark square></q-skeleton>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
+      <q-skeleton class="q-mb-md" type="text" width="100%" height="30px" animation-speed="700" dark square></q-skeleton>
+    </pre>
   </q-page>
 </template>
 
@@ -105,6 +119,7 @@ export default defineComponent({
     const session = computed(() => store.state.authentication.session);
 
     const proposal = computed(() => store.state.data.proposals.find(el => el.id === proposalID));
+    const loading = computed(() => !store.state.data.proposalsLoaded || store.state.data.loading);
 
     const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '').replace(/\\n/gm, '\n')));
 
@@ -153,6 +168,7 @@ export default defineComponent({
     });
 
     return {
+      loading,
       session,
       proposal,
       description,

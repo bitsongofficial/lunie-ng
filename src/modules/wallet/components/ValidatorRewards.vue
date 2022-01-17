@@ -2,12 +2,13 @@
   <div class="validator-rewards column items-center">
     <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">MY REWARDS</label>
 
-    <h5 class="validator-rewards-amount text-body5 text-white">
+    <h5 class="validator-rewards-amount text-body5 text-white" v-if="!loading">
       {{ stakingDenomReward }}
     </h5>
+    <q-skeleton type="text" width="160px" height="50px" animation-speed="700" dark square v-else></q-skeleton>
 
     <div class="row items-center justify-center full-width">
-      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
+      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0 || loading" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>
@@ -25,9 +26,11 @@ export default defineComponent({
   name: 'ValidatorRewards',
   props: {
     validator: {
-      type: Object as PropType<Validator>,
-      required: true
+      type: Object as PropType<Validator>
     },
+    loading: {
+      type: Boolean
+    }
   },
   setup(props) {
     const quasar = useQuasar();
@@ -37,7 +40,7 @@ export default defineComponent({
     const session = computed(() => store.state.authentication.session);
 
     const validatorReward = computed(() => rewards.value.filter(
-      ({ validator }) => validator.operatorAddress === props.validator.operatorAddress)
+      ({ validator }) => props.validator && validator.operatorAddress === props.validator.operatorAddress)
     );
 
     const stakingDenomReward = computed(() => {
