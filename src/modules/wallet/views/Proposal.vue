@@ -24,8 +24,8 @@
           <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
             deposit
           </q-btn>
-          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING'" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-            vote
+          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING' || voted" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+            {{ voted ? 'voted' : 'vote' }}
           </q-btn>
         </template>
 
@@ -126,6 +126,7 @@ export default defineComponent({
     const loading = computed(() => !store.state.data.proposalsLoaded || store.state.data.loading || loadingAuth.value);
 
     const description = computed(() => marked(sanitizeHtml(proposal.value?.description ?? '').replace(/\\n/gm, '\n')));
+    const voted = (store.getters['data/proposalVoted'] as (id: number) => boolean)(proposalID);
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value && proposal.value.detailedVotes) {
@@ -172,6 +173,7 @@ export default defineComponent({
     });
 
     return {
+      voted,
       loadingAuth,
       loading,
       session,

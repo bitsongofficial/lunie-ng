@@ -71,7 +71,7 @@ export const queryAutoPaginate = async <K>(url: string) => {
     while (response.data.pagination && response.data.pagination.next_key !== null) {
       response = await api.get<PaginationResponse>(url + `?pagination.key=${urlSafeEncode(response.data.pagination.next_key)}`);
 
-      data.concat(response.data[fieldName] as K[]);
+      data = data.concat(response.data[fieldName] as K[]);
     }
 
     return data;

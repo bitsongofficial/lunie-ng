@@ -46,7 +46,7 @@
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
             </p>
-            <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" />
+            <!-- <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" /> -->
           </div>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
@@ -91,7 +91,7 @@
               <q-item class="menu-item" active-class="active" clickable @click="openClaimDialog(props.row)" v-if="getRewards(props.row.operatorAddress).length > 0" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Claim</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable v-if="!staking" @click="openStakeDialog(props.row)" v-close-popup>
+              <q-item class="menu-item" active-class="active" clickable @click="openStakeDialog(props.row)" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Delegate</q-item-section>
               </q-item>
               <q-item class="menu-item" active-class="active" @click="openRestakeDialog(props.row)" :disable="getDelegations(props.row.operatorAddress).length === 0" :clickable="getDelegations(props.row.operatorAddress).length > 0" v-close-popup>
