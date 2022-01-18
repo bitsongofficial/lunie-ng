@@ -266,7 +266,7 @@ export const networks: NetworkConfig[] = [
       {
         viewDenom: 'LIKE',
         chainDenom: 'nanolike',
-        chainToViewConversionFactor: 1e-6,
+        chainToViewConversionFactor: 1e-9,
         icon: 'currencies/bitsong.png',
       },
     ],
