@@ -81,19 +81,25 @@ export const queryAutoPaginate = async <K>(url: string) => {
 }
 
 export const getDelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
-  const delegations = await queryAutoPaginate<DelegationWithBalance>(
-    `cosmos/staking/v1beta1/delegations/${address}`
-  );
+  try {
+    const delegations = await queryAutoPaginate<DelegationWithBalance>(
+      `cosmos/staking/v1beta1/delegations/${address}`
+    );
 
-  const delegationsReduced = delegations.length ? delegations.map((delegation) =>
-    delegationReducer(
-      delegation,
-      validatorsDictionary[delegation.delegation.validator_address],
-      ValidatorStatus.ACTIVE
-    )
-  ) : [];
+    const delegationsReduced = delegations.length ? delegations.map((delegation) =>
+      delegationReducer(
+        delegation,
+        validatorsDictionary[delegation.delegation.validator_address],
+        ValidatorStatus.ACTIVE
+      )
+    ) : [];
 
-  return compact(delegationsReduced).filter((delegation) => new BigNumber(delegation.amount).gt(0));
+    return compact(delegationsReduced).filter((delegation) => new BigNumber(delegation.amount).gt(0));
+  } catch (error) {
+    console.error(error);
+
+    return [];
+  }
 }
 
 export const getUndelegationsForDelegator = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
