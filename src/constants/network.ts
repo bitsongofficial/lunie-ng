@@ -256,7 +256,7 @@ export const networks: NetworkConfig[] = [
     logo: 'logo.svg',
     website: 'https://like.co',
     apiURL: 'https://mainnet-node.like.co',
-    rpcURL: 'https://mainnet-node.like.co:443/rpc',
+    rpcURL: 'https://mainnet-node.like.co:443/rpc/',
     explorerURL: 'https://likecoin.bigdipper.live/',
     supplyURL: null,
     minBlockHeight: 2167000,
