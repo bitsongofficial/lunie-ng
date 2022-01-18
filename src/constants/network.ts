@@ -249,5 +249,45 @@ export const networks: NetworkConfig[] = [
     },
     icon: 'https://assets.coingecko.com/coins/images/22485/small/logo_transparent_notext.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },{
+    id: 'likecoin-mainnet-2',
+    name: 'LikeCoin',
+    description: 'LikeCoin Mainnet',
+    logo: 'logo.svg',
+    website: 'https://like.co',
+    apiURL: 'https://mainnet-node.like.co',
+    rpcURL: 'https://mainnet-node.like.co:443/rpc/',
+    explorerURL: 'https://likecoin.bigdipper.live/',
+    supplyURL: null,
+    minBlockHeight: 2167000,
+    stakingDenom: 'LIKE',
+    coinLookup: [
+      {
+        viewDenom: 'LIKE',
+        chainDenom: 'nanolike',
+        chainToViewConversionFactor: 1e-9,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'cosmos',
+    validatorAddressPrefix: 'cosmosvaloper',
+    validatorConsensusaddressPrefix: 'cosmosvalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'cosmos',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'LIKE',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/10212/small/likecoin.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   }
 ];

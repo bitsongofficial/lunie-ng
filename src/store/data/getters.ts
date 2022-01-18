@@ -98,8 +98,34 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   activeValidators({ validators }) {
     return validators.filter(el => el.status === ValidatorStatus.ACTIVE);
   },
-  votingProposalsCount({ proposals }) {
-    return proposals.filter(el => el.status === ProposalStatus.VOTING).length;
+  votingProposalsCount({ proposals }, _getters, { authentication }) {
+    return proposals.filter(el => {
+      if (el.status === ProposalStatus.VOTING) {
+
+        if (el.detailedVotes && authentication.session) {
+          const vote = el.detailedVotes.votes.find(detailVote => detailVote.voter.address === authentication.session?.address);
+
+          return vote === undefined;
+        }
+
+        return true;
+      }
+
+      return false;
+    }).length;
+  },
+  proposalVoted({ proposals }, _getters, { authentication }) {
+    return (id: number) => {
+      const proposal = proposals.find(el => el.id === id);
+
+      if (proposal && proposal.detailedVotes && authentication.session) {
+        const vote = proposal.detailedVotes.votes.find(detailVote => detailVote.voter.address === authentication.session?.address);
+
+        return vote !== undefined;
+      }
+
+      return false;
+    };
   },
   getTotalSupply({ supply }) {
     if (supply) {
