@@ -25,9 +25,9 @@
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxCommission ? percent(validator.maxCommission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Validator Since</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">LAST COMMISSION CHANGE</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">Block #{{ validator.startHeight || 'N/A' }}</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ fromNow(validator.commissionUpdateTime) }} ago</h5>
       </div>
     </div>
     <div class="validator-address-right column col-12 col-md">
@@ -45,11 +45,6 @@
         <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Max Daily Commission Change</label>
 
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxChangeCommission ? percent(validator.maxChangeCommission) : 'N/A' }}</h5>
-      </div>
-      <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">LAST COMMISSION CHANGE</label>
-
-        <h5 class="text-white q-mt-none q-mb-xs">{{ fromNow(validator.commissionUpdateTime) }} ago</h5>
       </div>
     </div>
   </div>

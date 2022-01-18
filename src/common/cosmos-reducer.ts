@@ -56,9 +56,9 @@ export function coinReducer(chainCoin: NetworkConfigFeeOption | Coin, ibcInfo: P
     }
   }
 
-  const precision = coinLookup.chainToViewConversionFactor
-    .toString()
-    .split('.')[1].length;
+  const coinDecimals = new BigNumber(coinLookup.chainToViewConversionFactor).toFixed();
+
+  const precision = coinDecimals.split('.')[1].length;
 
   return {
     supported: true,
