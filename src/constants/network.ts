@@ -133,7 +133,7 @@ export const networks: NetworkConfig[] = [
     description: 'Osmosis Mainnet',
     logo: 'logo.svg',
     website: 'https://osmosis.zone',
-    apiURL: 'https://lcd-osmosis.keplr.app',
+    apiURL: 'https://lcd-osmosis.itastakers.com',
     rpcURL: 'https://rpc-osmosis.itastakers.com',
     explorerURL: 'https://www.mintscan.io/osmosis/',
     supplyURL: null,
