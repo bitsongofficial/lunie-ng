@@ -20,7 +20,9 @@
     >
       <template v-slot:selected-item="{ opt }">
         <div class="row items-center cursor-pointer">
-          <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+          <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
+
+          <label class="text-white text-body2 q-ml-md cursor-pointer">{{ opt.name }}</label>
         </div>
       </template>
       <template v-slot:option="{ itemProps, opt }">

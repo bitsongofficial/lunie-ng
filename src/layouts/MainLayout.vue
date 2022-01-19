@@ -16,22 +16,35 @@
           </q-btn>
         </q-toolbar-title>
 
-        <q-item class="profile-item" clickable v-if="session" @click="!loading && session ? onCopy(session.address) : null">
-          <q-item-section class="column">
-            <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
-            <label class="text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
-            <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
-          </q-item-section>
+        <q-select
+          v-model="network"
+          rounded
+          standout
+          map-options
+          :options="networks"
+          bg-color="transparent-white"
+          color="transparent-white"
+          label-color="primary"
+          class="medium-large white"
+          no-error-icon
+          hide-bottom-space
+          :loading="loadingNetwork"
+          :disable="loadingNetwork"
+          :options-cover="false"
+        >
+          <template v-slot:selected-item="{ opt }">
+            <div class="row items-center cursor-pointer">
+              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
 
-          <q-item-section side v-if="!quasar.screen.lt.md">
-            <q-btn @click.stop="" dense color="transparent-accent-3" unelevated round to="/authentication" class="q-ml-md">
-              <q-icon name="svguse:icons.svg#reload|0 0 17 14" color="white" size="16px" />
-            </q-btn>
-          </q-item-section>
-        </q-item>
-        <q-btn @click.stop="" dense color="transparent-accent-3" unelevated round to="/authentication" class="q-ml-md" v-else>
-          <q-icon name="svguse:icons.svg#reload|0 0 17 14" color="white" size="16px" />
-        </q-btn>
+              <label class="text-white text-body2 q-ml-md q-mr-lg cursor-pointer">{{ opt.name }}</label>
+            </div>
+          </template>
+          <template v-slot:option="{ itemProps, opt }">
+            <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
+              <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+            </q-item>
+          </template>
+        </q-select>
       </q-toolbar>
     </q-header>
 
@@ -55,33 +68,25 @@
             <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
 
-          <q-select
-            v-model="network"
-            rounded
-            standout
-            map-options
-            :options="networks"
-            bg-color="transparent-white"
-            color="transparent-white"
-            label-color="primary"
-            class="full-width medium q-mt-auto connection-item"
-            no-error-icon
-            hide-bottom-space
-            :loading="loadingNetwork"
-            :disable="loadingNetwork"
-            :options-cover="false"
-          >
-            <template v-slot:selected-item="{ opt }">
-              <div class="row items-center cursor-pointer">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
-              </div>
-            </template>
-            <template v-slot:option="{ itemProps, opt }">
-              <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-                <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
-              </q-item>
-            </template>
-          </q-select>
+          <q-item class="q-mt-auto profile-item" clickable>
+            <q-item-section avatar @click="goToAuthentication">
+              <q-btn padding="2px" dense flat unelevated round>
+                <q-icon class="rotate-180" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
+              </q-btn>
+            </q-item-section>
+
+            <q-item-section class="column no-wrap" v-if="session" @click.stop="!loading && session ? onCopy(session.address) : null">
+              <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
+              <label class="profile-item-address text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
+              <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
+            </q-item-section>
+
+            <q-item-section side @click="goToAuthentication">
+              <q-btn padding="2px" dense flat unelevated round>
+                <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="quart-transparent-white" size="14px" />
+              </q-btn>
+            </q-item-section>
+          </q-item>
         </q-drawer>
       </div>
 
@@ -105,7 +110,7 @@
 import { defineComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue';
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
-import { formatAddress } from 'src/common/address';
+import { formatShortAddress } from 'src/common/address';
 import { useClipboard } from 'src/hooks';
 import { useChangeNetwork, useBack } from 'src/hooks';
 import { useRouter } from 'vue-router';
@@ -125,7 +130,7 @@ export default defineComponent({
     const router = useRouter();
     const leftDrawer = ref<boolean>(true);
     const session = computed(() => store.state.authentication.session);
-    const address = computed(() => formatAddress(store.state.authentication.session?.address));
+    const address = computed(() => formatShortAddress(store.state.authentication.session?.address));
     const loading = computed(() => store.state.authentication.loading);
     const votingProposalsCount = computed(() => store.getters['data/votingProposalsCount'] as number);
 
@@ -163,12 +168,12 @@ export default defineComponent({
       store.dispatch('authentication/init').catch(err => console.error(err));
     });
 
-    const signOut = async () => {
+    const goToAuthentication = async () => {
       try {
-        await store.dispatch('authentication/signIn', undefined);
         await router.replace({ name: 'authentication' });
       } catch (error) {
         console.error(error);
+        throw error;
       }
     }
 
@@ -185,7 +190,7 @@ export default defineComponent({
       quasar,
       leftDrawer,
       back,
-      signOut,
+      goToAuthentication,
       goBack,
       ...useClipboard(),
     }
@@ -217,10 +222,27 @@ export default defineComponent({
 }
 
 .profile-item {
-  background: $secondary;
-  border-radius: 50px;
-  padding: 12px 24px 12px 26px;
-  border: 2px solid $accent-3;
+  background: $transparent-gray2;
+  box-shadow: $full-secondary-box-shadow;
+  border-radius: 30px;
+  padding: 12px 24px 11px 24px;
+  margin-bottom: 51px;
+  min-height: 51px;
+
+  &::v-deep(.q-item__section--avatar) {
+    min-width: unset;
+    padding-right: 18px;
+  }
+
+  &::v-deep(.q-item__section--side:not(.q-item__section--avatar)) {
+    min-width: unset;
+    padding-left: 28px;
+  }
+}
+
+.profile-item-address {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .network-item {
@@ -240,9 +262,5 @@ export default defineComponent({
 .back-btn {
   max-width: 112px;
   margin-bottom: 84px;
-}
-
-.connection-item {
-  margin-bottom: 40px;
 }
 </style>
