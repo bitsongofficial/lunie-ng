@@ -55,7 +55,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc.testnet.bitsong.network',
     supplyURL: 'https://supply.bitsong.io/',
     explorerURL: 'https://www.mintscan.io/bitsong/',
-    minBlockHeight: 2966151,
+    minBlockHeight: 1,
     stakingDenom: 'BTSG',
     coinLookup: [
       {
@@ -133,11 +133,11 @@ export const networks: NetworkConfig[] = [
     description: 'Osmosis Mainnet',
     logo: 'logo.svg',
     website: 'https://osmosis.zone',
-    apiURL: 'https://lcd-osmosis.itastakers.com',
-    rpcURL: 'https://rpc-osmosis.itastakers.com',
+    apiURL: 'https://lcd.osmosis.bas.network',
+    rpcURL: 'https://rpc.osmosis.bas.network',
     explorerURL: 'https://www.mintscan.io/osmosis/',
     supplyURL: null,
-    minBlockHeight: 2742000,
+    minBlockHeight: 2784001,
     stakingDenom: 'OSMO',
     coinLookup: [
       {
