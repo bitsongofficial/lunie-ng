@@ -54,6 +54,12 @@
         </template>
       </item>
     </q-list>
+
+    <div class="column items-center" v-if="session">
+      <q-btn @click="signOut" :ripple="false" class="signout-btn text-capitalize text-underline q-mx-auto text-body4 no-hoverable" dense flat unelevated text-color="white" padding="0">
+        Signout
+      </q-btn>
+    </div>
   </div>
 </template>
 
@@ -77,6 +83,16 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
+
+    const session = computed(() => store.state.authentication.session);
+
+    const signOut = async () => {
+      try {
+        await store.dispatch('authentication/signIn', undefined);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     const keplrSignIn = async () => {
       try {
@@ -106,7 +122,9 @@ export default defineComponent({
 
     return {
       keplrAvailable,
+      session,
       keplrSignIn,
+      signOut,
       ...useChangeNetwork(false)
     }
   }
@@ -128,5 +146,9 @@ export default defineComponent({
   border-radius: 25px;
   align-items: center;
   justify-content: center;
+}
+
+.signout-btn {
+  margin-top: 20px;
 }
 </style>

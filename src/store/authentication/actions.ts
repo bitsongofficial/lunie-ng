@@ -11,7 +11,10 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       await dispatch('data/resetSessionData', undefined, { root: true });
 
       commit('setSession', session);
-      await dispatch('data/refresh', undefined, { root: true });
+
+      if (session) {
+        await dispatch('data/refresh', undefined, { root: true });
+      }
     } catch (error) {
       await dispatch('data/resetSessionData', undefined, { root: true });
       console.error('Err:', error);
