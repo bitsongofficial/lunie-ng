@@ -13,12 +13,12 @@
       appear
     >
       <div class="chain-stats-grid">
-        <chain-stats title="CIRCULATING SUPPLY" :quantity="supplyInfo?.circulatingSupply ?? 'N/A'" :loading="loadingSupplyInfo" />
-        <chain-stats title="TOTAL SUPPLY" :quantity="supplyInfo?.totalSupply ?? 'N/A'" :loading="loadingSupplyInfo" />
-        <chain-stats title="COMMUNITY POOL" :quantity="supplyInfo?.communityPool ?? 'N/A'" :loading="loadingSupplyInfo" />
-        <chain-stats title="APR" :quantity="apr ?? 'N/A'" :loading="loadingApr" />
-        <chain-stats title="TOKEN BONDED" :quantity="bondedTokens ?? 'N/A'" :loading="loadingApr" />
-        <chain-stats title="INFLATION" :quantity="inflation ?? 'N/A'" :loading="loadingApr" />
+        <chain-stats title="CIRCULATING SUPPLY" :denom="network.stakingDenom" :splittedDecimals="supplyInfo?.circulatingSupply" :loading="loadingSupplyInfo" />
+        <chain-stats title="TOTAL SUPPLY" :denom="network.stakingDenom" :splittedDecimals="supplyInfo?.totalSupply" :loading="loadingSupplyInfo" />
+        <chain-stats title="COMMUNITY POOL" :denom="network.stakingDenom" :splittedDecimals="supplyInfo?.communityPool" :loading="loadingSupplyInfo" />
+        <chain-stats title="APR" :quantity="apr" :loading="loadingApr" />
+        <chain-stats title="TOKEN BONDED" :denom="network.stakingDenom" :splittedDecimals="bondedTokens" :loading="loadingApr" />
+        <chain-stats title="INFLATION" :quantity="inflation" :loading="loadingApr" />
       </div>
     </transition>
   </q-page>
@@ -43,6 +43,7 @@ export default defineComponent({
     const loadingSupplyInfo = computed(
       () => store.state.data.loadingSupplyInfo || store.state.data.loadingApr || store.state.authentication.loading || store.state.authentication.changing
     );
+    const network = computed(() => store.state.authentication.network);
 
     const apr = computed(() => store.getters['data/getAprInfo'] as string | null);
     const inflation = computed(() => store.getters['data/getInflation'] as string | null);
@@ -50,6 +51,7 @@ export default defineComponent({
     const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading || store.state.authentication.loading || store.state.authentication.changing);
 
     return {
+      network,
       inflation,
       bondedTokens,
       apr,
@@ -84,7 +86,7 @@ export default defineComponent({
   margin: 0 auto 0 0;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    padding-left: 32px;
+    padding-left: 0;
     margin: 0 32px 0 0;
   }
 }

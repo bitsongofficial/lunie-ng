@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
-import { bigFigureOrShortDecimals, percent } from 'src/common/numbers';
+import { shortDecimals, percent, splitDecimals } from 'src/common/numbers';
 import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
 import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus } from 'src/models';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
@@ -46,8 +46,8 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
         return ({
           ...balance,
-          total: bigFigureOrShortDecimals(total),
-          available: bigFigureOrShortDecimals(available),
+          total: shortDecimals(total),
+          available: shortDecimals(available),
         });
       }
     );
@@ -58,8 +58,8 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     if (balance) {
       return {
         ...balance,
-        total: bigFigureOrShortDecimals(new BigNumber(balance.total).toString()),
-        available: bigFigureOrShortDecimals(new BigNumber(balance.available).toString()),
+        total: shortDecimals(new BigNumber(balance.total).toString()),
+        available: shortDecimals(new BigNumber(balance.available).toString()),
       }
     }
   },
@@ -151,21 +151,21 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return null;
   },
-  supplyInfo({ supplyInfo }, getters, { authentication }) {
+  supplyInfo({ supplyInfo }, getters) {
     if (supplyInfo) {
       return {
         ...supplyInfo,
-        circulatingSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.circulatingSupply).toString()) ?? ''} ${supplyInfo.denom}`,
-        communityPool: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.communityPool).toString()) ?? ''} ${supplyInfo.denom}`,
-        totalSupply: `${bigFigureOrShortDecimals(new BigNumber(supplyInfo.totalSupply).toString()) ?? ''} ${supplyInfo.denom}`
+        circulatingSupply: splitDecimals(shortDecimals(new BigNumber(supplyInfo.circulatingSupply).toString()) ?? ''),
+        communityPool: splitDecimals(shortDecimals(new BigNumber(supplyInfo.communityPool).toString()) ?? ''),
+        totalSupply: splitDecimals(shortDecimals(new BigNumber(supplyInfo.totalSupply).toString()) ?? '')
       };
     } else {
       const totalSupply = getters['getTotalSupply'] as string | null;
       const communityPool = getters['getCommunityPool'] as string | null;
 
       return {
-        totalSupply: totalSupply ? `${bigFigureOrShortDecimals(totalSupply) ?? ''} ${authentication.network.stakingDenom}` : null,
-        communityPool: communityPool ? `${bigFigureOrShortDecimals(communityPool) ?? ''} ${authentication.network.stakingDenom}` : null,
+        totalSupply: totalSupply ? splitDecimals(shortDecimals(totalSupply) ?? '') : null,
+        communityPool: communityPool ? splitDecimals(shortDecimals(communityPool) ?? '') : null,
       }
     }
   },
@@ -179,10 +179,10 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return null;
   },
-  getBondedTokens({ pool }, _getters, { authentication }) {
+  getBondedTokens({ pool }) {
     if (pool) {
       const bondedTokensNumber = new BigNumber(getStakingCoinViewAmount(pool.bonded_tokens));
-      return `${bigFigureOrShortDecimals(bondedTokensNumber.toString()) ?? ''} ${authentication.network.stakingDenom}`;
+      return splitDecimals(shortDecimals(bondedTokensNumber.toString()) ?? '');
     }
 
     return null;

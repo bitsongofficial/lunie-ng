@@ -11,8 +11,8 @@
           </h3>
 
           <template v-if="!loadingBalance && !loading">
-            <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-              {{ balance ? balance.total : 0 }}
+            <p class="balance-subtitle text-weight-medium text-body-large text-white q-my-none">
+              {{ total ? total.left : 0 }}<span class="text-h4" v-if="total && total.right">.{{ total.right }}</span>
             </p>
           </template>
           <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
@@ -23,8 +23,8 @@
           </h3>
 
           <template v-if="!loadingBalance && !loading">
-            <p class="balance-subtitle text-body-extra-large text-white q-my-none">
-              {{ rewards }}
+            <p class="balance-subtitle text-body-large text-white q-my-none">
+              {{ rewards.left }}<span class="text-h4" v-if="rewards && rewards.right">.{{ rewards.right }}</span>
             </p>
           </template>
           <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
@@ -34,8 +34,8 @@
             AVAILABLE ({{ network.stakingDenom }})
           </h3>
 
-          <p class="balance-subtitle text-body-extra-large text-white q-my-none" v-if="!loadingBalance && !loading">
-            {{ balance && balance.type === 'STAKE' ? balance.available : 0 }}
+          <p class="balance-subtitle text-body-large text-white q-my-none" v-if="!loadingBalance && !loading">
+            {{ available && balance && balance.type === 'STAKE' ? available.left : 0 }}<span class="text-h4" v-if="available && available.right">.{{ available.right }}</span>
           </p>
           <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
         </div>
@@ -51,7 +51,7 @@
 <script lang="ts">
 import { Dictionary } from 'lodash';
 import { useQuasar } from 'quasar';
-import { bigFigureOrShortDecimals } from 'src/common/numbers';
+import { shortDecimals, splitDecimals } from 'src/common/numbers';
 import { Balance } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, computed } from 'vue';
@@ -67,6 +67,22 @@ export default defineComponent({
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const total = computed(() => {
+      if (balance.value) {
+        return splitDecimals((balance.value.total as string))
+      }
+
+      return null;
+    });
+
+    const available = computed(() => {
+      if (balance.value) {
+        return splitDecimals((balance.value.available as string));
+      }
+
+      return null;
+    });
+
     const loadingBalance = computed(() => !store.state.data.balancesLoaded || store.state.data.loading);
     const network = computed(() => store.state.authentication.network);
 
@@ -77,17 +93,27 @@ export default defineComponent({
         const amount = totalRewardsPerDenom[balance.value.denom];
 
         if (amount === 0) {
-          return '0';
+          return {
+            left: '0',
+          };
         }
 
         if (amount > 0.001) {
-          return bigFigureOrShortDecimals(amount);
+          const rewards = shortDecimals(amount);
+
+          if (rewards) {
+            return splitDecimals(rewards);
+          }
         } else {
-          return '< 1';
+          return {
+            left: '< 1',
+          };
         }
       }
 
-      return '0';
+      return {
+        left: '0',
+      };
     });
 
     const openSendDialog = () => {
@@ -99,6 +125,8 @@ export default defineComponent({
     }
 
     return {
+      available,
+      total,
       session,
       loadingBalance,
       loading,
