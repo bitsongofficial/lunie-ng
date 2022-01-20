@@ -42,7 +42,7 @@
           unelevated
           color="accent-2"
           text-color="white"
-          padding="8px 30px"
+          :padding="!quasar.screen.lt.md ? '8px 30px' : '8px 20px'"
         >
           {{ !quasar.screen.lt.md ? 'CLAIM REWARD' : 'CLAIM' }}
         </q-btn>
