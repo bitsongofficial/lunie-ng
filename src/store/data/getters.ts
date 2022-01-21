@@ -52,8 +52,8 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     );
   },
-  currentBalance({ balances }) {
-    const balance = [...balances].pop();
+  currentBalance({ balances }, _getters, { authentication }) {
+    const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
 
     if (balance) {
       return {
@@ -63,8 +63,8 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     }
   },
-  currentRawBalance({ balances }) {
-    const balance = [...balances].pop();
+  currentRawBalance({ balances }, _getters, { authentication }) {
+    const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
 
     return balance;
   },
