@@ -81,10 +81,8 @@
               <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
             </q-item-section>
 
-            <q-item-section side @click="goToAuthentication">
-              <q-btn padding="2px" dense flat unelevated round>
-                <q-icon name="svguse:icons.svg#profile|0 0 15 17" color="quart-transparent-white" size="14px" />
-              </q-btn>
+            <q-item-section v-if="session" side @click.stop="!loading && session ? onCopy(session.address) : null">
+              <q-icon name="svguse:icons.svg#copy|0 0 18 18" color="quart-transparent-white" size="15px" />
             </q-item-section>
           </q-item>
         </q-drawer>
@@ -227,7 +225,7 @@ export default defineComponent({
   border-radius: 30px;
   padding: 12px 24px 11px 24px;
   margin-bottom: 51px;
-  min-height: 52px;
+  min-height: 58px;
 
   &::v-deep(.q-item__section--avatar) {
     min-width: unset;
