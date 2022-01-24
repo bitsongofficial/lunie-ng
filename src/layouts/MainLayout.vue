@@ -227,7 +227,7 @@ export default defineComponent({
   border-radius: 30px;
   padding: 12px 24px 11px 24px;
   margin-bottom: 51px;
-  min-height: 51px;
+  min-height: 52px;
 
   &::v-deep(.q-item__section--avatar) {
     min-width: unset;

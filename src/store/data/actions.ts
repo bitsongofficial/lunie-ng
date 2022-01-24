@@ -71,7 +71,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         commit('setLoading', true);
         await dispatch('getBalances', { address });
         await dispatch('getRewards', { address });
-        await dispatch('getValidators');
         await dispatch('getDelegations', address);
         await dispatch('getUndelegations', address);
       } catch (error) {
