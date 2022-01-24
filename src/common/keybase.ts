@@ -77,7 +77,7 @@ const queryKeybaseImages = (keybaseImageRecords: Keybase[], onChunkReady: (keyba
   }, {});
 }
 
-export const updateValidatorImages = async (currentValidators: Validator[], onChunkReady: ValidatorImagesChunk) => {
+export const updateValidatorImages = async (currentValidators: Validator[], update = true, onChunkReady: ValidatorImagesChunk) => {
   const updateableKeybaseHashes = getUpdateableKeybaseEntries(currentValidators);
 
   const nonUpdateableValidators = currentValidators.filter(
@@ -88,22 +88,24 @@ export const updateValidatorImages = async (currentValidators: Validator[], onCh
 
   onChunkReady(enrichedValidatorsWithPicture(nonUpdateableValidators));
 
-  await Promise.resolve(
-    queryKeybaseImages(
-      updateableKeybaseHashes,
-      // callback on every chunk
-      (updatedKeybaseHashes) => {
-        saveKeybaseImages(updatedKeybaseHashes)
-        onChunkReady(
-          enrichedValidatorsWithPicture(
-            currentValidators.filter(
-              ({ identity }) => updatedKeybaseHashes[identity]
+  if (update) {
+    await Promise.resolve(
+      queryKeybaseImages(
+        updateableKeybaseHashes,
+        // callback on every chunk
+        (updatedKeybaseHashes) => {
+          saveKeybaseImages(updatedKeybaseHashes)
+          onChunkReady(
+            enrichedValidatorsWithPicture(
+              currentValidators.filter(
+                ({ identity }) => updatedKeybaseHashes[identity]
+              )
             )
           )
-        )
-      }
-    )
-  );
+        }
+      )
+    );
+  }
 
   return enrichedValidatorsWithPicture(currentValidators);
 }

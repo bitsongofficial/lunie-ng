@@ -24,3 +24,8 @@ export interface PaginationResponse {
 export interface BalanceResponse extends PaginationResponse {
   balances: Coin[];
 }
+
+export interface SplittedDecimals {
+  left?: string;
+  right?: string;
+}

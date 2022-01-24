@@ -1,20 +1,30 @@
 <template>
   <div class="chain-stats">
     <div class="chain-stats-section">
-      <h3 class="chain-stats-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-uppercase">
-        {{ title }}
-      </h3>
+      <div class="chain-stats-header row justify-between">
+        <h3 class="chain-stats-title q-my-none text-half-transparent-white text-caption text-weight-medium text-uppercase">
+          {{ title }}
+        </h3>
 
-      <p class="chain-stats-subtitle text-body-extra-large3 text-white q-my-none" v-if="!loading">
-        {{ quantity }}
-      </p>
+        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" color="transparent-accent-3"></q-badge>
+      </div>
+
+      <template v-if="!loading">
+        <p class="chain-stats-subtitle text-body-large text-weight-medium text-white q-my-none" v-if="splittedDecimals">
+          {{ splittedDecimals && splittedDecimals.left ? splittedDecimals.left : 'N/A' }}<span class="text-h4" v-if="splittedDecimals && splittedDecimals.right">.{{ splittedDecimals.right }}</span>
+        </p>
+        <p class="chain-stats-subtitle text-body-large text-weight-medium text-white q-my-none" v-else>
+          {{ quantity ?? 'N/A'  }}
+        </p>
+      </template>
       <q-skeleton width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { SplittedDecimals } from 'src/models';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'ChainStats',
@@ -27,11 +37,16 @@ export default defineComponent({
       type: String,
       required: true
     },
+    splittedDecimals: {
+      type: Object as PropType<SplittedDecimals>,
+    },
     quantity: {
       type: String,
-      required: true
     },
-  }
+    denom: {
+      type: String,
+    }
+  },
 });
 </script>
 
@@ -39,20 +54,32 @@ export default defineComponent({
 .chain-stats {
   background: $transparent-gray2;
   box-shadow: $full-secondary-box-shadow;
-  backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
-  padding: 34px 46px 30px 43px;
+  padding: 24px 34px;
+}
+
+.chain-stats-header {
+  margin-bottom: 20px;
 }
 
 .chain-stats-title {
-  margin-bottom: 16px;
+  margin-top: 6px;
+  margin-right: 6px;
 }
 
 .chain-stats-section {
-  & .chain-stats-title,
-  & .chain-stats-subtitle {
-    text-overflow: ellipsis;
-    overflow: hidden;
+  & .chain-stats-title {
+    flex: 1;
+    word-break: break-word;
   }
+
+  & .chain-stats-subtitle {
+    word-break: break-all;
+  }
+}
+
+.network {
+  min-height: 24px;
+  padding: 0 10px;
 }
 </style>

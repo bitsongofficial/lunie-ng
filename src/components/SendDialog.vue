@@ -222,8 +222,6 @@ export default defineComponent({
           }],
         };
 
-        console.log(request);
-
         const hashres = await store.dispatch('data/signTransaction', request) as string;
 
         hash.value = hashres;

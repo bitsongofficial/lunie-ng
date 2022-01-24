@@ -120,7 +120,7 @@ export default defineComponent({
     const success = ref<boolean>(false);
     const error = ref<string>();
 
-    const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const balance = computed(() => store.getters['data/currentRawBalance'] as Balance | undefined);
     const network = computed(() => store.state.authentication.network);
 
     const availableCoins = computed(() => {

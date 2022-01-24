@@ -27,6 +27,19 @@
     }
   }
 
+  &.medium-large {
+    & .q-field__control {
+      min-height: 51px;
+      height: 51px;
+      padding-left: 19px;
+      padding-right: 19px;
+    }
+
+    & .q-field__native {
+      min-height: 51px;
+    }
+  }
+
   &.large {
     & .q-field__control {
       height: 56px;
@@ -66,6 +79,14 @@
   height: 8px;
   background: url('../assets/keyboard-arrow-down.svg') no-repeat center;
   background-size: contain;
+}
+
+.q-select {
+  &.white {
+    .q-select__dropdown-icon {
+      background: url('../assets/keyboard-arrow-down-white.svg') no-repeat center;
+    }
+  }
 }
 
 .quantity-input {
