@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+import { defineComponent, computed, PropType, onMounted } from 'vue';
 import { Validator } from 'src/models';
 import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -258,6 +258,10 @@ export default defineComponent({
         reward.denom === network.value.stakingDenom && reward.amount > 0.000001
       ) !== undefined;
     };
+
+    onMounted(() => {
+      store.dispatch('data/updateValidatorImages', { validators: props.rows }).catch((err) => console.error(err));
+    });
 
     return {
       network,
