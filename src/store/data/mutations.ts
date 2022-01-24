@@ -108,6 +108,20 @@ const mutation: MutationTree<DataStateInterface> = {
     state.rewards = [];
     state.validators = [];
     state.proposals = [];
+    state.loadingSignTransaction = false;
+    state.balancesLoaded = false;
+    state.delegationsLoaded = false;
+    state.undelegationsLoaded = false;
+    state.validatorsLoaded = false;
+    state.rewardsLoaded = false;
+    state.proposalsLoaded = false;
+    state.governanceOverviewLoaded = false;
+    state.validatorDelegationsLoading = false;
+    state.selfStakeValidatorLoading = false;
+    state.loading = false;
+    state.loadingDataDetails = false;
+    state.loadingSupplyInfo = false;
+    state.loadingApr = false;
   },
 }
 
