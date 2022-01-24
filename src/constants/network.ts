@@ -173,9 +173,9 @@ export const networks: NetworkConfig[] = [
     name: 'Cosmos',
     description: 'Cosmos Mainnet',
     logo: 'logo.svg',
-    website: 'https://bitsong.io',
-    apiURL: 'https://lcd-cosmoshub.keplr.app',
-    rpcURL: 'https://rpc-cosmoshub.keplr.app',
+    website: 'https://cosmos.network',
+    apiURL: 'https://lcd.cosmos.bas.network',
+    rpcURL: 'https://rpc.cosmos.bas.network/',
     explorerURL: 'https://www.mintscan.io/cosmos/',
     supplyURL: null,
     minBlockHeight: 9054000,
@@ -288,6 +288,46 @@ export const networks: NetworkConfig[] = [
       },
     },
     icon: 'https://assets.coingecko.com/coins/images/10212/small/likecoin.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },{
+    id: 'stargaze-1',
+    name: 'Stargaze',
+    description: 'Stargaze Mainnet',
+    logo: 'logo.svg',
+    website: 'https://www.stargaze.zone',
+    apiURL: 'https://api.stargaze.ezstaking.io',
+    rpcURL: 'https://rpc.stargaze.ezstaking.io/',
+    explorerURL: 'https://www.mintscan.io/stargaze/',
+    supplyURL: null,
+    minBlockHeight: 1,
+    stakingDenom: 'STARS',
+    coinLookup: [
+      {
+        viewDenom: 'STARS',
+        chainDenom: 'ustars',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'stars',
+    validatorAddressPrefix: 'starsvaloper',
+    validatorConsensusaddressPrefix: 'starsvalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'stargaze',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'STARS',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'https://assets.coingecko.com/coins/images/22363/small/stargaze.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   }
 ];
