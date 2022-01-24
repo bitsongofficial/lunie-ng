@@ -5,6 +5,9 @@ import { AuthenticationStateInterface } from './state';
 import { api } from 'src/boot/axios';
 
 const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
+  resetLoadingData({ commit }) {
+    commit('resetLoadingData');
+  },
   async signIn({ commit, dispatch }, session: Session) {
     try {
       commit('setLoading', true);

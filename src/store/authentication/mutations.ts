@@ -16,6 +16,10 @@ const mutation: MutationTree<AuthenticationStateInterface> = {
   setChanging(state, changing: boolean) {
     state.changing = changing;
   },
+  resetLoadingData(state) {
+    state.changing = false;
+    state.loading = false;
+  }
 }
 
 export default mutation;
