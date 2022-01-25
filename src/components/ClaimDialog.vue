@@ -42,7 +42,13 @@
               ]"
             >
               <template v-slot:append>
-                <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-primary" v-if="reward.networkCoin">{{ reward.denom }}</label>
+                <div class="ibc-info" v-else>
+                  <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="16px" color="primary" />
+                  <q-tooltip anchor="top middle" self="bottom middle">
+                    {{ reward.denom }}
+                  </q-tooltip>
+                </div>
               </template>
             </q-input>
 
@@ -100,7 +106,6 @@ import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { getRewardsValidators } from 'src/common/ledger';
 import { Dictionary } from 'lodash';
-
 export default defineComponent({
   name: 'ClaimDialog',
   props: {
@@ -114,55 +119,43 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
-
     const amount = ref<string>('0');
     const hash = ref<string>();
     const success = ref<boolean>(false);
     const error = ref<string>();
-
     const balance = computed(() => store.getters['data/currentRawBalance'] as Balance | undefined);
     const network = computed(() => store.state.authentication.network);
-
     const availableCoins = computed(() => {
       return balance.value ? new BigNumber(balance.value.available).toString() : '0';
     });
-
     const isLedger = computed(() => store.state.authentication.session?.sessionType === SessionType.LEDGER);
-
     const rewards = computed(() => {
       if (props.validator) {
         return store.state.data.rewards.filter(el => el.validator.operatorAddress === props.validator?.operatorAddress);
       }
-
       return store.state.data.rewards;
     });
-
     const validators = computed(() => {
       return getRewardsValidators(rewards.value, isLedger.value);
     });
-
     const totalRewards = computed(() => {
       let filteredRewards: Reward[] = [];
-
       filteredRewards = store.state.data.rewards.filter(({ validator }) => {
         return validators.value.includes(validator.operatorAddress);
       });
-
       const validatorsRewardsObject = (store.getters['data/totalRewardsPerDenomByValidator'] as (rewards: Reward[]) => Dictionary<number>)(filteredRewards);
-
       const rewardsDenomArray = Object.entries(validatorsRewardsObject);
-
-      return rewardsDenomArray
-        .map(([denom, amount]) => ({ denom, amount }))
-        .sort((a, b) => b.amount - a.amount);
+      return rewardsDenomArray.map(([denom, amount]) => ({
+        networkCoin: denom.includes(network.value.stakingDenom),
+        denom,
+        amount
+      }))
+      .sort((a, b) => b.amount - a.amount);
     });
-
     const loading = computed(() => store.state.data.loadingSignTransaction);
-
     const close = () => {
       dialogRef.value?.hide();
     };
-
     const onSubmit = async () => {
       try {
         const request = {
@@ -170,14 +163,11 @@ export default defineComponent({
           amounts: totalRewards.value,
           froms: validators.value
         };
-
         const hashres = await store.dispatch('data/signTransaction', request) as string;
-
         hash.value = hashres;
         success.value = true;
       } catch (err) {
         console.error(err);
-
         if (err instanceof Error) {
           error.value = err.message;
         } else {
@@ -185,7 +175,6 @@ export default defineComponent({
         }
       }
     }
-
     return {
       hash,
       totalRewards,
@@ -213,11 +202,9 @@ export default defineComponent({
 .title {
   padding-left: 9px;
 }
-
 .dialog-header {
   margin-bottom: 41px;
 }
-
 .body {
   width: 100%;
   min-height: 446px;
@@ -227,69 +214,60 @@ export default defineComponent({
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
 }
-
 .close-icon {
   margin-left: 15px;
 }
-
 .submit {
   width: 100%;
   margin-top: 12px;
-
   @media screen and (min-width: $breakpoint-md-min) {
     max-width: 217px;
     margin-left: 34px;
     margin-top: 0;
   }
 }
-
 .field-label {
   margin-bottom: 17px;
   padding-left: 11px;
 }
-
 .field-block {
   &:not(:last-of-type) {
     margin-bottom: 27px;
   }
 }
-
 .max-btn {
   margin-right: 15px;
 }
-
 .validator-avatar {
   margin-right: 17px;
   box-shadow: $black-box-shadow;
 }
-
 .success-icon {
   margin-top: 23px;
   margin-bottom: 45px;
   margin-left: auto;
   margin-right: auto;
 }
-
 .success {
   padding: 0 12px 10px;
 }
-
 .transaction-btn {
   width: 100%;
   max-width: 197px;
   margin-top: 36px;
 }
-
 .validator-item {
   padding: 16px 24px;
 }
-
 .btns {
   display: flex;
   flex-direction: column;
-
   @media screen and (min-width: $breakpoint-md-min) {
     flex-direction: row;
   }
+}
+.ibc-info {
+  pointer-events: all;
+  cursor: help;
 }
 </style>
