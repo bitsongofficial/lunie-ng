@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { SplittedDecimals } from 'src/models';
 import { getStakingCoinViewAmount } from './cosmos-reducer';
 
 const language = 'en';
@@ -114,4 +115,17 @@ export const getAPR = (supply: string, inflation: string, bondedTokens: string) 
   const bondedTokensNumber = new BigNumber(getStakingCoinViewAmount(bondedTokens));
 
   return (supplyNumber.multipliedBy(inflationNumber)).div(bondedTokensNumber);
+}
+
+export const splitDecimals = (value: string): SplittedDecimals | null => {
+  const splitted = value.split('.');
+
+  if (splitted.length === 0) {
+    return null;
+  }
+
+  return {
+    left: splitted.shift(),
+    right: splitted.pop()
+  };
 }

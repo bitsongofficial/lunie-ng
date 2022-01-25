@@ -28,10 +28,18 @@
 </template>
 
 <script lang="ts">
+import { useStore } from 'src/store';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'AuthLayout',
+  setup() {
+    const store = useStore();
+
+    store.dispatch('authentication/resetLoadingData').catch((err) => {
+      console.error(err);
+    });
+  }
 });
 </script>
 

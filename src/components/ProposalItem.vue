@@ -1,10 +1,12 @@
 <template>
   <item :clickable="proposal !== undefined" reverse details v-ripple :to="!loading && proposal ? '/proposals/' + proposal.id : '/'" :disable="!proposal">
-    <div class="col-12 col-md-8" :class="{
+    <div class="full-width" :class="{
       'row items-center': !quasar.screen.lt.md,
       'column reverse items-start': quasar.screen.lt.md,
     }">
-      <h4 class="title text-white text-weight-medium q-my-none" v-if="proposal && !loading">{{ proposal.title }}</h4>
+      <div class="title-content"  v-if="proposal && !loading">
+        <h4 class="title text-white text-weight-medium q-my-none">{{ proposal.title }}</h4>
+      </div>
       <q-skeleton class="title-skeleton" type="text" width="100%" height="23px" square dark v-else></q-skeleton>
 
       <proposal-status :status="proposal.status" v-if="proposal && !loading"/>
@@ -57,11 +59,22 @@ export default defineComponent({
   }
 }
 
+.title-content {
+  @media screen and (min-width: $breakpoint-md-min) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 120px);
+  }
+}
+
 .title,
 .title-skeleton {
   margin-bottom: 8px;
 
   @media screen and (min-width: $breakpoint-md-min) {
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-bottom: 0;
   }
 }

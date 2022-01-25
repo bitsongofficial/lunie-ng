@@ -50,6 +50,16 @@ export const formatAddress = (address: string | undefined, start = 9, end = 6 ) 
   return `${address.substring(0, start)}...${address.slice(-end)}`;
 }
 
+export const formatShortAddress = (address: string | undefined, end = 6 ) => {
+  if (!address) {
+    return 'Address Not Found';
+  }
+
+  const splitted = address.split('1');
+
+  return `${splitted.shift() ?? ''}1...${address.slice(-end)}`;
+}
+
 export const decodeB32 = (value: string) => {
   const words = bech32.decode(value);
 

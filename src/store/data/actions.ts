@@ -71,7 +71,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         commit('setLoading', true);
         await dispatch('getBalances', { address });
         await dispatch('getRewards', { address });
-        await dispatch('getValidators');
         await dispatch('getDelegations', address);
         await dispatch('getUndelegations', address);
       } catch (error) {
@@ -289,7 +288,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setRewardsLoaded', true);
     }
   },
-  async getValidators({ commit, dispatch }) {
+  async getValidators({ state, commit, dispatch }) {
     try {
       commit('setValidatorsLoaded', false);
       const validators = await loadValidators();
@@ -309,14 +308,14 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setValidatorsLoaded', true);
     }
 
-    await dispatch('updateValidatorImages');
+    await dispatch('updateValidatorImages', { validators: state.validators, update: false });
   },
-  async updateValidatorImages({ state, commit }) {
+  async updateValidatorImages({ commit }, { validators, update = true}: { validators: Validator[], update: boolean }) {
     // get validator images for chunk
-    await updateValidatorImages(state.validators, (updatedChunk) => {
-      const updatedValidatorsDict = keyBy(updatedChunk, 'operatorAddress')
+    await updateValidatorImages(validators, update, (updatedChunk) => {
+      const updatedValidatorsDict = keyBy(updatedChunk, 'operatorAddress');
       // update the validators from our chunk
-      const updatedValidators = state.validators.map((validator) => {
+      const updatedValidators = validators.map((validator) => {
         const updatedValidator = updatedValidatorsDict[validator.operatorAddress];
 
         if (updatedValidator) {
@@ -324,11 +323,11 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         }
 
         return validator;
-      })
+      });
 
       // update the store and UI
-      commit('setValidators', updatedValidators);
-    })
+      commit('setUpdatedValidators', updatedValidators);
+    });
   },
   async getProposals({ commit, getters }) {
     try {

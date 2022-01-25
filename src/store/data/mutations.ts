@@ -31,6 +31,17 @@ const mutation: MutationTree<DataStateInterface> = {
   setValidators(state, validators: Validator[]) {
     state.validators = validators;
   },
+  setUpdatedValidators(state, updatedValidators: Validator[]) {
+    state.validators = state.validators.map((validator) => {
+      const updatedValidator = updatedValidators.find(el => el.id === validator.id);
+
+      if (updatedValidator) {
+        return updatedValidator;
+      }
+
+      return validator;
+    });
+  },
   setValidatorsLoaded(state, validatorsLoaded: boolean) {
     state.validatorsLoaded = validatorsLoaded;
   },
@@ -108,6 +119,20 @@ const mutation: MutationTree<DataStateInterface> = {
     state.rewards = [];
     state.validators = [];
     state.proposals = [];
+    state.loadingSignTransaction = false;
+    state.balancesLoaded = false;
+    state.delegationsLoaded = false;
+    state.undelegationsLoaded = false;
+    state.validatorsLoaded = false;
+    state.rewardsLoaded = false;
+    state.proposalsLoaded = false;
+    state.governanceOverviewLoaded = false;
+    state.validatorDelegationsLoading = false;
+    state.selfStakeValidatorLoading = false;
+    state.loading = false;
+    state.loadingDataDetails = false;
+    state.loadingSupplyInfo = false;
+    state.loadingApr = false;
   },
 }
 

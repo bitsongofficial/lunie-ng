@@ -4,10 +4,6 @@
       <h2 class="section-title text-body-large text-white">
         Your Balances
       </h2>
-
-      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0" class="btn-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="5px 28px">
-        {{ !quasar.screen.lt.md ? 'CLAIM REWARDS' : 'CLAIM' }}
-      </q-btn>
     </div>
 
     <balance-summary class="balance-summary" />
@@ -30,13 +26,26 @@
     </transition>
 
     <div class="undelegation-section">
-      <div class="row items-center no-wrap" :class="{
+      <div class="row items-center justify-between no-wrap" :class="{
         'section-header': validatorsOfDelegations.length === 0,
         'section-header-small': validatorsOfDelegations.length > 0,
       }">
-        <h2 class="section-title text-body-large text-white">
+        <h2 class="delegations-title section-title text-body-large text-white">
           Your Delegations
         </h2>
+
+        <q-btn
+          @click="openClaimDialog"
+          :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0"
+          class="btn-medium-large-small font-weight-medium text-body3"
+          rounded
+          unelevated
+          color="accent-2"
+          text-color="white"
+          :padding="!quasar.screen.lt.md ? '8px 30px' : '8px 20px'"
+        >
+          {{ !quasar.screen.lt.md ? 'CLAIM REWARD' : 'CLAIM' }}
+        </q-btn>
       </div>
 
       <transition
@@ -131,7 +140,7 @@ export default defineComponent({
   margin: 0 auto 0 0;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    padding-left: 32px;
+    padding-left: 0;
     margin: 0 32px 0 0;
   }
 }
@@ -164,5 +173,9 @@ export default defineComponent({
 
 .section-total {
   margin-right: 12px;
+}
+
+.delegations-title {
+  margin-top: 10px;
 }
 </style>
