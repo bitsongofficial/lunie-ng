@@ -42,7 +42,13 @@
               ]"
             >
               <template v-slot:append>
-                <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-primary" v-if="reward.networkCoin">{{ reward.denom }}</label>
+                <div class="ibc-info" v-else>
+                  <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="16px" color="primary" />
+                  <q-tooltip anchor="top middle" self="bottom middle">
+                    {{ reward.denom }}
+                  </q-tooltip>
+                </div>
               </template>
             </q-input>
 
@@ -152,9 +158,12 @@ export default defineComponent({
 
       const rewardsDenomArray = Object.entries(validatorsRewardsObject);
 
-      return rewardsDenomArray
-        .map(([denom, amount]) => ({ denom, amount }))
-        .sort((a, b) => b.amount - a.amount);
+      return rewardsDenomArray.map(([denom, amount]) => ({
+        networkCoin: denom.includes(network.value.stakingDenom),
+        denom,
+        amount
+      }))
+      .sort((a, b) => b.amount - a.amount);
     });
 
     const loading = computed(() => store.state.data.loadingSignTransaction);
@@ -291,5 +300,10 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     flex-direction: row;
   }
+}
+
+.ibc-info {
+  pointer-events: all;
+  cursor: help;
 }
 </style>
