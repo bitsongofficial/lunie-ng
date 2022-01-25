@@ -2,36 +2,6 @@
   <div class="login-home-content">
     <h1 class="text-body-large text-white text-weight-medium q-mt-none q-mb-md text-center">Welcome</h1>
 
-    <q-select
-      v-model="network"
-      rounded
-      standout
-      map-options
-      :options="networks"
-      bg-color="transparent-white"
-      color="transparent-white"
-      label-color="primary"
-      class="subtitle full-width medium q-mt-auto connection-item"
-      no-error-icon
-      hide-bottom-space
-      :loading="loadingNetwork"
-      :disable="loadingNetwork"
-      :options-cover="false"
-    >
-      <template v-slot:selected-item="{ opt }">
-        <div class="row items-center cursor-pointer">
-          <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
-
-          <label class="text-white text-body2 q-ml-md cursor-pointer">{{ opt.name }}</label>
-        </div>
-      </template>
-      <template v-slot:option="{ itemProps, opt }">
-        <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-          <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
-        </q-item>
-      </template>
-    </q-select>
-
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
       <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
@@ -69,7 +39,6 @@ import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 import { SessionType } from 'src/models';
-import { useChangeNetwork } from 'src/hooks';
 
 import Item from 'src/components/Item.vue';
 
@@ -124,8 +93,7 @@ export default defineComponent({
       keplrAvailable,
       session,
       keplrSignIn,
-      signOut,
-      ...useChangeNetwork(false)
+      signOut
     }
   }
 });

@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="bg-secondary" view="hhh LpR fff">
+  <q-layout class="bg-dark" view="hhh LpR fff">
     <q-header class="header bg-transparent text-white">
       <q-toolbar class="header-toolbar container bg-transparent justify-between items-end">
         <q-toolbar-title class="text-body1 row items-center q-pt-sm">
@@ -12,39 +12,16 @@
               <img src="~assets/logo.svg">
             </q-avatar>
 
-            <p class="text-body-large text-weight-medium text-white q-my-none text-capitalize" v-if="!quasar.screen.lt.md">wallet</p>
+            <p class="text-body-large text-weight-medium text-white q-my-none text-lowercase" v-if="!quasar.screen.lt.md">wallet</p>
+
+            <q-badge label="TESTNET" class="logo-badge text-weight-medium text-caption-2" text-color="dark" color="primary"></q-badge>
           </q-btn>
         </q-toolbar-title>
 
-        <q-select
-          v-model="network"
-          rounded
-          standout
-          map-options
-          :options="networks"
-          bg-color="transparent-white"
-          color="transparent-white"
-          label-color="primary"
-          class="medium-large white"
-          no-error-icon
-          hide-bottom-space
-          :loading="loadingNetwork"
-          :disable="loadingNetwork"
-          :options-cover="false"
-        >
-          <template v-slot:selected-item="{ opt }">
-            <div class="row items-center cursor-pointer">
-              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
-
-              <label class="text-white text-body2 q-ml-md q-mr-lg cursor-pointer">{{ opt.name }}</label>
-            </div>
-          </template>
-          <template v-slot:option="{ itemProps, opt }">
-            <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-              <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
-            </q-item>
-          </template>
-        </q-select>
+        <q-btn class="btn-medium" rounded unelevated color="primary" text-color="dark" padding="0 40px 0 26px">
+          <q-icon class="btsg-coin-icon" name="svguse:icons.svg#coin|0 0 24 24" color="dark" size="24px" />
+          <label class="text-body2 text-dark text-untransform no-pointer-events">Get BTSG</label>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -53,8 +30,8 @@
         <q-drawer class="drawer-menu bg-transparent column no-wrap" :class="{
           'back': back
         }" :persistent="true" show-if-above :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
-          <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
-            <q-icon class="rotate-180 q-mr-md" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
+          <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="transparent-white" text-color="white" padding="15px 28px 16px 23px" v-if="back">
+            <q-icon class="rotate-180 q-mr-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="14px" />
             <label class="text-h6 text-white text-uppercase no-pointer-events">back</label>
           </q-btn>
 
@@ -62,16 +39,15 @@
             <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="/portfolio" />
             <menu-link icon="svguse:icons.svg#assets|0 0 17 18" title="Assets" link="/assets" />
             <menu-link icon="svguse:icons.svg#stats|0 0 20 12" title="Stats" link="/stats" />
+            <menu-link icon="svguse:icons.svg#coins|0 0 22 16" title="Fantoken" link="/fantokens" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" title="Proposals" link="/proposals" />
-            <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
-            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
 
           <q-item class="q-mt-auto profile-item" clickable>
             <q-item-section avatar @click="goToAuthentication">
               <q-btn padding="2px" dense flat unelevated round>
-                <q-icon class="rotate-180" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
+                <q-icon class="rotate-180" name="svguse:icons.svg#arrow-right|0 0 14 14" color="primary" size="12px" />
               </q-btn>
             </q-item-section>
 
@@ -221,7 +197,6 @@ export default defineComponent({
 
 .profile-item {
   background: $transparent-gray2;
-  box-shadow: $full-secondary-box-shadow;
   border-radius: 30px;
   padding: 12px 24px 11px 24px;
   margin-bottom: 51px;
@@ -260,5 +235,14 @@ export default defineComponent({
 .back-btn {
   max-width: 112px;
   margin-bottom: 84px;
+}
+
+.logo-badge {
+  margin-left: 21px;
+  padding: 8px;
+}
+
+.btsg-coin-icon {
+  margin-right: 21px;
 }
 </style>

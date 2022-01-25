@@ -40,8 +40,8 @@
           class="btn-medium-large-small font-weight-medium text-body3"
           rounded
           unelevated
-          color="accent-2"
-          text-color="white"
+          color="primary"
+          text-color="dark"
           :padding="!quasar.screen.lt.md ? '8px 30px' : '8px 20px'"
         >
           {{ !quasar.screen.lt.md ? 'CLAIM REWARD' : 'CLAIM' }}

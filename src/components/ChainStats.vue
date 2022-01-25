@@ -53,7 +53,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chain-stats {
   background: $transparent-gray2;
-  box-shadow: $full-secondary-box-shadow;
   border-radius: $generic-border-radius;
   padding: 24px 34px;
 }

@@ -16,6 +16,14 @@ export default [
         },
       },
       {
+        path: 'fantokens',
+        name: 'fantokens',
+        component: () => import('./views/Fantokens.vue'),
+        meta: {
+          title: 'Fantoken Lab'
+        },
+      },
+      {
         path: 'assets',
         name: 'assets',
         component: () => import('./views/Assets.vue'),

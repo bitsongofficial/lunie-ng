@@ -20,7 +20,7 @@
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Send To</label>
+            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">Send To</label>
 
             <q-input
               v-model="to"
@@ -41,7 +41,7 @@
           </div>
 
           <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Amount</label>
+            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">Amount</label>
 
             <q-input
               v-model="amount"
@@ -62,14 +62,14 @@
               ]"
             >
               <template v-slot:append>
-                <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+                <label class="text-body2 text-half-transparent-white" v-if="!denom">{{ network.stakingDenom }}</label>
+                <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="primary" text-color="white" padding="4px 7px 3px">
                   MAX
                 </q-btn>
-                <label class="text-body2 text-primary" v-if="!denom">{{ network.stakingDenom }}</label>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-half-transparent-white q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
           </div>
 
           <div class="field-block column full-width justify-start items-start">
@@ -80,7 +80,7 @@
               flat
               unelevated
               :ripple="false"
-              text-color="accent"
+              text-color="primary"
               toggle-text-color="white"
               padding="0 0 0 11px"
             >{{ !showAdvanced ? 'Show Advanced' : 'Hide Advanced' }}</q-btn>
@@ -93,7 +93,7 @@
             appear
           >
             <div class="field-block column full-width" v-if="showAdvanced">
-              <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Note</label>
+              <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">Note</label>
 
               <q-input
                 v-model="memo"
@@ -121,7 +121,7 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
+            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="white" padding="15px 20px 14px" :loading="loading">
               send
             </q-btn>
           </div>
@@ -276,9 +276,9 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $full-transparent-gray;
+  backdrop-filter: blur(60px);
   padding: 33px 36px 28px;
-  box-shadow: $secondary-box-shadow;
 }
 
 .close-icon {
@@ -308,7 +308,7 @@ export default defineComponent({
 }
 
 .max-btn {
-  margin-right: 15px;
+  margin-left: 16px;
 }
 
 .validator-avatar {

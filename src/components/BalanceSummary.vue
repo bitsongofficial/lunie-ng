@@ -41,8 +41,8 @@
         </div>
       </div>
 
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
-        SEND <q-icon class="balance-icon rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="half-transparent-white" />
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3 font-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
+        SEND <q-icon class="q-ml-auto rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
       </q-btn>
     </div>
   </div>
@@ -143,8 +143,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .balance-summary {
   background: $transparent-gray2;
-  box-shadow: $full-secondary-box-shadow;
-  backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
   padding: 34px 46px 30px 43px;
 }
