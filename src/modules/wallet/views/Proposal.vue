@@ -8,7 +8,7 @@
           {{ proposal?.title }}
         </h2>
 
-        <p class="description text-h5 text-accent">
+        <p class="description text-h5 text-half-transparent-white">
           {{ proposal?.summary }}
         </p>
       </div>
@@ -21,15 +21,15 @@
 
       <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
         <template v-if="session && session.sessionType !== 'explore'">
-          <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+          <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="primary" text-color="dark" padding="10px 28px">
             deposit
           </q-btn>
-          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING' || voted" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
+          <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING' || voted" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="primary" text-color="dark" padding="10px 28px">
             {{ voted ? 'voted' : 'vote' }}
           </q-btn>
         </template>
 
-        <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
+        <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="transparent-white" text-color="white" padding="11px 20px 10px">
           Copy link
 
           <q-icon class="q-ml-md" name="svguse:icons.svg#attachment|0 0 24 12" size="16px" color="white" />
@@ -42,12 +42,12 @@
 
       <div class="row items-center">
         <div class="row items-center" v-if="proposal.tally && proposal.tally.totalVotedPercentage !== -1">
-          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
+          <h5 class="section-detail-title text-h6 text-half-transparent-white text-weight-medium q-my-none">VOTED</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.tally ? percent(proposal.tally.totalVotedPercentage) : 'N/A' }}</p>
         </div>
 
         <div class="row items-center q-ml-md">
-          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
+          <h5 class="section-detail-title text-h6 text-half-transparent-white text-weight-medium q-my-none">QUORUM</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.detailedVotes ? percent(proposal.detailedVotes.votingQuorum) : 'N/A' }}</p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <q-item class="item bg-transparent-gray rounded-borders" v-bind="$props" @click="click">
+  <q-item class="item bg-transparent-gray2 rounded-borders" v-bind="$props" @click="click">
     <q-item-section avatar v-if="(hasLeftContent || leftIcon) && !quasar.screen.lt.md">
       <slot name="left">
         <q-icon class="icon" :name="leftIcon" color="gray3" :size="leftIconSize" v-if="leftIcon" />
@@ -16,8 +16,8 @@
       <slot name="right">
         <q-btn class="details-btn" :class="{
           'reverse': reverse
-        }" rounded unelevated :color="!reverse ? 'secondary' : 'accent-2'" text-color="white" :disable="disable" size="18px" v-if="details">
-          <q-icon class="small-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
+        }" rounded unelevated :color="!reverse ? 'dark-3' : 'primary'" text-color="white" :disable="disable" size="18px" v-if="details">
+          <q-icon class="small-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="dark" size="12px" />
         </q-btn>
         <q-icon class="small-icon" :name="rightIcon" color="gray3" v-else-if="rightIcon" />
       </slot>
@@ -82,6 +82,10 @@ export default defineComponent({
   border-radius: 10px;
   margin-bottom: 10px;
 
+  &::v-deep(.q-focus-helper) {
+    opacity: 0 !important;
+  }
+
   &::v-deep(.q-item__section--avatar) {
     min-width: unset;
     padding-right: 37px;
@@ -90,11 +94,19 @@ export default defineComponent({
   &:not(.disabled):hover {
     & .details-btn {
       &:not(.reverse) {
-        background-color: $accent-2 !important;
+        background-color: $primary !important;
+
+        & .small-icon {
+          color: $dark !important;
+        }
       }
 
       &.reverse {
-        background-color: $secondary !important;
+        background-color: $dark-3 !important;
+
+        & .small-icon {
+          color: $white !important;
+        }
       }
     }
   }

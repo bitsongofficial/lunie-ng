@@ -15,14 +15,39 @@ export const getProposalStatusColor = (status: ProposalStatus) => {
   switch (status) {
     case ProposalStatus.DEPOSIT:
     case ProposalStatus.VOTING:
-      return 'warning';
+      return 'primary';
     case ProposalStatus.PASSED:
-      return 'info';
+      return 'primary';
     case ProposalStatus.REJECTED:
     case ProposalStatus.FAILED:
-      return 'negative';
+      return 'dark';
     case ProposalStatus.UNSPECIFIED:
     default:
-      return 'gray2';
+      return 'dark';
+  }
+}
+
+export const getProposalTextStatusColor = (status: ProposalStatus) => {
+  switch (status) {
+    case ProposalStatus.DEPOSIT:
+    case ProposalStatus.VOTING:
+      return 'dark';
+    case ProposalStatus.PASSED:
+      return 'primary';
+    case ProposalStatus.REJECTED:
+    case ProposalStatus.FAILED:
+      return 'white';
+    case ProposalStatus.UNSPECIFIED:
+    default:
+      return 'white';
+  }
+}
+
+export const getProposalStatusOutline = (status: ProposalStatus) => {
+  switch (status) {
+    case ProposalStatus.PASSED:
+      return true;
+    default:
+      return false;
   }
 }
