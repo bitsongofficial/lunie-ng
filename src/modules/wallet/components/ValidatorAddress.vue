@@ -10,8 +10,8 @@
           <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ address }}</h5>
         </div>
 
-        <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="onCopy(validator.operatorAddress)">
-          COPY
+        <q-btn class="copy-btn" rounded unelevated flat @click="onCopy(validator.operatorAddress)">
+          <q-icon name="svguse:icons.svg#copy|0 0 18 18" color="quart-transparent-white" size="18px" />
         </q-btn>
       </div>
       <div class="validator-address-row column">
@@ -90,8 +90,7 @@ export default defineComponent({
 .validator-address {
   position: relative;
   grid-gap: 76px;
-  background-color: $transparent-gray;
-  backdrop-filter: blur(60px);
+  background-color: $dark-2;
   border-radius: 10px;
   padding: 24px;
 
@@ -126,6 +125,8 @@ export default defineComponent({
 .copy-btn {
   margin-top: 14px;
   margin-left: 8px;
+  padding: 6px;
+  min-width: 30px;
 }
 
 .validator-address-left {

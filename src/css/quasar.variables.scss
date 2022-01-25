@@ -33,6 +33,8 @@ $quart-transparent-white: transparentize($white, 0.75);
 $full-transparent-white: transparentize($white, 0.9);
 $full-transparent-dark: rgba(255, 255, 255, 0.1);
 $dark: #000;
+$dark-2: #121113;
+$dark-3: #1F1F1F;
 
 $transparent-secondary: transparentize($secondary, 0.3);
 
@@ -50,9 +52,9 @@ $transparent-gray: transparentize($gray, 0.85);
 $full-transparent-gray: transparentize($gray, 0.9);
 $transparent-gray2: transparentize($gray2, 0.85);
 
-$positive: #11B521;
-$negative: #96446B;
-$info: #00D62F;
+$positive: #00D62F;
+$negative: #FF0000;
+$info: #315438;
 $warning: #F2C037;
 
 $menu-background: $secondary;

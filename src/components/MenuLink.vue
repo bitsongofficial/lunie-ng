@@ -101,13 +101,16 @@ export default defineComponent({
   transition: all 250ms ease-in-out;
   border: 2px solid transparent;
 
+  &::v-deep(.q-focus-helper) {
+    opacity: 0 !important;
+  }
+
   &::v-deep(.q-icon) {
     transition: all 250ms ease-in-out;
     opacity: 0.3;
   }
 
-  &.active,
-  &:hover {
+  &.active {
     background: $dark;
     color: $white;
     border: 2px solid $primary;

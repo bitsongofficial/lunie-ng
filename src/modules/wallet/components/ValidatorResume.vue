@@ -147,8 +147,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .validator-resume {
-  background-color: $transparent-gray;
-  backdrop-filter: blur(60px);
+  background-color: $dark-2;
   border-radius: 10px;
   padding: 32px;
 
@@ -168,13 +167,12 @@ export default defineComponent({
 .validator-avatar {
   min-width: 100px;
   margin-right: 35px;
-  box-shadow: $black-box-shadow;
 }
 
 .validator-header {
   padding-top: 10px;
   padding-bottom: 38px;
-  border-bottom: 1px solid transparentize($color: $accent-3, $amount: 0.5);
+  border-bottom: 1px solid transparentize($color: $accent-3, $amount: 0.8);
 }
 
 .validator-header-row {

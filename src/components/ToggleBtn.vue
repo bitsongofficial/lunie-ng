@@ -98,14 +98,15 @@ export default defineComponent({
     top: 0;
     height: 100%;
     width: 100%;
-    border: 2px solid $accent;
+    border: 2px solid $half-transparent-white;
     border-radius: 25px;
+    opacity: 0.3;
   }
 
   & button {
     border: none;
     background: none;
-    color: $accent;
+    color: $half-transparent-white;
     padding-left: 29px;
     padding-right: 26px;
     text-transform: uppercase;

@@ -14,10 +14,10 @@
         <toggle-btn class="col-12 col-md-auto" v-model="type" :options="validatorTypeOptions" />
       </div>
 
-      <div class="col-12 col-md-auto q-ml-auto">
+      <div class="col-12 col-md-5 q-ml-auto">
         <q-input
           color="transparent-gray"
-          label-color="accent-5"
+          label-color="half-transparent-white"
           bg-color="transparent-gray"
           round
           standout
@@ -25,10 +25,10 @@
           placeholder="Search validator"
           no-error-icon
           hide-bottom-space
-          class="search-box large text-h5 q-ml-auto"
+          class="search-box medium text-body3 q-ml-auto"
         >
           <template v-slot:append>
-            <q-icon name="svguse:icons.svg#search|0 0 13 13" size="16px" color="accent-5" />
+            <q-icon name="svguse:icons.svg#search|0 0 13 13" size="12px" color="half-transparent-white" />
           </template>
         </q-input>
       </div>
@@ -109,8 +109,7 @@ export default defineComponent({
   margin: 0 auto 16px;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    margin: 0 48px 0 0;
-    padding-left: 32px;
+    margin: 0 36px 0 0;
   }
 }
 

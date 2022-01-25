@@ -30,11 +30,6 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="validators-table-row cursor-pointer" @click="rowClick(props.row)" :props="props">
-        <q-td key="id" class="text-white id-cell" :props="props">
-          <p class="text-subtitle2 q-my-none">
-            {{ props.rowIndex + 1 }}
-          </p>
-        </q-td>
         <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
             <q-avatar size="32px" :color="props.row.picture ? 'transparent' : 'secondary'">
@@ -157,12 +152,6 @@ export default defineComponent({
 
     const columns = computed(() => [
       {
-        name: 'id',
-        label: '',
-        align: 'center',
-        field: 'id'
-      },
-      {
         name: 'name',
         label: 'Name',
         align: 'left',
@@ -206,7 +195,7 @@ export default defineComponent({
       },
       {
         name: 'actions',
-        align: 'center'
+        align: 'right'
       },
     ]);
 
@@ -214,14 +203,14 @@ export default defineComponent({
       const extra = !session.value || (session.value && session.value.sessionType !== 'keplr') ? [] : ['actions'];
 
       if (props.unstaking) {
-        return ['id', 'name', 'unstaked', 'time'];
+        return ['name', 'unstaked', 'time'];
       }
 
       if (props.staking) {
-        return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', ...extra];
+        return ['name', 'status', 'staked', 'rewards', 'votingPower', ...extra];
       }
 
-      return ['id', 'name', 'status', 'rewards', 'votingPower', ...extra];
+      return ['name', 'status', 'rewards', 'votingPower', ...extra];
     });
 
     const rowClick = async (row: LooseDictionary) => {
@@ -298,8 +287,12 @@ export default defineComponent({
   padding-bottom: 21px;
   border: none;
 
-  &:first-of-type {
-    width: 60px;
+  &:first-child {
+    padding-left: 40px;
+  }
+
+  &:last-child {
+    padding-right: 40px;
   }
 }
 
@@ -319,11 +312,13 @@ export default defineComponent({
     &:first-child {
       border-top-left-radius: 10px;
       border-bottom-left-radius: 10px;
+      padding-left: 40px;
     }
 
     &:last-child {
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
+      padding-right: 40px;
     }
   }
 }

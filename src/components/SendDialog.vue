@@ -69,7 +69,7 @@
               </template>
             </q-input>
 
-            <p class="text-body2 text-half-transparent-white q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-half-transparent-white text-right q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
           </div>
 
           <div class="field-block column full-width justify-start items-start">
@@ -121,27 +121,23 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="white" padding="15px 20px 14px" :loading="loading">
+            <q-btn type="submit" class="submit btn-medium text-weight-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
               send
             </q-btn>
           </div>
         </q-form>
 
         <div class="success col column fit" v-else>
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="86px" color="positive" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Success!</h3>
 
           <p class="text-h4 text-half-transparent-white text-center">You have successfully send your {{ !denom ? network.stakingDenom : 'coin' }}s.</p>
-
-          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
-            See your transaction
-          </q-btn>
         </div>
       </template>
 
       <div class="success col column fit" v-else>
-        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
+        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="86px" color="negative" />
 
         <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
@@ -268,7 +264,11 @@ export default defineComponent({
 }
 
 .dialog-header {
-  margin-bottom: 41px;
+  margin-bottom: 40px;
+}
+
+.close {
+  opacity: 0.5;
 }
 
 .body {
@@ -276,8 +276,7 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $full-transparent-gray;
-  backdrop-filter: blur(60px);
+  background: $dark-2;
   padding: 33px 36px 28px;
 }
 
@@ -317,8 +316,8 @@ export default defineComponent({
 }
 
 .success-icon {
-  margin-top: 23px;
-  margin-bottom: 45px;
+  margin-top: 30px;
+  margin-bottom: 86px;
   margin-left: auto;
   margin-right: auto;
 }

@@ -2,10 +2,10 @@
 .q-input,
 .q-textarea {
   & .q-field__native {
-    color: $white !important;
+    color: $half-transparent-white !important;
 
     &::placeholder {
-      color: $accent-5 !important;
+      color: $half-transparent-white !important;
     }
   }
 
