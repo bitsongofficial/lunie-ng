@@ -6,18 +6,9 @@
           Fantoken Lab
         </h2>
 
-        <!-- <q-btn
-          @click="openClaimDialog"
-          :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0"
-          class="btn-medium-large-small font-weight-medium text-body3"
-          rounded
-          unelevated
-          color="primary"
-          text-color="dark"
-          :padding="!quasar.screen.lt.md ? '8px 30px' : '8px 20px'"
-        >
-          {{ !quasar.screen.lt.md ? 'CLAIM REWARD' : 'CLAIM' }}
-        </q-btn> -->
+        <q-btn class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
+          CREATE FANTOKEN <q-icon class="arrow-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
+        </q-btn>
       </div>
 
       <transition
@@ -113,5 +104,9 @@ export default defineComponent({
 
 .delegations-title {
   margin-top: 10px;
+}
+
+.arrow-icon {
+  margin-left: 40px;
 }
 </style>

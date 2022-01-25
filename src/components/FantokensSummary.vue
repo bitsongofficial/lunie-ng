@@ -9,7 +9,7 @@
 Try to istance your first fantoken serie.
       </p>
 
-      <q-btn to="/validators" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
+      <q-btn class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
         CREATE FANTOKEN <q-icon class="validators-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
       </q-btn>
     </div>

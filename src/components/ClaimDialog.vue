@@ -20,7 +20,7 @@
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width" v-for="(reward, index) in totalRewards" :key="index">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Amount</label>
+            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">Amount</label>
 
             <q-input
               v-model="reward.amount"
@@ -46,7 +46,7 @@
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none" v-if="isLedger">Claim will only withdraw rewards from 5 validators at a time because of a limitation with the Ledger Nano.</p>
+            <p class="text-body2 text-half-transparent-white q-px-sm q-mt-sm q-mb-none" v-if="isLedger">Claim will only withdraw rewards from 5 validators at a time because of a limitation with the Ledger Nano.</p>
           </div>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -61,7 +61,7 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
+            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="white" padding="15px 20px 14px" :loading="loading">
               claim
             </q-btn>
           </div>
@@ -223,9 +223,9 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $full-transparent-gray;
+  backdrop-filter: blur(60px);
   padding: 33px 36px 28px;
-  box-shadow: $secondary-box-shadow;
 }
 
 .close-icon {
