@@ -37,7 +37,7 @@
         <q-btn
           @click="openClaimDialog"
           :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0"
-          class="btn-medium-large-small font-weight-medium text-body3"
+          class="btn-medium-large-small text-weight-medium text-body3"
           rounded
           unelevated
           color="primary"

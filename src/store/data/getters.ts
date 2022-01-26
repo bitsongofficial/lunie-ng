@@ -3,8 +3,9 @@ import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
 import { shortDecimals, percent, splitDecimals } from 'src/common/numbers';
-import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
-import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus } from 'src/models';
+import { mapBalance } from 'src/common/balance';
+import { compact, Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
+import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus, Balance } from 'src/models';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
 
 const getters: GetterTree<DataStateInterface, StateInterface> = {
@@ -33,24 +34,30 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     };
   },
   balances({ balances }, _getters, { authentication }) {
-    return sortBy(balances, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
-      balance => {
-        if (balance.denom === authentication.network.stakingDenom) {
-          return ({
-            ...balance,
-          });
-        }
+    return sortBy(balances, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1)
+      .filter(balance => balance.denom.includes(authentication.network.stakingDenom))
+      .map(balance => mapBalance(balance, authentication.network.stakingDenom));
+  },
+  fantokenBalances({ balances }, _getters, { fantoken, authentication }): Balance[] {
+    const fantokens = [...fantoken.fantokens];
+    const stakingDenom = authentication.network.stakingDenom;
+    const balancesMap = balances.map(balance => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const fantoken = fantokens.find(el => el.meta_data.base === balance.denom);
 
-        const total = getStakingCoinViewAmount(new BigNumber(balance.total).toString());
-        const available = getStakingCoinViewAmount(new BigNumber(balance.available).toString());
-
-        return ({
-          ...balance,
-          total: shortDecimals(total),
-          available: shortDecimals(available),
-        });
+      if (fantoken) {
+        return {
+          ...mapBalance(balance, stakingDenom),
+          name: fantoken.name,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          display: fantoken.meta_data.display as string
+        };
       }
-    );
+    });
+
+    return sortBy(compact(balancesMap), 'display');
   },
   currentBalance({ balances }, _getters, { authentication }) {
     const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);

@@ -55,6 +55,12 @@
       padding-right: 28px;
     }
   }
+
+  &.small-radius {
+    & .q-field__control {
+      border-radius: 10px;
+    }
+  }
 }
 
 .q-textarea .q-field__native {

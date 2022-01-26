@@ -9,7 +9,7 @@
         Head over the validator list to start staking.
       </p>
 
-      <q-btn to="/validators" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="full-transparent-white" text-color="white" padding="12px 28px">
+      <q-btn to="/validators" class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="full-transparent-white" text-color="white" padding="12px 28px">
         VALIDATOR LIST <q-icon class="validators-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
       </q-btn>
     </div>

@@ -16,6 +16,22 @@
         <balances-table :rows="balances" :loading="!balancesLoaded || loading" />
       </div>
     </transition>
+    <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      mode="out-in"
+      appear
+    >
+      <div class="balance-section">
+        <div class="section-header-small row items-center no-wrap">
+          <h2 class="section-title text-body-large text-white">
+            Fantokens
+          </h2>
+        </div>
+
+        <balances-table :rows="fantokenBalances" :loading="!balancesLoaded || loading" fantoken />
+      </div>
+    </transition>
   </q-page>
 </template>
 
@@ -35,12 +51,14 @@ export default defineComponent({
     const store = useStore();
 
     const balances = computed(() => store.getters['data/balances'] as Balance[]);
+    const fantokenBalances = computed(() => store.getters['data/fantokenBalances'] as Balance[]);
     const balancesLoaded = computed(() => store.state.data.balancesLoaded);
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     return {
       balances,
       balancesLoaded,
+      fantokenBalances,
       loading
     }
   }

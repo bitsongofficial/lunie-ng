@@ -8,6 +8,7 @@ export const network: NetworkConfig = {
   logo: 'logo.svg',
   website: 'https://bitsong.io',
   apiURL: 'https://api.testnet.bitsong.network',
+  faucetURL: 'https://faucet.testnet.bitsong.network',
   rpcURL: 'https://rpc.testnet.bitsong.network',
   supplyURL: 'https://supply.bitsong.io/',
   explorerURL: 'https://www.mintscan.io/bitsong/',

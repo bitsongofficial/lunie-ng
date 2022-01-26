@@ -9,7 +9,7 @@
         Come back in days to see what’s changed.
       </p>
 
-      <q-btn @click="reset" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="full-transparent-white" text-color="white" padding="12px 28px 10px 29px">
+      <q-btn @click="reset" class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="full-transparent-white" text-color="white" padding="12px 28px 10px 29px">
         SEE ALL PROPOSALS
       </q-btn>
     </div>

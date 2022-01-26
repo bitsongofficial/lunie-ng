@@ -1,6 +1,6 @@
 <template>
   <div class="toggle-btn row no-wrap position-relative">
-    <button v-for="(option, i) in options" :key="option.value" class="text-h6 font-weight-medium" :class="{
+    <button v-for="(option, i) in options" :key="option.value" class="text-h6 text-weight-medium" :class="{
       'active': modelValue === option.value,
       'animated': animated,
     }" :ref="el => setBtnRef(el, i)" @click="(payload) => onChange(payload, option.value)">

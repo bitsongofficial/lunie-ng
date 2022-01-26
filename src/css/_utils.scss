@@ -107,6 +107,10 @@
   color: $gray3 !important;
 }
 
+.text-gray4 {
+  color: $gray4 !important;
+}
+
 .text-alternative-4 {
   color: $alternative-4 !important;
 }
@@ -173,3 +177,14 @@
 .text-underline {
   text-decoration: underline;
 }
+
+.q-col-gutter-custom {
+  margin-top: -28px;
+  margin-left: -28px;
+}
+
+.q-col-gutter-custom > * {
+  padding-top: 28px;
+  padding-left: 28px;
+}
+

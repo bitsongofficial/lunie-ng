@@ -19,3 +19,5 @@ export * from './wallet';
 export * from './account';
 export * from './supply';
 export * from './inflaction';
+export * from './faucet';
+export * from './fantoken';

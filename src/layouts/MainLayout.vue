@@ -18,7 +18,7 @@
           </q-btn>
         </q-toolbar-title>
 
-        <q-btn class="btn-medium" rounded unelevated color="primary" text-color="dark" padding="0 40px 0 26px">
+        <q-btn class="btn-medium" rounded unelevated color="primary" text-color="dark" padding="0 40px 0 26px" @click="openGetBTSGDialog">
           <q-icon class="btsg-coin-icon" name="svguse:icons.svg#coin|0 0 24 24" color="dark" size="24px" />
           <label class="text-body2 text-dark text-untransform no-pointer-events">Get BTSG</label>
         </q-btn>
@@ -86,10 +86,11 @@ import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { formatShortAddress } from 'src/common/address';
 import { useClipboard } from 'src/hooks';
-import { useChangeNetwork, useBack } from 'src/hooks';
+import { useBack } from 'src/hooks';
 import { useRouter } from 'vue-router';
 
 import MenuLink from 'src/components/MenuLink.vue';
+import FaucetDialog from 'src/components/FaucetDialog.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -98,7 +99,6 @@ export default defineComponent({
   },
   setup() {
     const { back, goBack } = useBack();
-    const { network, networks, loadingNetwork } = useChangeNetwork(true, goBack);
     const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
@@ -107,18 +107,6 @@ export default defineComponent({
     const address = computed(() => formatShortAddress(store.state.authentication.session?.address));
     const loading = computed(() => store.state.authentication.loading);
     const votingProposalsCount = computed(() => store.getters['data/votingProposalsCount'] as number);
-
-    const explorerURL = computed(() => {
-      const session = store.state.authentication.session;
-
-      if (session) {
-        return `${network.value.explorerURL}account/${session.address}`;
-      }
-
-      return network.value.explorerURL;
-    });
-
-    const bridgeURL = computed(() => 'https://bridge.bitsong.io/');
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -151,21 +139,25 @@ export default defineComponent({
       }
     }
 
+    const openGetBTSGDialog = () => {
+      quasar.dialog({
+        component: FaucetDialog,
+        fullWidth: true,
+        maximized: true,
+      });
+    }
+
     return {
       votingProposalsCount,
-      bridgeURL,
-      loadingNetwork,
-      network,
-      networks,
       loading,
       address,
-      explorerURL,
       session,
       quasar,
       leftDrawer,
       back,
       goToAuthentication,
       goBack,
+      openGetBTSGDialog,
       ...useClipboard(),
     }
   }

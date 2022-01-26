@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js';
-import { SplittedDecimals } from 'src/models';
+import { SplittedDecimals, CoinLookUp } from 'src/models';
 import { getStakingCoinViewAmount } from './cosmos-reducer';
+import { Coin as StargateCoin } from '@cosmjs/stargate';
 
 const language = 'en';
 
@@ -128,4 +129,24 @@ export const splitDecimals = (value: string): SplittedDecimals | null => {
     left: splitted.shift(),
     right: splitted.pop()
   };
+}
+
+export function Coin({ amount, denom }: StargateCoin, coinLookup: CoinLookUp[]) {
+  const lookup = coinLookup.find(({ viewDenom }) => viewDenom === denom);
+
+  if (lookup) {
+    return {
+      amount: new BigNumber(amount)
+        .dividedBy(lookup.chainToViewConversionFactor)
+        .toFixed(),
+      denom: lookup.chainDenom,
+    };
+  } else {
+    return {
+      amount: new BigNumber(amount)
+        .dividedBy('1e-6')
+        .toFixed(),
+      denom
+    };
+  }
 }

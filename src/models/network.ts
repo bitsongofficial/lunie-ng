@@ -26,6 +26,7 @@ export interface NetworkConfig {
   logo: string;
   website: string;
   apiURL: string;
+  faucetURL: string;
   rpcURL: string;
   explorerURL: string;
   supplyURL?: string | null;
