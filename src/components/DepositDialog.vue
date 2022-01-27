@@ -30,7 +30,6 @@
               round
               standout
               no-error-icon
-              hide-bottom-space
               class="quantity-input full-width large"
               :rules="[
                 val => !!val || 'Required field',
@@ -39,6 +38,7 @@
                 val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
                 val => !isNegative(val) || 'Amount must be greater then zero'
               ]"
+              placeholder="0"
             >
               <template v-slot:append>
                 <label class="text-body2 text-half-transparent-white" v-if="!denom">{{ network.stakingDenom }}</label>
@@ -112,7 +112,7 @@ export default defineComponent({
     const store = useStore();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-    const amount = ref<string>('0');
+    const amount = ref<string>('');
     const hash = ref<string>();
     const success = ref<boolean>(false);
     const error = ref<string>();

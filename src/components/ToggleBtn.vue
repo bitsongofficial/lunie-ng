@@ -3,12 +3,14 @@
     <button v-for="(option, i) in options" :key="option.value" class="text-h6 text-weight-medium" :class="{
       'active': modelValue === option.value,
       'animated': animated,
+      'first-opt': firstOptionActive && i === 0
     }" :ref="el => setBtnRef(el, i)" @click="(payload) => onChange(payload, option.value)">
       {{ option.label }}
     </button>
 
     <div class="toggle-btn-segment" :class="{
       'animated': animated,
+      'first-opt': firstOptionActive
     }" :style="{
       'width': `${segmentWidth}px`,
       'left': `${segmentOffset}px`,
@@ -40,6 +42,16 @@ export default defineComponent({
     const activeButton = computed(() => buttons.value.find((el: HTMLButtonElement) => {
       return el.classList.contains('active');
     }));
+    const firstOptionActive = computed(() => {
+      const options = [...props.options];
+      const firstOpt = options.shift();
+
+      if (firstOpt) {
+        return firstOpt.value === props.modelValue;
+      }
+
+      return false;
+    });
 
     const onChange = (payload: MouseEvent, value: string | number) => {
       const target = payload.target as HTMLButtonElement;
@@ -74,6 +86,7 @@ export default defineComponent({
     });
 
     return {
+      firstOptionActive,
       animated,
       segmentWidth,
       segmentOffset,
@@ -89,7 +102,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .toggle-btn {
   border-radius: 25px;
-  min-height: 40px;
+  min-height: 32px;
+  background-color: $transparent-gray2;
 
   &::before {
     content: '';
@@ -98,7 +112,6 @@ export default defineComponent({
     top: 0;
     height: 100%;
     width: 100%;
-    border: 2px solid $half-transparent-white;
     border-radius: 25px;
     opacity: 0.3;
   }
@@ -107,14 +120,19 @@ export default defineComponent({
     border: none;
     background: none;
     color: $half-transparent-white;
-    padding-left: 29px;
-    padding-right: 26px;
+    padding-left: 20px;
+    padding-right: 20px;
     text-transform: uppercase;
     z-index: 1;
     flex: 1;
     cursor: pointer;
+    transition: all 250ms ease-in-out;
 
     &.active {
+      color: $dark;
+    }
+
+    &.first-opt {
       color: $white;
     }
   }
@@ -125,9 +143,14 @@ export default defineComponent({
   top: 50%;
   left: 0;
   height: 100%;
-  background-color: $info;
+  background-color: $primary;
   border-radius: 25px;
   transform: translateY(-50%);
+  transition: background-color 250ms ease-in-out;
+
+  &.first-opt {
+    background-color: $half-transparent-white;
+  }
 }
 
 .animated {

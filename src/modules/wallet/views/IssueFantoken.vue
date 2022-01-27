@@ -26,7 +26,7 @@
                 standout
                 no-error-icon
                 hide-bottom-space
-                class="full-width extra-large small-radius"
+                class="full-width extra-large"
                 placeholder="Ex. Adam Clay, Bitsong"
                 :rules="[
                   val => !!val || 'Required field'
@@ -44,7 +44,7 @@
                 standout
                 no-error-icon
                 hide-bottom-space
-                class="full-width extra-large small-radius"
+                class="full-width extra-large"
                 placeholder="Ex. CLAY, BTSG"
                 :rules="[
                   val => !!val || 'Required field',
@@ -62,7 +62,7 @@
                 standout
                 no-error-icon
                 hide-bottom-space
-                class="full-width extra-large small-radius"
+                class="full-width extra-large"
                 :rules="[
                   val => !!val || 'Required field',
                   val => !isNaN(val) || 'Amount must be a decimal value',
@@ -83,8 +83,9 @@
                 standout
                 no-error-icon
                 hide-bottom-space
-                class="full-width extra-large small-radius"
+                class="full-width extra-large-fluid"
                 placeholder="Write a simple description"
+                autogrow
               />
             </div>
           </div>
