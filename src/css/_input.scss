@@ -2,10 +2,10 @@
 .q-input,
 .q-textarea {
   & .q-field__native {
-    color: $white !important;
+    color: $half-transparent-white !important;
 
     &::placeholder {
-      color: $accent-5 !important;
+      color: $half-transparent-white !important;
     }
   }
 
@@ -53,6 +53,12 @@
       height: 62px;
       padding-left: 25px;
       padding-right: 28px;
+    }
+  }
+
+  &.small-radius {
+    & .q-field__control {
+      border-radius: 10px;
     }
   }
 }

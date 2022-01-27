@@ -20,7 +20,7 @@
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width" v-for="(reward, index) in totalRewards" :key="index">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Amount</label>
+            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">Amount</label>
 
             <q-input
               v-model="reward.amount"
@@ -42,11 +42,17 @@
               ]"
             >
               <template v-slot:append>
-                <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-half-transparent-white" v-if="reward.networkCoin">{{ reward.denom }}</label>
+                <div class="ibc-info" v-else>
+                  <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="16px" color="primary" />
+                  <q-tooltip anchor="top middle" self="bottom middle">
+                    {{ reward.denom }}
+                  </q-tooltip>
+                </div>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none" v-if="isLedger">Claim will only withdraw rewards from 5 validators at a time because of a limitation with the Ledger Nano.</p>
+            <p class="text-body2 text-half-transparent-white q-px-sm q-mt-sm q-mb-none" v-if="isLedger">Claim will only withdraw rewards from 5 validators at a time because of a limitation with the Ledger Nano.</p>
           </div>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -61,27 +67,23 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
+            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
               claim
             </q-btn>
           </div>
         </q-form>
 
         <div class="success col column fit" v-else>
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="86px" color="positive" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful withdrawal!</h3>
 
           <p class="text-h4 text-half-transparent-white text-center">You have successfully withdrawn your rewards.</p>
-
-          <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
-            See your transaction
-          </q-btn>
         </div>
       </template>
 
       <div class="success col column fit" v-else>
-        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
+        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="86px" color="negative" />
 
         <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
 
@@ -152,9 +154,12 @@ export default defineComponent({
 
       const rewardsDenomArray = Object.entries(validatorsRewardsObject);
 
-      return rewardsDenomArray
-        .map(([denom, amount]) => ({ denom, amount }))
-        .sort((a, b) => b.amount - a.amount);
+      return rewardsDenomArray.map(([denom, amount]) => ({
+        networkCoin: denom.includes(network.value.stakingDenom),
+        denom,
+        amount
+      }))
+      .sort((a, b) => b.amount - a.amount);
     });
 
     const loading = computed(() => store.state.data.loadingSignTransaction);
@@ -215,7 +220,11 @@ export default defineComponent({
 }
 
 .dialog-header {
-  margin-bottom: 41px;
+  margin-bottom: 40px;
+}
+
+.close {
+  opacity: 0.5;
 }
 
 .body {
@@ -223,13 +232,12 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $dark-2;
   padding: 33px 36px 28px;
-  box-shadow: $secondary-box-shadow;
 }
 
 .close-icon {
-  margin-left: 15px;
+  margin-left: 16px;
 }
 
 .submit {
@@ -255,7 +263,7 @@ export default defineComponent({
 }
 
 .max-btn {
-  margin-right: 15px;
+  margin-left: 16px;
 }
 
 .validator-avatar {
@@ -264,8 +272,8 @@ export default defineComponent({
 }
 
 .success-icon {
-  margin-top: 23px;
-  margin-bottom: 45px;
+  margin-top: 30px;
+  margin-bottom: 86px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -291,5 +299,10 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     flex-direction: row;
   }
+}
+
+.ibc-info {
+  pointer-events: all;
+  cursor: help;
 }
 </style>

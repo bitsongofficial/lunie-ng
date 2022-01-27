@@ -14,7 +14,7 @@
         flat
         unelevated
         :ripple="false"
-        text-color="accent"
+        text-color="quart-transparent-white"
         toggle-text-color="white"
         padding="0"
         :options="options"

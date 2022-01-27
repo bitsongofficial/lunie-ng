@@ -1,4 +1,3 @@
-/* .q-dialog.fullscreen > .q-dialog__backdrop {
-  background: transparent;
+.q-dialog.fullscreen > .q-dialog__backdrop {
+  background: transparentize($color: $dark, $amount: 0.4);
 }
- */

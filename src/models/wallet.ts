@@ -1,3 +1,4 @@
+import { IssueFantokenRequest } from './fantoken';
 import Transport from '@ledgerhq/hw-transport';
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
 import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
@@ -16,6 +17,11 @@ export enum MessageTypes {
   DEPOSIT = 'DepositTx',
   CLAIM_REWARDS = 'ClaimRewardsTx',
   SUBMIT_PROPOSAL = 'SubmitProposalTx',
+  ISSUE_FANTOKEN = 'IssueFantokenTx',
+  MINT_FANTOKEN = 'MintFantokenTx',
+  BURN_FANTOKEN = 'BurnFantokenTx',
+  CHANGE_OWNER_FANTOKEN = 'ChangeOwnerFantokenTx',
+  DISABLE_MINT_FANTOKEN = 'DisableMintFantokenTx',
   UNKNOWN = 'UnknownTx',
 };
 
@@ -44,6 +50,35 @@ export interface TransactionRequest {
   amount: Coin;
 }
 
+export interface TransactionBitsongRequest extends Partial<IssueFantokenRequest> {
+  memo?: string;
+  password?: string;
+  to?: string;
+  amount?: string;
+  denom?: string;
+  mintable?: boolean;
+}
+
+export interface TransactionBitsongRequestWithType {
+  type: MessageTypes;
+  message: TransactionBitsongRequest;
+  memo?: string;
+}
+
+export interface BitsongSignBroadcastRequest {
+  messageType: MessageTypes;
+  message: TransactionBitsongRequest;
+  senderAddress: string;
+  accountInfo: AccountInfo;
+  network: NetworkConfig;
+  signingType: SessionType;
+  HDPath: string;
+  feeDenom: string;
+  chainId: string;
+  memo: string;
+  ledgerTransport?: Transport
+}
+
 export interface SignBroadcastRequest {
   messageType: MessageTypes;
   message: TransactionRequest;
@@ -56,7 +91,7 @@ export interface SignBroadcastRequest {
   feeDenom: string;
   chainId: string;
   memo: string;
-  ledgerTransport?: Transport<string>
+  ledgerTransport?: Transport
 }
 
 export interface SignMessageRequest {

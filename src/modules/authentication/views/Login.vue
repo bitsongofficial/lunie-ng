@@ -45,7 +45,6 @@ export default defineComponent({
 .content-login-inner {
   position: relative;
   padding: 47px 26px 29px;
-  box-shadow: $secondary-box-shadow;
   border-radius: 10px;
   width: 100%;
 }

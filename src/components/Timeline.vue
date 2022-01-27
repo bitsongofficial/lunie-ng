@@ -1,14 +1,21 @@
 <template>
   <div class="timeline row items-center justify-between">
     <div class="timeline-entry column items-center col-12 col-md-auto" v-for="(entry, index) in entries" :key="index">
-      <q-icon class="timeline-entry-icon" name="svguse:icons.svg#check-outlined|0 0 20 20" :color="entry.active ? 'white' : 'accent'" />
+      <q-icon
+        class="timeline-entry-icon"
+        name="svguse:icons.svg#check-outlined|0 0 20 20"
+        :class="{
+          fill: entry.active,
+        }"
+        :color="entry.active ? 'white' : 'quart-transparent-white'"
+      />
 
       <h6 class="text-subtitle2 text-weight-medium q-mt-sm q-mb-xs" :class="{
         'text-white': entry.active,
-        'text-accent': !entry.active,
+        'text-quart-transparent-white': !entry.active,
       }">{{ entry.label }}</h6>
 
-      <p class="text-accent text-body3 q-my-none">{{ entry.subtitle }}</p>
+      <p class="text-quart-transparent-white text-body3 q-my-none">{{ entry.subtitle }}</p>
     </div>
   </div>
 </template>
@@ -45,5 +52,12 @@ export default defineComponent({
 .timeline-entry-icon {
   width: 20px;
   height: auto;
+  fill: none;
+  stroke: $quart-transparent-white;
+
+  &.fill {
+    stroke: $primary;
+    fill: $white;
+  }
 }
 </style>

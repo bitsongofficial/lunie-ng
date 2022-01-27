@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Reward, ValidatorWithReward } from 'src/models';
-import { LedgerSigner } from '@bitsongjs/sdk';
+import { LedgerSigner } from '@cosmjs/ledger-amino';
 import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Transport from '@ledgerhq/hw-transport';

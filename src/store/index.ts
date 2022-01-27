@@ -24,12 +24,16 @@ import { KeplrStateInterface } from './keplr/state';
 import ledger from './ledger';
 import { LedgerStateInterface } from './ledger/state';
 
+import fantoken from './fantoken';
+import { FantokenStateInterface } from './fantoken/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
   authentication: AuthenticationStateInterface;
   data: DataStateInterface;
   keplr: KeplrStateInterface;
   ledger: LedgerStateInterface;
+  fantoken: FantokenStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -57,7 +61,8 @@ const modules = {
   authentication,
   data,
   keplr,
-  ledger
+  ledger,
+  fantoken
 };
 
 const Store = createStore<StateInterface>({

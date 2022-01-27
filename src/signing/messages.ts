@@ -1,5 +1,4 @@
-import { Coin as StargateCoin } from '@cosmjs/stargate';
-import { BigNumber } from 'bignumber.js';
+import { Coin } from 'src/common/numbers';
 import {
   MsgDelegate,
   MsgUndelegate,
@@ -8,7 +7,7 @@ import {
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
 import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
 import Long from 'long';
-import { CoinLookUp, NetworkConfig, TransactionRequest, SignMessageRequest } from 'src/models';
+import { NetworkConfig, TransactionRequest, SignMessageRequest } from 'src/models';
 
 // Bank
 export const SendTx = (senderAddress: string, { to, amounts }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
@@ -91,26 +90,6 @@ export const DepositTx = (senderAddress: string, { proposalId, amount }: Transac
         proposalId: Long.fromString(proposalId),
         amount: [coin]
       }),
-    };
-  }
-}
-
-export function Coin({ amount, denom }: StargateCoin, coinLookup: CoinLookUp[]) {
-  const lookup = coinLookup.find(({ viewDenom }) => viewDenom === denom);
-
-  if (lookup) {
-    return {
-      amount: new BigNumber(amount)
-        .dividedBy(lookup.chainToViewConversionFactor)
-        .toFixed(),
-      denom: lookup.chainDenom,
-    };
-  } else {
-    return {
-      amount: new BigNumber(amount)
-        .dividedBy('1e-6')
-        .toFixed(),
-      denom
     };
   }
 }

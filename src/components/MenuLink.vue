@@ -15,14 +15,14 @@
       class="menu-link"
     >
       <q-item-section v-if="icon" avatar>
-        <q-icon :name="icon" :color="newLink || isActive || contained(route) ? 'accent-2' : 'accent'" size="20px" />
+        <q-icon :name="icon" :color="newLink || isActive || contained(route) ? 'primary' : 'white'" size="20px" />
       </q-item-section>
 
       <q-item-section>
         <q-item-label class="text-weight-medium text-subtitle2">{{ title }}</q-item-label>
       </q-item-section>
 
-      <q-badge v-if="count" :label="count" class="status-count text-uppercase text-weight-medium q-mx-none q-my-none text-caption-2" text-color="white" color="info"></q-badge>
+      <q-badge v-if="count" :label="count" class="status-count text-uppercase text-weight-medium q-mx-none q-my-none text-caption-2" text-color="dark" color="primary"></q-badge>
     </q-item>
   </router-link>
   <q-item
@@ -35,7 +35,7 @@
     v-else
   >
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" :color="newLink ? 'accent-2' : 'accent'" size="20px" />
+      <q-icon :name="icon" :color="newLink ? 'primary' : 'white'" size="20px" />
     </q-item-section>
 
     <q-item-section>
@@ -96,21 +96,28 @@ export default defineComponent({
 .menu-link {
   background: transparent;
   border-radius: 25px;
-  padding: 16px 28px;
+  padding: 14px 26px;
   color: $white;
   transition: all 250ms ease-in-out;
+  border: 2px solid transparent;
+
+  &::v-deep(.q-focus-helper) {
+    opacity: 0 !important;
+  }
 
   &::v-deep(.q-icon) {
     transition: all 250ms ease-in-out;
+    opacity: 0.3;
   }
 
-  &.active,
-  &:hover {
-    background: $white;
-    color: $secondary;
+  &.active {
+    background: $dark;
+    color: $white;
+    border: 2px solid $primary;
 
     &::v-deep(.q-icon) {
-      color: $accent-2 !important;
+      color: $primary !important;
+      opacity: 1;
     }
   }
 

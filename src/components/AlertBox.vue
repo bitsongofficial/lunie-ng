@@ -1,6 +1,6 @@
 <template>
   <div :class="`alert-box row items-center no-wrap text-${color} ${clickable ? 'clickable' : ''}`">
-    <q-icon class="icon" name="svguse:icons.svg#warning|0 0 21 19" size="30px" />
+    <q-icon class="icon" name="svguse:icons.svg#warning|0 0 21 19" size="18px" />
 
     <h6 class="q-my-none white-space-break-spaces">{{ title }}</h6>
   </div>
@@ -43,6 +43,6 @@ export default defineComponent({
 
 .icon {
   margin-right: 32px;
-  min-width: 30px;
+  min-width: 18px;
 }
 </style>

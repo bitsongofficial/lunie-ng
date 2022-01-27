@@ -29,13 +29,19 @@
   color: $white;
   transition: color 250ms ease-in-out;
 
-  &:hover,
-  &:active,
-  &.active {
-    color: $primary;
+  & .q-focus-helper {
+    opacity: 0 !important;
+  }
+
+  &:not(.disabled) {
+    &:hover,
+    &:active,
+    &.active {
+      color: $primary;
+    }
   }
 }
 
 .q-select__dialog {
-  background: $secondary;
+  background: $dark-3;
 }

@@ -1,4 +1,4 @@
-import { LedgerSigner } from '@bitsongjs/sdk';
+import { LedgerSigner } from '@cosmjs/ledger-amino';
 import { AccountData } from '@cosmjs/proto-signing';
 import Transport from '@ledgerhq/hw-transport';
 import { MutationTree } from 'vuex'

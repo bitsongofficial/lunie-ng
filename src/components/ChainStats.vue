@@ -6,7 +6,7 @@
           {{ title }}
         </h3>
 
-        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" color="transparent-accent-3"></q-badge>
+        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="dark" color="primary"></q-badge>
       </div>
 
       <template v-if="!loading">
@@ -53,7 +53,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chain-stats {
   background: $transparent-gray2;
-  box-shadow: $full-secondary-box-shadow;
   border-radius: $generic-border-radius;
   padding: 24px 34px;
 }

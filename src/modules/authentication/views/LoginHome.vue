@@ -2,51 +2,23 @@
   <div class="login-home-content">
     <h1 class="text-body-large text-white text-weight-medium q-mt-none q-mb-md text-center">Welcome</h1>
 
-    <q-select
-      v-model="network"
-      rounded
-      standout
-      map-options
-      :options="networks"
-      bg-color="transparent-white"
-      color="transparent-white"
-      label-color="primary"
-      class="subtitle full-width medium q-mt-auto connection-item"
-      no-error-icon
-      hide-bottom-space
-      :loading="loadingNetwork"
-      :disable="loadingNetwork"
-      :options-cover="false"
-    >
-      <template v-slot:selected-item="{ opt }">
-        <div class="row items-center cursor-pointer">
-          <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
-
-          <label class="text-white text-body2 q-ml-md cursor-pointer">{{ opt.name }}</label>
-        </div>
-      </template>
-      <template v-slot:option="{ itemProps, opt }">
-        <q-item class="network-item row items-center cursor-pointer bg-secondary text-secondary" v-bind="itemProps">
-          <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
-        </q-item>
-      </template>
-    </q-select>
+    <p class="subtitle text-half-transparent-white text-wight-medium text-subtitle2 text-center">Bitsong Testnet</p>
 
     <q-list>
-      <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
-      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
-      <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension">
+      <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" reverse />
+      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" reverse />
+      <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" reverse>
         <template v-slot:right>
-          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
             <label class="text-center full-width">
               Soon
             </label>
           </q-chip>
         </template>
       </item>
-      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
+      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App" reverse>
         <template v-slot:right>
-          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
             <label class="text-center full-width">
               Soon
             </label>
@@ -69,7 +41,6 @@ import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 import { SessionType } from 'src/models';
-import { useChangeNetwork } from 'src/hooks';
 
 import Item from 'src/components/Item.vue';
 
@@ -124,8 +95,7 @@ export default defineComponent({
       keplrAvailable,
       session,
       keplrSignIn,
-      signOut,
-      ...useChangeNetwork(false)
+      signOut
     }
   }
 });
@@ -137,7 +107,7 @@ export default defineComponent({
 }
 
 .subtitle {
-  margin-bottom: 48px;
+  margin-bottom: 42px;
 }
 
 .soon-chip {
@@ -146,6 +116,7 @@ export default defineComponent({
   border-radius: 25px;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
 }
 
 .signout-btn {

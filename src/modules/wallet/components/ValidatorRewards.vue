@@ -8,7 +8,7 @@
     <q-skeleton type="text" width="160px" height="50px" animation-speed="700" dark square v-else></q-skeleton>
 
     <div class="row items-center justify-center full-width">
-      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0 || loading" class="btn-medium-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="12px 28px">
+      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0 || loading" class="btn-medium-small text-body4" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>
@@ -77,8 +77,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .validator-rewards {
-  background-color: $transparent-gray;
-  backdrop-filter: blur(60px);
+  background-color: $dark-2;
   border-radius: 10px;
   padding: 24px 12px;
 

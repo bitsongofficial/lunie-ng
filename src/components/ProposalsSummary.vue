@@ -9,7 +9,7 @@
         Come back in days to see what’s changed.
       </p>
 
-      <q-btn @click="reset" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="white" text-color="secondary" padding="12px 28px 10px 29px">
+      <q-btn @click="reset" class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="full-transparent-white" text-color="white" padding="12px 28px 10px 29px">
         SEE ALL PROPOSALS
       </q-btn>
     </div>
@@ -41,8 +41,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .proposals-summary {
   background: $transparent-gray2;
-  box-shadow: $full-secondary-box-shadow;
-  backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
   padding: 38px 48px 36px 41px;
 }

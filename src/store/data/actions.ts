@@ -17,15 +17,17 @@ import {
   getPool,
   getInflation,
   getCommunityPool,
-  getSupplyByDenom
+  getSupplyByDenom,
+  getFaucet
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
-import { AccountInfo, BlockReduced, TransactionRequest, Validator } from 'src/models';
-import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
-import { getAPR } from 'src/common/numbers';
+import { AccountInfo, BlockReduced, TransactionRequest, Validator, TransactionBitsongRequestWithType } from 'src/models';
+import { createBitsongSignBroadcast, createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
+import { Coin, getAPR } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
+import { Coin as StargateCoin } from '@cosmjs/stargate';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -419,6 +421,20 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
     return accountInfo;
   },
+  async getFaucet({ rootState }, amounts: StargateCoin[]) {
+    const coins = amounts
+      .map(coin => Coin(coin, rootState.authentication.network.coinLookup))
+      .map(coin => `${coin.amount}ubtsg`);
+
+    if (rootState.authentication.session) {
+      const faucet = await getFaucet({
+        address: rootState.authentication.session.address,
+        coins,
+      });
+
+      return faucet;
+    }
+  },
   async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {
     try {
       if (rootState.authentication.session && data) {
@@ -454,6 +470,50 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         return hash;
       }
     } catch (err) {
+      throw err;
+    } finally {
+      commit('setLoadingSignTransaction', false);
+    }
+  },
+  async signBitsongTransaction({ commit, dispatch, rootState }, data: TransactionBitsongRequestWithType) {
+    try {
+      if (rootState.authentication.session && data) {
+        commit('setLoadingSignTransaction', true);
+        const session = rootState.authentication.session;
+        const block = await dispatch('getBlock') as BlockReduced;
+        const accountInfo = await dispatch('getAccountInfo', session.address) as AccountInfo;
+
+        const { type, message, memo = '' } = data;
+
+        const HDPath = rootState.authentication.network.HDPath;
+
+        const hashResult = await createBitsongSignBroadcast({
+          messageType: type,
+          message,
+          senderAddress: session.address,
+          accountInfo,
+          network: rootState.authentication.network,
+          signingType: session.sessionType,
+          HDPath,
+          memo: memo ?? '',
+          feeDenom: rootState.authentication.network.stakingDenom,
+          chainId: block.chainId,
+          ledgerTransport: rootState.ledger.transport
+        });
+
+        if (hashResult) {
+          const { hash } = hashResult;
+
+          await pollTxInclusion(hash);
+
+          dispatch('refresh').catch(err => console.error(err));
+          dispatch('fantoken/refresh', undefined, { root: true }).catch(err => console.error(err));
+
+          return hash;
+        }
+      }
+    } catch (err) {
+      console.error(err);
       throw err;
     } finally {
       commit('setLoadingSignTransaction', false);

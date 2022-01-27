@@ -1,6 +1,6 @@
 <template>
   <div class="toggle-btn row no-wrap position-relative">
-    <button v-for="(option, i) in options" :key="option.value" class="text-h6 font-weight-medium" :class="{
+    <button v-for="(option, i) in options" :key="option.value" class="text-h6 text-weight-medium" :class="{
       'active': modelValue === option.value,
       'animated': animated,
     }" :ref="el => setBtnRef(el, i)" @click="(payload) => onChange(payload, option.value)">
@@ -98,14 +98,15 @@ export default defineComponent({
     top: 0;
     height: 100%;
     width: 100%;
-    border: 2px solid $accent;
+    border: 2px solid $half-transparent-white;
     border-radius: 25px;
+    opacity: 0.3;
   }
 
   & button {
     border: none;
     background: none;
-    color: $accent;
+    color: $half-transparent-white;
     padding-left: 29px;
     padding-right: 26px;
     text-transform: uppercase;

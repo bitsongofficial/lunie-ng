@@ -12,9 +12,9 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary: #9B9BC1;
+$primary: #00D62F;
 $secondary: #14142E;
-$tertiary: #ED2977;
+$tertiary: #315438;
 $accent: #6B6B84;
 $accent-2: #7C4496;
 $accent-3: #898997;
@@ -32,7 +32,10 @@ $half-transparent-white: transparentize($white, 0.5);
 $quart-transparent-white: transparentize($white, 0.75);
 $full-transparent-white: transparentize($white, 0.9);
 $full-transparent-dark: rgba(255, 255, 255, 0.1);
-$dark: #1D1D1D;
+$dark: #000;
+$dark-2: #121113;
+$dark-3: #1F1F1F;
+$dark-4: #242326;
 
 $transparent-secondary: transparentize($secondary, 0.3);
 
@@ -46,12 +49,14 @@ $alternative-3-linear-gradient: linear-gradient(0deg, $alternative-3, $alternati
 $gray: #CACACA;
 $gray2: #706E7C;
 $gray3: #93939F;
+$gray4: #8A8A8A;
 $transparent-gray: transparentize($gray, 0.85);
+$full-transparent-gray: transparentize($gray, 0.9);
 $transparent-gray2: transparentize($gray2, 0.85);
 
-$positive: #11B521;
-$negative: #96446B;
-$info: #67BAB0;
+$positive: #00D62F;
+$negative: #FF0000;
+$info: #315438;
 $warning: #F2C037;
 
 $menu-background: $secondary;
@@ -62,7 +67,7 @@ $input-label-color: inherit !default;
 
 $generic-border-radius: 20px !default;
 
-$button-rounded-border-radius: 25px !default;
+$button-rounded-border-radius: 32px !default;
 $button-border-radius: 20px !default;
 
 $input-font-size                : 16px !default;

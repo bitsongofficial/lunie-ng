@@ -24,6 +24,10 @@
           :key="col.name"
           :props="props"
           class="text-body4 text-uppercase text-half-transparent-white text-weight-medium balances-table-head-col"
+          :class="{
+            'fantoken': fantoken,
+            [col.name]: true,
+          }"
         >
           {{ col.label }}
         </q-th>
@@ -31,32 +35,29 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="balances-table-row cursor-pointer" :props="props">
-        <q-td key="name" class="text-subtitle2 text-white" :props="props">
+        <q-td key="name" class="text-subtitle2 text-white name" :props="props">
           <div class="row no-wrap items-center">
-            <p class="balance-name q-my-none text-subtitle2">
+            <p class="balance-name q-my-none text-subtitle2" v-if="!props.row.name">
               {{ props.row.denom }}
+            </p>
+            <p class="balance-name q-my-none text-subtitle2" v-else>
+              {{ props.row.name }} <span class="text-half-transparent-white q-ml-lg text-uppercase">{{ props.row.display }}</span>
             </p>
           </div>
         </q-td>
-        <q-td key="total" class="text-subtitle2 text-white" :props="props">
+        <q-td key="total" class="text-subtitle2 text-white total" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ props.row.total }}
           </p>
         </q-td>
-        <q-td key="available" class="text-subtitle2 text-white" :props="props">
+        <q-td key="available" class="text-subtitle2 text-white available" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ props.row.available }}
           </p>
         </q-td>
-        <q-td key="actions" :props="props">
-          <q-btn flat unelevated padding="2px" @click.stop="">
-            <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
-
-            <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" disable v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Send</q-item-section>
-              </q-item>
-            </q-menu>
+        <q-td key="actions" class="actions" :props="props">
+          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)">
+            <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
         </q-td>
       </q-tr>
@@ -82,8 +83,12 @@ export default defineComponent({
       type: Array as PropType<Balance[]>,
       default: () => [],
     },
+    fantoken: {
+      type: Boolean,
+      default: false,
+    }
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const quasar = useQuasar();
 
@@ -115,11 +120,17 @@ export default defineComponent({
       },
       {
         name: 'actions',
-        align: 'center'
+        align: 'right'
       },
     ]);
 
-    const visibleColumns = computed<string[]>(() => ['name', 'total', 'available', 'actions']);
+    const visibleColumns = computed<string[]>(() => {
+      if (props.fantoken) {
+        return ['name', 'available', 'actions'];
+      }
+
+      return ['name', 'total', 'available', 'actions'];
+    });
 
     const openSendDialog = (balance: Balance) => {
       quasar.dialog({
@@ -153,12 +164,36 @@ export default defineComponent({
 }
 
 .balances-table-head-col {
-  padding-top: 21px;
+  padding-top: 0;
   padding-bottom: 21px;
   border: none;
 
-  &:first-of-type {
-    width: 60px;
+  &:first-child {
+    padding-left: 40px;
+  }
+
+  &:last-child {
+    padding-right: 40px;
+  }
+
+  &.name {
+    width: 50%;
+
+    &.fantoken {
+      width: 70%;
+    }
+  }
+
+  &.total {
+    width: 20%;
+  }
+
+  &.available {
+    width: 20%;
+  }
+
+  &.actions {
+    width: 10%;
   }
 }
 
@@ -176,20 +211,20 @@ export default defineComponent({
     height: 60px;
 
     &:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      padding-left: 40px;
     }
 
     &:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      padding-right: 40px;
     }
   }
 }
 
 .balance-name {
-  margin-left: 17px;
-  margin-right: 12px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box !important;

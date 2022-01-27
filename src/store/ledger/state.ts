@@ -1,11 +1,11 @@
 import { AccountData } from '@cosmjs/proto-signing';
-import { LedgerSigner } from '@bitsongjs/sdk';
+import { LedgerSigner } from '@cosmjs/ledger-amino';
 import Transport from '@ledgerhq/hw-transport';
 
 export interface LedgerStateInterface {
   ledger?: LedgerSigner;
   accounts: AccountData[];
-  transport?: Transport<string> | Transport;
+  transport?: Transport;
   error: string | undefined;
   loading: boolean;
 }

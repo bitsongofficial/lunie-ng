@@ -9,6 +9,9 @@ export interface Balance {
   available: string | number | BigNumber;
   staked: number;
   sourceChain: string | undefined;
+  name?: string;
+  display?: string;
+  symbol?: string;
 }
 
 export interface Pagination {

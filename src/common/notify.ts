@@ -4,7 +4,7 @@ import { NotificationPosition } from 'src/models';
 function notify(message: string, success = true, position: NotificationPosition = 'bottom') {
   return Notify.create({
     message,
-    color: success ? 'positive' : 'negative',
+    color: success ? 'info' : 'negative',
     icon: success ? 'svguse:icons.svg#check|0 0 70 70' : 'svguse:icons.svg#error-outlined|0 0 70 70',
     position,
     timeout: 2500,
