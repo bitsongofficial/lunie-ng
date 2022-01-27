@@ -45,7 +45,9 @@
             </q-input>
           </div>
 
-          <alert-box color="half-transparent-white" title="We reccomend that you verify the network details before proceeding."></alert-box>
+          <pre class="description-block text-half-transparent-white text-h5 scroll scroll--transparent">
+            {{ curl }}
+          </pre>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
             <q-btn
@@ -59,8 +61,8 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
-              claim
+            <q-btn @click="onCopy(curl)" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
+              copy
             </q-btn>
           </div>
         </q-form>
@@ -91,18 +93,21 @@ import { useStore } from 'src/store';
 import { defineComponent, ref, computed } from 'vue';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 
-import AlertBox from './AlertBox.vue';
+/* import AlertBox from './AlertBox.vue'; */
+import { BigNumber } from 'bignumber.js';
+import { useClipboard } from 'src/hooks';
 
 export default defineComponent({
   name: 'FaucetDialog',
-  components: {
+  /* components: {
     AlertBox,
-  },
+  }, */
   emits: [
     ...useDialogPluginComponent.emits,
   ],
   setup() {
     const store = useStore();
+    const { onCopy } = useClipboard();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
     const amount = ref<string>('0');
@@ -111,6 +116,14 @@ export default defineComponent({
     const loading = ref<boolean>(false);
 
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
+
+    const curl = computed(() => {
+      const coinRaw = new BigNumber(amount.value);
+      const coin = (coinRaw.isNaN() || coinRaw.isNegative()) ? new BigNumber(0) : coinRaw;
+
+      return `curl -X POST -d '{"address": "${session.value?.address ?? ''}", "coins": ["${coin.div(1e-6).toString()}ubtsg"]}' https://faucet.testnet.bitsong.network`;
+    });
 
     const close = () => {
       dialogRef.value?.hide();
@@ -139,6 +152,7 @@ export default defineComponent({
     }
 
     return {
+      curl,
       error,
       loading,
       network,
@@ -151,7 +165,8 @@ export default defineComponent({
       isNaN,
       gtnZero,
       onDialogHide,
-      onSubmit
+      onSubmit,
+      onCopy
     }
   },
 })
@@ -201,7 +216,7 @@ export default defineComponent({
 
 .field-block {
   &:not(:last-of-type) {
-    margin-bottom: 60px;
+    margin-bottom: 26px;
   }
 }
 
@@ -238,5 +253,15 @@ export default defineComponent({
 .ibc-info {
   pointer-events: all;
   cursor: help;
+}
+
+.description-block {
+  word-break: break-word;
+  white-space: nowrap;
+  background-color: $transparent-gray;
+  backdrop-filter: blur(60px);
+  border-radius: 10px;
+  padding: 26px;
+  max-width: 100%;
 }
 </style>
