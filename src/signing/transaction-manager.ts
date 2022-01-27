@@ -218,15 +218,29 @@ export const createBitsongSignBroadcast = async ({
           memo
         );
         break;
-     /*  ì
       case MessageTypes.BURN_FANTOKEN:
-        txResult = await signingBitsong.issueFanToken(
-          message.symbol ?? '',
-          message.name ?? '',
-          maxSupply,
-          message.description ?? '',
+        txResult = await signingBitsong.burnFanToken(
+          message.denom ?? '',
+          amount,
           senderAddress,
-          issueFee,
+          defaultFee,
+          memo
+        );
+        break;
+      case MessageTypes.DISABLE_MINT_FANTOKEN:
+        txResult = await signingBitsong.editFanToken(
+          message.denom ?? '',
+          message.mintable ? true : false,
+          senderAddress,
+          defaultFee,
+          memo
+        );
+        break;
+      /* case MessageTypes.CHANGE_OWNER_FANTOKEN:
+        txResult = await signingBitsong.editFanToken(
+          message.denom ?? '',
+          message.mintable ? true : false,
+          message.to ?? '',
           defaultFee,
           memo
         );

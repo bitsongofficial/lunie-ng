@@ -20,6 +20,8 @@ export enum MessageTypes {
   ISSUE_FANTOKEN = 'IssueFantokenTx',
   MINT_FANTOKEN = 'MintFantokenTx',
   BURN_FANTOKEN = 'BurnFantokenTx',
+  CHANGE_OWNER_FANTOKEN = 'ChangeOwnerFantokenTx',
+  DISABLE_MINT_FANTOKEN = 'DisableMintFantokenTx',
   UNKNOWN = 'UnknownTx',
 };
 
@@ -54,6 +56,7 @@ export interface TransactionBitsongRequest extends Partial<IssueFantokenRequest>
   to?: string;
   amount?: string;
   denom?: string;
+  mintable?: boolean;
 }
 
 export interface TransactionBitsongRequestWithType {

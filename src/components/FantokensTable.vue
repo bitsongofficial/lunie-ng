@@ -69,16 +69,16 @@
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" @click="openMintDialog(props.row)" clickable v-close-popup>
+              <q-item class="menu-item" active-class="active" @click="openMintDialog(props.row)" :clickable="props.row.mintable" :disable="!props.row.mintable" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Mint</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+              <q-item class="menu-item" active-class="active" @click="openBurnDialog(props.row)" clickable v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Burn</q-item-section>
               </q-item>
-              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+              <!-- <q-item class="menu-item" active-class="active" @click="openChangeOwnerDialog(props.row)" clickable v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Change Owner</q-item-section>
-              </q-item>
-              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+              </q-item> -->
+              <q-item class="menu-item" active-class="active" @click="openDisableMintDialog(props.row)" :clickable="props.row.mintable" :disable="!props.row.mintable" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Disable Mint</q-item-section>
               </q-item>
             </q-menu>
@@ -93,8 +93,12 @@
 import { defineComponent, computed, PropType } from 'vue';
 import { FanTokenMapped } from 'src/models';
 import { useQuasar } from 'quasar';
-import MintDialog from './MintDialog.vue';
 import { useStore } from 'src/store';
+
+import DisableMintDialog from './DisableMintDialog.vue';
+import ChangeOwnerDialog from './ChangeOwnerDialog.vue';
+import MintDialog from './MintDialog.vue';
+import BurnDialog from './BurnDialog.vue';
 
 export default defineComponent({
   name: 'FantokensTable',
@@ -171,11 +175,53 @@ export default defineComponent({
       });
     }
 
+    const openBurnDialog = (fantokenMapped: FanTokenMapped) => {
+      const fantoken = store.state.fantoken.fantokens.find(el => el.metaData?.base === fantokenMapped.metaData?.base);
+
+      quasar.dialog({
+        component: BurnDialog,
+        componentProps: {
+          fantoken,
+        },
+        fullWidth: true,
+        maximized: true
+      });
+    }
+
+    const openChangeOwnerDialog = (fantokenMapped: FanTokenMapped) => {
+      const fantoken = store.state.fantoken.fantokens.find(el => el.metaData?.base === fantokenMapped.metaData?.base);
+
+      quasar.dialog({
+        component: ChangeOwnerDialog,
+        componentProps: {
+          fantoken,
+        },
+        fullWidth: true,
+        maximized: true
+      });
+    }
+
+    const openDisableMintDialog = (fantokenMapped: FanTokenMapped) => {
+      const fantoken = store.state.fantoken.fantokens.find(el => el.metaData?.base === fantokenMapped.metaData?.base);
+
+      quasar.dialog({
+        component: DisableMintDialog,
+        componentProps: {
+          fantoken,
+        },
+        fullWidth: true,
+        maximized: true
+      });
+    }
+
     return {
       pagination,
       columns,
       visibleColumns,
-      openMintDialog
+      openMintDialog,
+      openBurnDialog,
+      openChangeOwnerDialog,
+      openDisableMintDialog
     }
   }
 });

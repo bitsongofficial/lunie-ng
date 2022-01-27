@@ -110,6 +110,12 @@ export const gtnZero = (amount: string): boolean => {
   return number.gt(0);
 }
 
+export const gteCompare = (amount: string, compare: string): boolean => {
+  const number = new BigNumber(amount);
+
+  return number.gte(new BigNumber(compare));
+}
+
 export const getAPR = (supply: string, inflation: string, bondedTokens: string) => {
   const supplyNumber = new BigNumber(supply);
   const inflationNumber = new BigNumber(inflation);
