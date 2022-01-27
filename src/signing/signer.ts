@@ -4,7 +4,7 @@ import { getWallet } from 'src/common/keystore';
 import { getLedger } from 'src/common/ledger';
 import Transport from '@ledgerhq/hw-transport';
 
-export const getSigner = async (signingType: SessionType, { address, password }: WalletSignData, chainId: string, ledgerTransport?: Transport<string>) => {
+export const getSigner = async (signingType: SessionType, { address, password }: WalletSignData, chainId: string, ledgerTransport?: Transport) => {
   if (signingType === SessionType.LOCAL) {
     const serializedWallet = getWallet(address);
 
@@ -23,7 +23,7 @@ export const getSigner = async (signingType: SessionType, { address, password }:
       return result.ledger;
     }
   } else if (signingType === SessionType.KEPLR && window.keplr) {
-    return window.keplr.getOfflineSignerOnlyAmino(chainId);
+    return window.keplr.getOfflineSigner(chainId);
   }
 
   throw new Error(`Signing via ${signingType} is not supported`);

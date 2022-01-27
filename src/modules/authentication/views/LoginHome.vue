@@ -9,7 +9,7 @@
       <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" reverse />
       <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" reverse>
         <template v-slot:right>
-          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
             <label class="text-center full-width">
               Soon
             </label>
@@ -18,7 +18,7 @@
       </item>
       <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App" reverse>
         <template v-slot:right>
-          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
+          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
             <label class="text-center full-width">
               Soon
             </label>
@@ -116,6 +116,7 @@ export default defineComponent({
   border-radius: 25px;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
 }
 
 .signout-btn {

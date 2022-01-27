@@ -969,10 +969,10 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@bitsongjs/sdk@1.0.0-dev-9":
-  version "1.0.0-dev-9"
-  resolved "https://registry.yarnpkg.com/@bitsongjs/sdk/-/sdk-1.0.0-dev-9.tgz#2dd8a299c804a6a074aa28e9aeaa722a7d397603"
-  integrity sha512-ZT8BQnnPqeOuexqftSDelotK875KFD095gJN0nNp7bUuYI07My4ywUt67PqysHEPsNJ3JpfqRv3Lmdg3BjIdog==
+"@bitsongjs/sdk@1.0.0-dev-11":
+  version "1.0.0-dev-11"
+  resolved "https://registry.yarnpkg.com/@bitsongjs/sdk/-/sdk-1.0.0-dev-11.tgz#c2c078221a3dfc89669b2df4e97436ad8ad3fe8f"
+  integrity sha512-wog87WD2/X9W+Cu6NB0dB2k01VtD9fW8r3dzSyFQFUFVQCIyDTneTAf6/jg8URr0gJad0qVme+DQE4H95xuFGQ==
   dependencies:
     "@cosmjs/crypto" "^0.26.0"
     "@cosmjs/encoding" "^0.26.0"
@@ -981,14 +981,10 @@
     "@cosmjs/stargate" "^0.26.0"
     "@cosmjs/tendermint-rpc" "^0.26.0"
     "@cosmjs/utils" "^0.26.0"
-    "@ledgerhq/hw-app-cosmos" "^5.46.0"
-    "@ledgerhq/hw-transport" "^5.46.0"
     "@types/crypto-js" "^4.0.1"
-    "@types/ledgerhq__hw-transport" "^4.21.3"
     "@types/uuid" "^8.3.0"
     crypto-browserify "^3.12.0"
     crypto-js "^4.0.0"
-    ledger-bitsong-js "^0.1.0-dev-1"
     long "^4.0.0"
     semver "^7.3.5"
     uuid "^8.3.2"
@@ -1456,15 +1452,6 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-6.10.0.tgz#dda9127b65f653fbb2f74a55e8f0e550d69de6e4"
   integrity sha512-fQFnl2VIXh9Yd41lGjReCeK+Q2hwxQJvLZfqHnKqWapTz68NHOv5QcI0OHuZVNEbv0xhgdLhi5b65kgYeQSUVg==
 
-"@ledgerhq/hw-app-cosmos@^5.46.0":
-  version "5.51.1"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-cosmos/-/hw-app-cosmos-5.51.1.tgz#ced2dac2fcd464eda50ab4c5b558fe798e897bf6"
-  integrity sha512-e9hutrWxDOPzS5Lo32z8stXhvBFXzfZi/b6/6BWnkUGVqAo5NzDF9C5lCimy88f+uao9U+gi27fGHXDCMea49A==
-  dependencies:
-    "@ledgerhq/errors" "^5.50.0"
-    "@ledgerhq/hw-transport" "^5.51.1"
-    bip32-path "^0.4.2"
-
 "@ledgerhq/hw-transport-webhid@^6.20.0":
   version "6.20.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webhid/-/hw-transport-webhid-6.20.0.tgz#5341a02b31663bc5259ef055b147e35be15c9b35"
@@ -1485,7 +1472,7 @@
     "@ledgerhq/hw-transport" "^6.20.0"
     "@ledgerhq/logs" "^6.10.0"
 
-"@ledgerhq/hw-transport@^5.25.0", "@ledgerhq/hw-transport@^5.46.0", "@ledgerhq/hw-transport@^5.51.1":
+"@ledgerhq/hw-transport@^5.25.0":
   version "5.51.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-5.51.1.tgz#8dd14a8e58cbee4df0c29eaeef983a79f5f22578"
   integrity sha512-6wDYdbWrw9VwHIcoDnqWBaDFyviyjZWv6H9vz9Vyhe4Qd7TIFmbTl/eWs6hZvtZBza9K8y7zD8ChHwRI4s9tSw==
@@ -1860,13 +1847,6 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
-
-"@types/ledgerhq__hw-transport@^4.21.3":
-  version "4.21.4"
-  resolved "https://registry.yarnpkg.com/@types/ledgerhq__hw-transport/-/ledgerhq__hw-transport-4.21.4.tgz#3a78a02d2b51d2b0dd8099412d5567d21118225c"
-  integrity sha512-vep+6yZnGv6owAthIY0w3f72w4dJIb4+yE5PCHveInTlZE9wukvU6Wc5Eig0OUUxcdhTazzeZx1xUaNVLqyQSg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/lodash@^4.14.178":
   version "4.14.178"
@@ -2663,11 +2643,6 @@ binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
-
-bip32-path@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/bip32-path/-/bip32-path-0.4.2.tgz#5db0416ad6822712f077836e2557b8697c0c7c99"
-  integrity sha1-XbBBataCJxLwd4NuJVe4aXwMfJk=
 
 bip39@^3.0.2:
   version "3.0.4"
@@ -5335,16 +5310,6 @@ lazystream@^1.0.0:
   integrity sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==
   dependencies:
     readable-stream "^2.0.5"
-
-ledger-bitsong-js@^0.1.0-dev-1:
-  version "0.1.0-dev-1"
-  resolved "https://registry.yarnpkg.com/ledger-bitsong-js/-/ledger-bitsong-js-0.1.0-dev-1.tgz#7b90deb2f76c187ad64e59ac5b665893b9352c4b"
-  integrity sha512-g2mZRvOxjDpADCBsjlnfTQrZ8y7zurrib5vn57NfFO3gJuFHirQxdEwYYv/AsPK2MvgQp/ofiVfh/H+t9dhIwQ==
-  dependencies:
-    "@babel/runtime" "^7.11.2"
-    "@ledgerhq/hw-transport" "^5.25.0"
-    bech32 "^1.1.4"
-    ripemd160 "^2.0.2"
 
 ledger-cosmos-js@^2.1.8:
   version "2.1.8"

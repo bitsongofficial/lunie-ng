@@ -25,7 +25,6 @@
           :props="props"
           class="text-body4 text-uppercase text-half-transparent-white text-weight-medium balances-table-head-col"
           :class="{
-            'fantoken': fantoken,
             [col.name]: true,
           }"
         >
@@ -41,23 +40,48 @@
               {{ props.row.denom }}
             </p>
             <p class="balance-name q-my-none text-subtitle2" v-else>
-              {{ props.row.name }} <span class="text-half-transparent-white q-ml-lg text-uppercase">{{ props.row.display }}</span>
+              {{ props.row.name }} <span class="text-half-transparent-white q-ml-lg text-uppercase">{{ props.row.metaData.display }}</span>
             </p>
           </div>
         </q-td>
-        <q-td key="total" class="text-subtitle2 text-white total" :props="props">
+        <q-td key="minted" class="text-subtitle2 text-white total" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.total }}
+            {{ props.row.minted }}
           </p>
         </q-td>
-        <q-td key="available" class="text-subtitle2 text-white available" :props="props">
+        <q-td key="burned" class="text-subtitle2 text-white total" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.available }}
+            {{ props.row.burned }}
+          </p>
+        </q-td>
+        <q-td key="supply" class="text-subtitle2 text-white total" :props="props">
+          <p class="text-subtitle2 q-my-none">
+            {{ props.row.supply }}
+          </p>
+        </q-td>
+        <q-td key="max-supply" class="text-subtitle2 text-white total" :props="props">
+          <p class="text-subtitle2 q-my-none">
+            {{ props.row.maxSupply }}
           </p>
         </q-td>
         <q-td key="actions" class="actions" :props="props">
-          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)">
-            <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
+          <q-btn flat unelevated padding="2px" @click.stop="">
+            <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
+
+            <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
+              <q-item class="menu-item" active-class="active" @click="openMintDialog(props.row)" clickable v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Mint</q-item-section>
+              </q-item>
+              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Burn</q-item-section>
+              </q-item>
+              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Change Owner</q-item-section>
+              </q-item>
+              <q-item class="menu-item" active-class="active" clickable v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Disable Mint</q-item-section>
+              </q-item>
+            </q-menu>
           </q-btn>
         </q-td>
       </q-tr>
@@ -67,32 +91,26 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue';
-import { Balance } from 'src/models';
+import { FanTokenMapped } from 'src/models';
 import { useQuasar } from 'quasar';
-import SendDialog from './SendDialog.vue';
+import MintDialog from './MintDialog.vue';
 import { useStore } from 'src/store';
 
 export default defineComponent({
-  name: 'BalancesTable',
+  name: 'FantokensTable',
   props: {
     loading: {
       type: Boolean,
       default: false,
     },
     rows: {
-      type: Array as PropType<Balance[]>,
+      type: Array as PropType<FanTokenMapped[]>,
       default: () => [],
     },
-    fantoken: {
-      type: Boolean,
-      default: false,
-    }
   },
-  setup(props) {
+  setup() {
     const store = useStore();
     const quasar = useQuasar();
-
-    const network = computed(() => store.state.authentication.network);
 
     const pagination = {
       descending: true,
@@ -107,16 +125,28 @@ export default defineComponent({
         field: 'name',
       },
       {
-        name: 'total',
-        label: 'Total',
+        name: 'minted',
+        label: 'Minted',
         align: 'center',
-        field: 'total',
+        field: 'minted',
       },
       {
-        name: 'available',
-        label: 'Available',
+        name: 'burned',
+        label: 'Burned',
         align: 'center',
-        field: 'available',
+        field: 'burned',
+      },
+      {
+        name: 'supply',
+        label: 'Supply',
+        align: 'center',
+        field: 'supply',
+      },
+      {
+        name: 'max-supply',
+        label: 'Max Supply',
+        align: 'center',
+        field: 'max-supply',
       },
       {
         name: 'actions',
@@ -125,18 +155,16 @@ export default defineComponent({
     ]);
 
     const visibleColumns = computed<string[]>(() => {
-      if (props.fantoken) {
-        return ['name', 'available', 'actions'];
-      }
-
-      return ['name', 'total', 'available', 'actions'];
+      return ['name', 'minted', 'burned', 'supply', 'max-supply', 'actions'];
     });
 
-    const openSendDialog = (balance: Balance) => {
+    const openMintDialog = (fantokenMapped: FanTokenMapped) => {
+      const fantoken = store.state.fantoken.fantokens.find(el => el.metaData?.base === fantokenMapped.metaData?.base);
+
       quasar.dialog({
-        component: SendDialog,
+        component: MintDialog,
         componentProps: {
-          denom: balance.denom === network.value.stakingDenom ? undefined : balance.denom,
+          fantoken,
         },
         fullWidth: true,
         maximized: true
@@ -147,7 +175,7 @@ export default defineComponent({
       pagination,
       columns,
       visibleColumns,
-      openSendDialog
+      openMintDialog
     }
   }
 });
@@ -177,19 +205,23 @@ export default defineComponent({
   }
 
   &.name {
-    width: 50%;
-
-    &.fantoken {
-      width: 70%;
-    }
+    width: auto;
   }
 
-  &.total {
-    width: 20%;
+  &.minted {
+    width: 10%;
   }
 
-  &.available {
-    width: 20%;
+  &.burned {
+    width: 10%;
+  }
+
+  &.max-supply {
+    width: 10%;
+  }
+
+  &.fee {
+    width: 10%;
   }
 
   &.actions {

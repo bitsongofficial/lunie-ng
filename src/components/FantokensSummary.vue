@@ -9,7 +9,7 @@
 Try to istance your first fantoken serie.
       </p>
 
-      <q-btn class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
         CREATE FANTOKEN <q-icon class="validators-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
       </q-btn>
     </div>
@@ -18,14 +18,19 @@ Try to istance your first fantoken serie.
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent } from 'vue';
+import { useStore } from 'src/store';
+import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   name: 'FantokensSummary',
   setup() {
+    const store = useStore();
     const quasar = useQuasar();
 
+    const session = computed(() => store.state.authentication.session);
+
     return {
+      session,
       quasar,
     }
   }

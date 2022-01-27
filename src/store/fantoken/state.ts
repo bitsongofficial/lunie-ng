@@ -1,14 +1,16 @@
-import { FanToken } from '@bitsongjs/sdk/build/codec/fantoken/fantoken';
+import { FantokenParams, FanTokenWithStats } from 'src/models';
 
 export interface FantokenStateInterface {
   loading: boolean;
-  fantokens: FanToken[];
+  fantokens: FanTokenWithStats[];
+  params: FantokenParams | null;
 }
 
 function state (): FantokenStateInterface {
   return {
     loading: false,
-    fantokens: []
+    fantokens: [],
+    params: null
   };
 }
 

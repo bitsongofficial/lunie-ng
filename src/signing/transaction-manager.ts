@@ -1,15 +1,17 @@
-import { MessageTypes, SignBroadcastRequest, SignMessageRequest } from 'src/models';
+import { BitsongSignBroadcastRequest, MessageTypes, SignBroadcastRequest, SignMessageRequest } from 'src/models';
 import { getNetworkFee } from 'src/common/fees';
 import { BigNumber } from 'bignumber.js';
 import { coins } from '@cosmjs/amino';
 import {
   SigningStargateClient,
   assertIsBroadcastTxSuccess,
+  BroadcastTxResponse,
 } from '@cosmjs/stargate';
 import { getSigner } from './signer';
 import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx } from './messages';
 import { getCoinLookup } from 'src/common/network';
 import Store from 'src/store';
+import { SigningBitsongClient, Constants } from '@bitsongjs/sdk';
 
 export const getFees = (transactionType: string, feeDenom: string) => {
   const { gasEstimate, feeOptions } = getNetworkFee(transactionType)
@@ -131,6 +133,116 @@ export const createSignBroadcast = async ({
   return {
     hash: txResult.transactionHash,
   };
+}
+
+export const createBitsongSignBroadcast = async ({
+  messageType,
+  message,
+  senderAddress,
+  signingType,
+  chainId,
+  memo,
+  ledgerTransport,
+}: BitsongSignBroadcastRequest) => {
+  try {
+    const signer = await getSigner(
+      signingType,
+      {
+        address: senderAddress,
+        password: '',
+      },
+      chainId,
+      ledgerTransport
+    );
+
+    const defaultFee = {
+      amount: [
+        {
+          denom: Constants.MicroDenom,
+          amount: '2000',
+        },
+      ],
+      gas: '180000', // 180k
+    };
+
+    const defaultIssueFee = {
+      denom: Constants.MicroDenom,
+      amount: '1000000',
+    };
+
+    const params = Store.state.fantoken.params;
+    let issueFee;
+
+    if (params) {
+      issueFee = {
+        denom: params.issue_price.denom,
+        amount: params.issue_price.amount
+      };
+    }
+
+    const signingBitsong = await SigningBitsongClient.connectWithSigner(
+      Store.state.authentication.network.rpcURL,
+      signer
+    );
+
+    let txResult: BroadcastTxResponse | undefined = undefined;
+
+    const amount = new BigNumber(message.amount ? message.amount : '0')
+      .div(1e-6)
+      .toString();
+
+    switch(messageType) {
+      case MessageTypes.ISSUE_FANTOKEN:
+        const maxSupply = new BigNumber(message.maxSupply ? message.maxSupply : '0')
+        .div(1e-6)
+        .toString();
+
+        txResult = await signingBitsong.issueFanToken(
+          message.symbol ?? '',
+          message.name ?? '',
+          maxSupply,
+          message.description ?? '',
+          senderAddress,
+          issueFee ?? defaultIssueFee,
+          defaultFee,
+          memo
+        );
+        break;
+      case MessageTypes.MINT_FANTOKEN:
+        txResult = await signingBitsong.mintFanToken(
+          message.to ?? '',
+          message.denom ?? '',
+          amount,
+          senderAddress,
+          defaultFee,
+          memo
+        );
+        break;
+     /*  ì
+      case MessageTypes.BURN_FANTOKEN:
+        txResult = await signingBitsong.issueFanToken(
+          message.symbol ?? '',
+          message.name ?? '',
+          maxSupply,
+          message.description ?? '',
+          senderAddress,
+          issueFee,
+          defaultFee,
+          memo
+        );
+        break; */
+    }
+
+    if (txResult) {
+      assertIsBroadcastTxSuccess(txResult);
+
+      return {
+        hash: txResult.transactionHash,
+      };
+    }
+  } catch (error) {
+    throw error;
+  }
 }
 
 export const pollTxInclusion = async (txHash: string, iteration = 0): Promise<unknown> => {

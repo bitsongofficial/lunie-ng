@@ -42,17 +42,13 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     const fantokens = [...fantoken.fantokens];
     const stakingDenom = authentication.network.stakingDenom;
     const balancesMap = balances.map(balance => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const fantoken = fantokens.find(el => el.meta_data.base === balance.denom);
+      const fantoken = fantokens.find(el => el.metaData?.base === balance.denom);
 
       if (fantoken) {
         return {
           ...mapBalance(balance, stakingDenom),
           name: fantoken.name,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          display: fantoken.meta_data.display as string
+          display: fantoken.metaData?.display as string
         };
       }
     });

@@ -1,12 +1,12 @@
 <template>
   <q-page class="fantokens">
     <div class="section">
-      <div class="row items-center justify-between no-wrap section-header">
-        <h2 class="section-title section-title text-body-large text-white">
+      <div class="section-header row items-center justify-between">
+        <h2 class="section-title text-body-large text-white col-12 col-md-auto">
           Fantoken Lab
         </h2>
 
-        <q-btn class="btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
+        <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" v-if="fantokenByOwner.length > 0" class="create-btn btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
           CREATE FANTOKEN <q-icon class="arrow-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
         </q-btn>
       </div>
@@ -17,29 +17,40 @@
         mode="out-in"
         appear
       >
-        <fantokens-summary />
+        <fantokens-summary v-if="fantokenByOwner.length === 0" />
+        <fantokens-table :rows="fantokenByOwner" :loading="loading" v-else />
       </transition>
     </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useQuasar } from 'quasar';
+import { defineComponent, computed } from 'vue';
+
+import { useStore } from 'src/store';
 
 import FantokensSummary from 'src/components/FantokensSummary.vue';
+import FantokensTable from 'src/components/FantokensTable.vue';
+import { FanTokenMapped } from 'src/models';
 
 export default defineComponent({
   name: 'Fantokens',
   components: {
     FantokensSummary,
+    FantokensTable
   },
   setup() {
-    const quasar = useQuasar();
+    const store = useStore();
+
+    const fantokenByOwner = computed(() => store.getters['fantoken/fantokenByOwner'] as FanTokenMapped[]);
+    const session = computed(() => store.state.authentication.session);
+    const loading = computed(() => store.state.fantoken.loading);
 
     return {
-      quasar
-    };
+      session,
+      fantokenByOwner,
+      loading
+    }
   },
 });
 </script>
@@ -72,34 +83,16 @@ export default defineComponent({
   }
 }
 
-.chain-stats-grid {
-  display: grid;
-  grid-gap: 32px;
-
-  @media screen and (min-width: $breakpoint-md-min) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.balance-summary {
-  margin-bottom: 68px;
-}
-
 .section {
   margin-bottom: 62px;
 }
 
-.section-balance {
-  padding-right: 0;
-  margin-left: auto;
+.create-btn {
+  margin-top: 16px;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    padding-right: 46px;
+    margin-top: 0;
   }
-}
-
-.section-total {
-  margin-right: 12px;
 }
 
 .section-title {

@@ -13,7 +13,7 @@
         mode="out-in"
         appear
       >
-        <q-form class="issue-form">
+        <q-form class="issue-form" @submit="submit">
           <div class="row q-col-gutter-custom">
             <div class="column col-12">
               <label class="text-capitalize text-white text-h4 text-weight-medium q-mb-md">Name</label>
@@ -45,9 +45,9 @@
                 no-error-icon
                 hide-bottom-space
                 class="full-width extra-large small-radius"
-                placeholder="Ex. $CLAY, BTSG"
+                placeholder="Ex. CLAY, BTSG"
                 :rules="[
-                  val => !!val || 'Required field'
+                  val => !!val || 'Required field',
                 ]"
               />
             </div>
@@ -93,7 +93,7 @@
             <div class="issue-fee row items-center">
               <p class="text-subtitle2 text-weight-medium text-white q-mb-none q-mr-lg">Issue Fee</p>
               <p class="text-subtitle2 text-weight-medium text-half-transparent-white q-mb-none">
-                10 <span class="text-body3">{{ network.stakingDenom }}</span>
+                {{ issueFee }} <span class="text-body3">{{ network.stakingDenom }}</span>
               </p>
               <div class="info">
                 <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="14px" color="gray4" />
@@ -102,7 +102,7 @@
                 </q-tooltip>
               </div>
             </div>
-            <q-btn type="submit" :disable="!session || (session && session.sessionType !== 'keplr')" class="issue-btn btn-large text-body2 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
+            <q-btn type="submit" :loading="loading" :disable="!session || (session && session.sessionType !== 'keplr')" class="issue-btn btn-large text-body2 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
               ISSUE
             </q-btn>
           </div>
@@ -113,28 +113,63 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue';
+import { defineComponent, reactive, computed, ref } from 'vue';
 import { isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { useStore } from 'src/store';
+import { IssueFantokenRequest, MessageTypes } from 'src/models';
+import { notifyError, notifySuccess } from 'src/common/notify';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'IssueFantoken',
   setup() {
+    const router = useRouter();
     const store = useStore();
     const session = computed(() => store.state.authentication.session);
     const network = computed(() => store.state.authentication.network);
+    const issueFee = computed(() => store.getters['fantoken/issueFee'] as string);
 
-    const request = reactive({
+    const request = reactive<IssueFantokenRequest>({
       name: '',
       symbol: '',
       maxSupply: '0',
       description: ''
     });
+    const loading = ref(false);
+
+    const submit = async () => {
+      try {
+        loading.value = true;
+
+        const requestToSign = {
+          type: MessageTypes.ISSUE_FANTOKEN,
+          message: {
+            ...request,
+            symbol: request.symbol.toLowerCase()
+          },
+        };
+
+        await store.dispatch('data/signBitsongTransaction', requestToSign);
+
+        notifySuccess('Fantoken issue success!');
+
+        await router.replace({ name: 'fantokens' });
+      } catch (err) {
+        console.error(err);
+
+        notifyError('Something went wrong, please try again later');
+      } finally {
+        loading.value = false;
+      }
+    }
 
     return {
+      loading,
       network,
       session,
       request,
+      issueFee,
+      submit,
       isNegative,
       isNaN,
       gtnZero
