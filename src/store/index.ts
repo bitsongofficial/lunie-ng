@@ -48,7 +48,7 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 
 const plugins: Plugin<StateInterface>[] = [
   createPersistedState({
-    paths: ['authentication', 'data', 'keplr', 'ledger']
+    paths: ['authentication', 'data', 'keplr', 'ledger', 'fantoken']
   }),
 ];
 

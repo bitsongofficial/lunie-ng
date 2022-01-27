@@ -7,7 +7,6 @@ import { FantokenStateInterface } from './state';
 const actions: ActionTree<FantokenStateInterface, StateInterface> = {
   async getFantokens({ commit }) {
     try {
-      commit('setLoading', true);
       // Query owner empty to get all coins
       const fantokensRaw = await bitsong.getAllFanTokensByOwner('');
       const burnedCoins = await getBurnedTokens();
@@ -27,12 +26,11 @@ const actions: ActionTree<FantokenStateInterface, StateInterface> = {
       commit('setFantokens', fantokens);
     } catch (error) {
       console.error(error);
-    } finally {
-      commit('setLoading', false);
     }
   },
   async init({ dispatch, commit }) {
     try {
+      commit('setLoading', true);
       await initBitsong();
 
       const params = await getFantokensParams();
@@ -42,14 +40,19 @@ const actions: ActionTree<FantokenStateInterface, StateInterface> = {
     } catch (error) {
       console.error(error);
       throw error;
+    } finally {
+      commit('setLoading', false);
     }
   },
-  async refresh({ dispatch }) {
+  async refresh({ dispatch, commit }) {
     try {
+      commit('setLoading', true);
       await dispatch('getFantokens');
     } catch (error) {
       console.error(error);
       throw error;
+    } finally {
+      commit('setLoading', false);
     }
   },
 }

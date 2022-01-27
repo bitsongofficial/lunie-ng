@@ -17,8 +17,16 @@
         mode="out-in"
         appear
       >
-        <fantokens-summary v-if="fantokenByOwner.length === 0" />
-        <fantokens-table :rows="fantokenByOwner" :loading="loading" v-else />
+        <fantokens-table :rows="fantokenByOwner" :loading="loading" v-if="loading || fantokenByOwner.length > 0" />
+      </transition>
+
+      <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        mode="out-in"
+        appear
+      >
+        <fantokens-summary v-if="fantokenByOwner.length === 0 && !loading" />
       </transition>
     </div>
   </q-page>
