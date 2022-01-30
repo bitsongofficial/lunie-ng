@@ -16,6 +16,7 @@
         <balances-table :rows="balances" :loading="!balancesLoaded || loading" />
       </div>
     </transition>
+
     <transition
       enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut"
@@ -29,7 +30,8 @@
           </h2>
         </div>
 
-        <balances-table :rows="fantokenBalances" :loading="!balancesLoaded || loading" fantoken />
+        <fantokens-summary class="fantokens-summary" v-if="fantokenBalances.length === 0 && (balancesLoaded && !loading)"></fantokens-summary>
+        <balances-table :rows="fantokenBalances" :loading="!balancesLoaded || loading" fantoken v-else />
       </div>
     </transition>
   </q-page>
@@ -41,11 +43,13 @@ import { useStore } from 'src/store';
 import { Balance } from 'src/models';
 
 import BalancesTable from 'src/components/BalancesTable.vue';
+import FantokensSummary from 'src/components/FantokensSummary.vue';
 
 export default defineComponent({
   name: 'Assets',
   components: {
-    BalancesTable
+    BalancesTable,
+    FantokensSummary
   },
   setup() {
     const store = useStore();
@@ -94,5 +98,9 @@ export default defineComponent({
 
 .balance-section {
   margin-bottom: 62px;
+}
+
+.fantokens-summary {
+  margin-top: 42px;
 }
 </style>

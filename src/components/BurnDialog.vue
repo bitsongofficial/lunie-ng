@@ -30,7 +30,6 @@
               round
               standout
               no-error-icon
-              hide-bottom-space
               class="quantity-input full-width large"
               :rules="[
                 val => !!val || 'Required field',
@@ -39,6 +38,7 @@
                 val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
                 val => !isNegative(val) || 'Amount must be greater then zero'
               ]"
+              placeholder="0"
             >
               <template v-slot:append>
                 <label class="text-body2 text-half-transparent-white text-uppercase">{{ fantoken.metaData?.display }}</label>
@@ -121,7 +121,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
     const request = reactive<TransactionBitsongRequest>({
-      amount: '0'
+      amount: ''
     });
 
     const success = ref<boolean>(false);

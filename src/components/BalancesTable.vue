@@ -56,7 +56,7 @@
           </p>
         </q-td>
         <q-td key="actions" class="actions" :props="props">
-          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)">
+          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr')">
             <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
         </q-td>
@@ -93,6 +93,7 @@ export default defineComponent({
     const quasar = useQuasar();
 
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
 
     const pagination = {
       descending: true,
@@ -144,6 +145,7 @@ export default defineComponent({
     }
 
     return {
+      session,
       pagination,
       columns,
       visibleColumns,

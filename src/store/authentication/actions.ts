@@ -31,10 +31,9 @@ const actions: ActionTree<AuthenticationStateInterface, StateInterface> = {
       commit('setSession', session);
 
       if (session) {
+        await dispatch('fantoken/init', undefined, { root: true });
         await dispatch('data/refresh', undefined, { root: true });
       }
-
-      await dispatch('fantoken/init', undefined, { root: true });
     } catch (error) {
       await dispatch('data/resetSessionData', undefined, { root: true });
       console.error('Err:', error);

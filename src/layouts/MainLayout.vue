@@ -14,7 +14,7 @@
 
             <p class="text-body-large text-weight-medium text-white q-my-none text-lowercase" v-if="!quasar.screen.lt.md">wallet</p>
 
-            <q-badge label="TESTNET" class="logo-badge text-weight-medium text-caption-2" text-color="dark" color="primary"></q-badge>
+            <q-badge label="TESTNET" class="logo-badge text-weight-medium text-uppercase text-caption-2" text-color="dark" color="primary"></q-badge>
           </q-btn>
         </q-toolbar-title>
 

@@ -30,7 +30,6 @@
               round
               standout
               no-error-icon
-              hide-bottom-space
               class="full-width large"
               :rules="[val => !!val || 'Field is required', val => isValidAddress(val) || 'Invalid address']"
             >
@@ -51,7 +50,6 @@
               round
               standout
               no-error-icon
-              hide-bottom-space
               class="quantity-input full-width large"
               :rules="[
                 val => !!val || 'Required field',
@@ -60,6 +58,7 @@
                 val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
                 val => !isNegative(val) || 'Amount must be greater then zero'
               ]"
+              placeholder="0"
             >
               <template v-slot:append>
                 <label class="text-body2 text-half-transparent-white text-uppercase">{{ fantoken.metaData?.display }}</label>
@@ -137,7 +136,7 @@ export default defineComponent({
 
     const request = reactive<TransactionBitsongRequest>({
       to: '',
-      amount: '0'
+      amount: ''
     });
 
     const success = ref<boolean>(false);

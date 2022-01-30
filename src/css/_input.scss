@@ -2,7 +2,7 @@
 .q-input,
 .q-textarea {
   & .q-field__native {
-    color: $half-transparent-white !important;
+    color: $white !important;
 
     &::placeholder {
       color: $half-transparent-white !important;
@@ -53,6 +53,18 @@
       height: 62px;
       padding-left: 25px;
       padding-right: 28px;
+    }
+  }
+
+  &.extra-large-fluid {
+    & .q-field__control {
+      height: unset;
+      padding-left: 25px;
+      padding-right: 28px;
+    }
+
+    & .q-field__native {
+      padding-bottom: 17px;
     }
   }
 

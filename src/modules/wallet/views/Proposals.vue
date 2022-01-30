@@ -89,7 +89,6 @@ export default defineComponent({
 
 .section-title {
   margin: 0 32px 0 0;
-  padding-left: 32px;
 }
 
 .filter {
