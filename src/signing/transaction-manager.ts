@@ -236,15 +236,15 @@ export const createBitsongSignBroadcast = async ({
           memo
         );
         break;
-      /* case MessageTypes.CHANGE_OWNER_FANTOKEN:
-        txResult = await signingBitsong.editFanToken(
+      case MessageTypes.CHANGE_OWNER_FANTOKEN:
+        txResult = await signingBitsong.transferFanTokenOwner(
           message.denom ?? '',
-          message.mintable ? true : false,
+          senderAddress,
           message.to ?? '',
           defaultFee,
           memo
         );
-        break; */
+        break;
     }
 
     if (txResult) {

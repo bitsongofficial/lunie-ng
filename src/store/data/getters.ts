@@ -55,6 +55,26 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return sortBy(compact(balancesMap), 'display');
   },
+  fantokenBalancesRaw({ balances }, _getters, { fantoken }): Balance[] {
+    const fantokens = [...fantoken.fantokens];
+    const balancesMap = balances.map(balance => {
+      const fantoken = fantokens.find(el => el.metaData?.base === balance.denom);
+
+      if (fantoken) {
+        return {
+          ...balance,
+          available: new BigNumber(balance.available)
+            .multipliedBy(1e-6),
+          total: new BigNumber(balance.available)
+            .multipliedBy(1e-6),
+          name: fantoken.name,
+          display: fantoken.metaData?.display as string
+        };
+      }
+    });
+
+    return sortBy(compact(balancesMap), 'display');
+  },
   currentBalance({ balances }, _getters, { authentication }) {
     const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
 
