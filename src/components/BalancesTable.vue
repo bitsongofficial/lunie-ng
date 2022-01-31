@@ -59,6 +59,16 @@
           <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr')">
             <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
+
+          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr')">
+            <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
+
+            <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
+              <q-item class="menu-item" active-class="active" @click="openBurnDialog(props.row)" clickable v-close-popup>
+                <q-item-section class="text-center text-subtitle2">Burn</q-item-section>
+              </q-item>
+            </q-menu>
+          </q-btn>
         </q-td>
       </q-tr>
     </template>
@@ -71,6 +81,7 @@ import { Balance } from 'src/models';
 import { useQuasar } from 'quasar';
 import SendDialog from './SendDialog.vue';
 import { useStore } from 'src/store';
+import BurnDialog from './BurnDialog.vue';
 
 export default defineComponent({
   name: 'BalancesTable',
@@ -144,12 +155,26 @@ export default defineComponent({
       });
     }
 
+    const openBurnDialog = (balance: Balance) => {
+      const fantoken = store.state.fantoken.fantokens.find(el => el.metaData?.base === balance.denom);
+
+      quasar.dialog({
+        component: BurnDialog,
+        componentProps: {
+          fantoken,
+        },
+        fullWidth: true,
+        maximized: true
+      });
+    }
+
     return {
       session,
       pagination,
       columns,
       visibleColumns,
-      openSendDialog
+      openSendDialog,
+      openBurnDialog
     }
   }
 });
@@ -197,6 +222,12 @@ export default defineComponent({
   &.actions {
     width: 10%;
   }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  grid-gap: 34px;
 }
 
 .id-cell {

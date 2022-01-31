@@ -10,7 +10,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@bitsongjs/sdk": "1.0.0-dev-11",
+    "@bitsongjs/sdk": "^1.0.0-dev-13",
     "@cosmjs/amino": "^0.26.5",
     "@cosmjs/encoding": "^0.26.5",
     "@cosmjs/launchpad": "^0.26.5",

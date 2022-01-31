@@ -13,7 +13,7 @@ const getters: GetterTree<FantokenStateInterface, StateInterface> = {
       return fantokens
       .filter(fantoken => fantoken.owner === authentication.session?.address)
       .map(fantoken => {
-        const burned = new BigNumber(fantoken.burned?.amount ?? '0')
+        const burned = new BigNumber(fantoken.burned ? fantoken.burned.amount : '0')
           .multipliedBy(coinLookup.chainToViewConversionFactor);
 
         const supply = new BigNumber(fantoken.supply.amount)

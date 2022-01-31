@@ -119,7 +119,7 @@ export default defineComponent({
     store.commit('data/setLoadingSignTransaction', false);
 
     const network = computed(() => store.state.authentication.network);
-    const fantokenBalances = computed(() => store.getters['data/fantokenBalances'] as Balance[]);
+    const fantokenBalances = computed(() => store.getters['data/fantokenBalancesRaw'] as Balance[]);
 
     const availableCoins = computed(() => {
       const fantoken = fantokenBalances.value.find(el => el.denom === props.fantoken.metaData?.base);

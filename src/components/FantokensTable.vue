@@ -65,7 +65,7 @@
           </p>
         </q-td>
         <q-td key="actions" class="actions" :props="props">
-          <q-btn flat unelevated padding="2px" @click.stop="">
+          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr')">
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
@@ -75,9 +75,9 @@
               <q-item class="menu-item" active-class="active" @click="openBurnDialog(props.row)" clickable v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Burn</q-item-section>
               </q-item>
-              <!-- <q-item class="menu-item" active-class="active" @click="openChangeOwnerDialog(props.row)" clickable v-close-popup>
+              <q-item class="menu-item" active-class="active" @click="openChangeOwnerDialog(props.row)" clickable v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Change Owner</q-item-section>
-              </q-item> -->
+              </q-item>
               <q-item class="menu-item" active-class="active" @click="openDisableMintDialog(props.row)" :clickable="props.row.mintable" :disable="!props.row.mintable" v-close-popup>
                 <q-item-section class="text-center text-subtitle2">Disable Mint</q-item-section>
               </q-item>
@@ -115,6 +115,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const quasar = useQuasar();
+
+    const session = computed(() => store.state.authentication.session);
 
     const pagination = {
       descending: true,
@@ -215,6 +217,7 @@ export default defineComponent({
     }
 
     return {
+      session,
       pagination,
       columns,
       visibleColumns,
