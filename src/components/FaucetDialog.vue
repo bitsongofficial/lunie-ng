@@ -19,32 +19,6 @@
 
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
-          <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">AMOUNT TO CLAIM</label>
-
-            <q-input
-              v-model="amount"
-              color="transparent-white"
-              label-color="accent-5"
-              bg-color="transparent-white"
-              round
-              standout
-              no-error-icon
-              class="quantity-input full-width large"
-              :rules="[
-                val => !!val || 'Required field',
-                val => !isNaN(val) || 'Amount must be a decimal value',
-                val => gtnZero(val) || 'Amount must be a greater then zero',
-                val => !isNegative(val) || 'Amount must be greater then zero'
-              ]"
-              placeholder="0"
-            >
-              <template v-slot:append>
-                <label class="text-body2 text-half-transparent-white">{{ network.stakingDenom }}</label>
-              </template>
-            </q-input>
-          </div>
-
           <alert-box color="half-transparent-white" title="We reccomend that you verify the network details before proceeding."></alert-box>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -107,7 +81,6 @@ export default defineComponent({
     const { onCopy } = useClipboard();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-    const amount = ref<string>('');
     const success = ref<boolean>(false);
     const error = ref<string>();
     const loading = ref<boolean>(false);
@@ -121,10 +94,7 @@ export default defineComponent({
     const onSubmit = async () => {
       try {
         loading.value = true;
-        await store.dispatch('data/getFaucet', [{
-          amount: amount.value,
-          denom: network.value.stakingDenom
-        }]);
+        await store.dispatch('data/getFaucet');
 
         success.value = true;
       } catch (err) {
@@ -144,7 +114,6 @@ export default defineComponent({
       error,
       loading,
       network,
-      amount,
       success,
       dialogRef,
       close,
@@ -175,8 +144,8 @@ export default defineComponent({
 
 .body {
   width: 100%;
-  min-height: 446px;
-  max-width: 508px;
+  min-height: 280px;
+  max-width: 510px;
   border-radius: 10px;
   background: $dark-2;
   padding: 33px 36px 28px;

@@ -1,6 +1,5 @@
 export interface FaucetRequest {
   address: string;
-  coins: string[];
 }
 
 export enum FaucetTransferStatus {
@@ -15,6 +14,6 @@ export interface FaucetTransfer {
 }
 
 export interface FaucetResponse {
-  transfers: FaucetTransfer[];
+  status: string;
   error?: string;
 }

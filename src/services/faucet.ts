@@ -1,5 +1,5 @@
 import { external } from 'src/boot/axios';
-import { FaucetRequest, FaucetResponse, FaucetTransferStatus } from 'src/models';
+import { FaucetRequest, FaucetResponse } from 'src/models';
 import Store from 'src/store';
 
 export const getFaucet = async (request: FaucetRequest) => {
@@ -7,18 +7,14 @@ export const getFaucet = async (request: FaucetRequest) => {
 
   if (faucetURL) {
     try {
-      const { data: result } = await external.post<FaucetResponse>(faucetURL, request);
+      const { data: result } = await external.get<FaucetResponse>(faucetURL, { params: request });
 
       if (result.error) {
         throw new Error(result.error);
       }
 
-      if (result.transfers.length > 0) {
-        const transferError = result.transfers.find(el => el.status === FaucetTransferStatus.ERROR);
-
-        if (transferError) {
-          throw new Error(transferError.error);
-        }
+      if (result.status === 'error') {
+        throw new Error('Faucet get error, try later');
       }
 
       return result;
