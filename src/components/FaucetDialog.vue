@@ -45,9 +45,7 @@
             </q-input>
           </div>
 
-          <pre class="description-block text-half-transparent-white text-h5 scroll scroll--transparent">
-            {{ curl }}
-          </pre>
+          <alert-box color="half-transparent-white" title="We reccomend that you verify the network details before proceeding."></alert-box>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
             <q-btn
@@ -61,8 +59,8 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn @click="onCopy(curl)" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
-              copy
+            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
+              claim
             </q-btn>
           </div>
         </q-form>
@@ -70,9 +68,9 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="86px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful withdrawal!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful claim!</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">You have successfully withdrawn your {{ network.stakingDenom }}s.</p>
+          <p class="text-h4 text-half-transparent-white text-center">You have successfully claim your {{ network.stakingDenom }}s.</p>
         </div>
       </template>
 
@@ -93,15 +91,14 @@ import { useStore } from 'src/store';
 import { defineComponent, ref, computed } from 'vue';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 
-/* import AlertBox from './AlertBox.vue'; */
-import { BigNumber } from 'bignumber.js';
+import AlertBox from './AlertBox.vue';
 import { useClipboard } from 'src/hooks';
 
 export default defineComponent({
   name: 'FaucetDialog',
-  /* components: {
+  components: {
     AlertBox,
-  }, */
+  },
   emits: [
     ...useDialogPluginComponent.emits,
   ],
@@ -116,14 +113,6 @@ export default defineComponent({
     const loading = ref<boolean>(false);
 
     const network = computed(() => store.state.authentication.network);
-    const session = computed(() => store.state.authentication.session);
-
-    const curl = computed(() => {
-      const coinRaw = new BigNumber(amount.value);
-      const coin = (coinRaw.isNaN() || coinRaw.isNegative()) ? new BigNumber(0) : coinRaw;
-
-      return `curl -X POST -d '{"address": "${session.value?.address ?? ''}", "coins": ["${coin.div(1e-6).toString()}ubtsg"]}' https://faucet.testnet.bitsong.network`;
-    });
 
     const close = () => {
       dialogRef.value?.hide();
@@ -152,7 +141,6 @@ export default defineComponent({
     }
 
     return {
-      curl,
       error,
       loading,
       network,
