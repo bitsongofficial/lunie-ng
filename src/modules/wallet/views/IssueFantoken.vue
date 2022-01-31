@@ -96,12 +96,12 @@
               <p class="text-subtitle2 text-weight-medium text-half-transparent-white q-mb-none">
                 {{ issueFee }} <span class="text-body3">{{ network.stakingDenom }}</span>
               </p>
-              <div class="info">
+              <!-- <div class="info">
                 <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="14px" color="gray4" />
                 <q-tooltip anchor="top middle" self="bottom middle">
                   ciao
                 </q-tooltip>
-              </div>
+              </div> -->
             </div>
             <q-btn type="submit" :loading="loading" :disable="!session || (session && session.sessionType !== 'keplr')" class="issue-btn btn-large text-body2 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
               ISSUE
