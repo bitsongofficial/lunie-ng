@@ -24,10 +24,9 @@ import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
 import { AccountInfo, BlockReduced, TransactionRequest, Validator, TransactionBitsongRequestWithType } from 'src/models';
 import { createBitsongSignBroadcast, createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
-import { Coin, getAPR } from 'src/common/numbers';
+import { getAPR } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
-import { Coin as StargateCoin } from '@cosmjs/stargate';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -421,18 +420,15 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
     return accountInfo;
   },
-  async getFaucet({ rootState }, amounts: StargateCoin[]) {
-    const coins = amounts
-      .map(coin => Coin(coin, rootState.authentication.network.coinLookup))
-      .map(coin => `${coin.amount}ubtsg`);
-
+  async getFaucet({ dispatch, rootState }) {
     if (rootState.authentication.session) {
-      const faucet = await getFaucet({
-        address: rootState.authentication.session.address,
-        coins,
+      const address = rootState.authentication.session.address;
+
+      await getFaucet({
+        address,
       });
 
-      return faucet;
+      await dispatch('getBalances', { address });
     }
   },
   async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {

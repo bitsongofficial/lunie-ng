@@ -19,35 +19,7 @@
 
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
-          <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-half-transparent-white text-h6 text-weight-medium">AMOUNT TO CLAIM</label>
-
-            <q-input
-              v-model="amount"
-              color="transparent-white"
-              label-color="accent-5"
-              bg-color="transparent-white"
-              round
-              standout
-              no-error-icon
-              class="quantity-input full-width large"
-              :rules="[
-                val => !!val || 'Required field',
-                val => !isNaN(val) || 'Amount must be a decimal value',
-                val => gtnZero(val) || 'Amount must be a greater then zero',
-                val => !isNegative(val) || 'Amount must be greater then zero'
-              ]"
-              placeholder="0"
-            >
-              <template v-slot:append>
-                <label class="text-body2 text-half-transparent-white">{{ network.stakingDenom }}</label>
-              </template>
-            </q-input>
-          </div>
-
-          <pre class="description-block text-half-transparent-white text-h5 scroll scroll--transparent">
-            {{ curl }}
-          </pre>
+          <alert-box color="half-transparent-white" title="We reccomend that you verify the network details before proceeding."></alert-box>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
             <q-btn
@@ -61,8 +33,8 @@
               <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
             </q-btn>
 
-            <q-btn @click="onCopy(curl)" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
-              copy
+            <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="primary" text-color="dark" padding="15px 20px 14px" :loading="loading">
+              claim
             </q-btn>
           </div>
         </q-form>
@@ -70,9 +42,9 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="86px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful withdrawal!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful claim!</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">You have successfully withdrawn your {{ network.stakingDenom }}s.</p>
+          <p class="text-h4 text-half-transparent-white text-center">You have successfully claim your {{ network.stakingDenom }}s.</p>
         </div>
       </template>
 
@@ -93,15 +65,14 @@ import { useStore } from 'src/store';
 import { defineComponent, ref, computed } from 'vue';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 
-/* import AlertBox from './AlertBox.vue'; */
-import { BigNumber } from 'bignumber.js';
+import AlertBox from './AlertBox.vue';
 import { useClipboard } from 'src/hooks';
 
 export default defineComponent({
   name: 'FaucetDialog',
-  /* components: {
+  components: {
     AlertBox,
-  }, */
+  },
   emits: [
     ...useDialogPluginComponent.emits,
   ],
@@ -110,20 +81,11 @@ export default defineComponent({
     const { onCopy } = useClipboard();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-    const amount = ref<string>('');
     const success = ref<boolean>(false);
     const error = ref<string>();
     const loading = ref<boolean>(false);
 
     const network = computed(() => store.state.authentication.network);
-    const session = computed(() => store.state.authentication.session);
-
-    const curl = computed(() => {
-      const coinRaw = new BigNumber(amount.value);
-      const coin = (coinRaw.isNaN() || coinRaw.isNegative()) ? new BigNumber(0) : coinRaw;
-
-      return `curl -X POST -d '{"address": "${session.value?.address ?? ''}", "coins": ["${coin.div(1e-6).toString()}ubtsg"]}' https://faucet.testnet.bitsong.network`;
-    });
 
     const close = () => {
       dialogRef.value?.hide();
@@ -132,10 +94,7 @@ export default defineComponent({
     const onSubmit = async () => {
       try {
         loading.value = true;
-        await store.dispatch('data/getFaucet', [{
-          amount: amount.value,
-          denom: network.value.stakingDenom
-        }]);
+        await store.dispatch('data/getFaucet');
 
         success.value = true;
       } catch (err) {
@@ -152,11 +111,9 @@ export default defineComponent({
     }
 
     return {
-      curl,
       error,
       loading,
       network,
-      amount,
       success,
       dialogRef,
       close,
@@ -187,8 +144,8 @@ export default defineComponent({
 
 .body {
   width: 100%;
-  min-height: 446px;
-  max-width: 508px;
+  min-height: 280px;
+  max-width: 510px;
   border-radius: 10px;
   background: $dark-2;
   padding: 33px 36px 28px;
