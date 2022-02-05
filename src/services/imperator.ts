@@ -1,5 +1,5 @@
 import { imperatorApi } from 'src/boot/axios';
-import { ImperatorSymbolResponse } from 'src/models';
+import { ImperatorSymbolResponse, ImperatorToken } from 'src/models';
 
 export const searchSymbolDetails = (denom: string) => {
   return imperatorApi.get<ImperatorSymbolResponse>('search/v1/symbol', {
@@ -7,4 +7,8 @@ export const searchSymbolDetails = (denom: string) => {
       denom,
     }
   });
+};
+
+export const searchTokenDetails = (symbol: string) => {
+  return imperatorApi.get<ImperatorToken[]>(`tokens/v1/${symbol}`);
 };

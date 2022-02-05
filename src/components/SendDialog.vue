@@ -66,10 +66,15 @@
                   MAX
                 </q-btn>
                 <label class="text-body2 text-primary" v-if="!denom">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-primary" v-else-if="symbol">{{ symbol }}</label>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">
+              Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }}
+              <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span>
+              <span class="text-uppercase" v-else-if="symbol">{{ symbol }}</span>
+            </p>
           </div>
 
           <div class="field-block column full-width justify-start items-start">
@@ -164,6 +169,9 @@ export default defineComponent({
   name: 'SendDialog',
   props: {
     denom: {
+      type: String,
+    },
+    symbol: {
       type: String,
     }
   },

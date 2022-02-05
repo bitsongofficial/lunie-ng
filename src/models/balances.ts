@@ -13,6 +13,7 @@ export interface Balance {
   staked: number;
   sourceChain: string | undefined;
   image?: string;
+  name: string;
 }
 
 export interface Pagination {

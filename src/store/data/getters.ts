@@ -33,7 +33,9 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     };
   },
   balances({ balances }, _getters, { authentication }) {
-    return sortBy(balances, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
+    const maincoins = balances.filter(el => !el.id.includes('ibc'));
+
+    return sortBy(maincoins, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
       balance => {
         if (balance.denom === authentication.network.stakingDenom) {
           return ({
@@ -53,7 +55,11 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     );
   },
   ibcBalances({ balances }) {
-    const ibc = balances.filter(el => el.id.includes('ibc'));
+    const ibc = balances.filter(el => {
+      const available = getStakingCoinViewAmount(new BigNumber(el.available).toString());
+
+      return el.id.includes('ibc') && new BigNumber(available).gt(1e-4);
+    });
 
     return sortBy(ibc, 'symbol').map(
       balance => {

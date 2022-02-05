@@ -7,15 +7,19 @@
       appear
     >
       <div class="chain-stats-grid">
-        <chain-stats title="TOTAL ASSETS" :denom="currency" :splittedDecimals="{
-          'left': '20,356',
-          'right': '76'
-        }" />
-        <chain-stats title="TOTAL STAKED" :denom="currency" :splittedDecimals="{
-          'left': '20,356',
-          'right': '76'
-        }" />
+        <chain-stats title="TOTAL ASSETS" :denom="currency" :splittedDecimals="available" />
+        <chain-stats title="TOTAL STAKED" :denom="currency" :splittedDecimals="totalDelegated" />
         <chain-stats :title="network.stakingDenom + ' PRICE'" :denom="currency" :splittedDecimals="currentPrice" :loading="loading" />
+      </div>
+    </transition>
+    <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      mode="out-in"
+      appear
+    >
+      <div class="balance-section">
+        <balances-table :rows="balances" :loading="!balancesLoaded || loading" hide-header />
       </div>
     </transition>
     <transition
@@ -41,10 +45,10 @@
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'src/store';
 import { Balance } from 'src/models';
+import { shortDecimals, splitDecimals } from 'src/common/numbers';
 
 import BalancesTable from 'src/components/BalancesTable.vue';
 import ChainStats from 'src/components/ChainStats.vue';
-import { shortDecimals, splitDecimals } from 'src/common/numbers';
 
 export default defineComponent({
   name: 'Assets',
@@ -57,6 +61,8 @@ export default defineComponent({
 
     const network = computed(() => store.state.authentication.network);
     const currency = computed(() => store.state.settings.currency);
+    const balances = computed(() => store.getters['data/balances'] as Balance[]);
+    const currentBalance = computed(() => store.getters['data/currentBalance'] as Balance);
     const ibcBalances = computed(() => store.getters['data/ibcBalances'] as Balance[]);
     const balancesLoaded = computed(() => store.state.data.balancesLoaded);
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
@@ -72,10 +78,34 @@ export default defineComponent({
       return null;
     });
 
+    const available = computed(() => {
+      const availableFiat = currentBalance.value && currentBalance.value.availableFiat ? currentBalance.value.availableFiat : '0';
+      const short = shortDecimals(availableFiat);
+
+      if (short) {
+        return splitDecimals(short);
+      }
+
+      return null;
+    });
+
+    const totalDelegated = computed(() => {
+      const total = store.getters['data/totalDelegated'] as string;
+
+      if (total) {
+        return splitDecimals(total);
+      }
+
+      return null;
+    });
+
     return {
       network,
       currentPrice,
       ibcBalances,
+      balances,
+      available,
+      totalDelegated,
       balancesLoaded,
       currency,
       loading
@@ -100,7 +130,7 @@ export default defineComponent({
 }
 
 .section-header-small {
-  margin-top: 0;
+  margin-top: 48px;
   margin-bottom: 10px;
 }
 
@@ -120,7 +150,7 @@ export default defineComponent({
   display: grid;
   column-gap: 32px;
   row-gap: 26px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 
   @media screen and (min-width: $breakpoint-md-min) {
     grid-template-columns: repeat(3, 1fr);
