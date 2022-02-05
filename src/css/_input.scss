@@ -99,3 +99,25 @@
     min-width: unset;
   }
 }
+
+.q-checkbox {
+  &.q-checkbox--dark {
+    & .q-checkbox__bg {
+      background: $white;
+      border-color: $white;
+      border-radius: 6px;
+    }
+
+    & .q-checkbox__svg {
+      color: $primary;
+    }
+
+    & .q-checkbox__label {
+      color: $white;
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 16px;
+      margin-left: 6px;
+    }
+  }
+}

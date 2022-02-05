@@ -77,10 +77,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title {
-  padding-left: 9px;
-}
-
 .dialog-header {
   margin-bottom: 14px;
 }
