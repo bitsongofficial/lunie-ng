@@ -284,7 +284,7 @@ export default defineComponent({
   min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $alternative-4;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
 }

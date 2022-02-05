@@ -33,6 +33,7 @@
     "marked": "^4.0.9",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "path": "^0.12.7",
+    "qrcode.vue": "^3.3.3",
     "quasar": "^2.0.0",
     "sanitize-html": "^2.6.1",
     "stream": "^0.0.2",

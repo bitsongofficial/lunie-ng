@@ -62,7 +62,7 @@
             <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
 
-          <q-btn class="action-btn receive-btn" flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr') || ibc">
+          <q-btn class="action-btn receive-btn" flat unelevated padding="4px" @click.stop="openReceiveDialog" :disable="!session || (session && session.sessionType !== 'keplr') || ibc">
             <q-icon class="rotate-90" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
         </q-td>
@@ -77,6 +77,7 @@ import { Balance } from 'src/models';
 import { useQuasar } from 'quasar';
 import SendDialog from './SendDialog.vue';
 import { useStore } from 'src/store';
+import QrCodeDialog from './QrCodeDialog.vue';
 
 export default defineComponent({
   name: 'BalancesTable',
@@ -143,12 +144,22 @@ export default defineComponent({
       });
     }
 
+    const openReceiveDialog = () => {
+      quasar.dialog({
+        component: QrCodeDialog,
+        componentProps: {
+          address: session.value?.address
+        }
+      });
+    }
+
     return {
       session,
       pagination,
       columns,
       visibleColumns,
-      openSendDialog
+      openSendDialog,
+      openReceiveDialog
     }
   }
 });
