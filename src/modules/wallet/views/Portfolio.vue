@@ -6,8 +6,8 @@
       </h2>
 
       <div class="portfolio-btns col-12 col-md-6">
-        <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" outline class="receive-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="accent-2" padding="12px 24px 10px 26px">
-          <label class="text-white">Receive</label> <q-icon class="rotate-90 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="accent-2" />
+        <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openReceiveDialog" outline class="receive-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="accent-2" padding="12px 24px 10px 26px">
+          <label class="cursor-pointer text-white">Receive</label> <q-icon class="rotate-90 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="accent-2" />
         </q-btn>
         <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
           SEND <q-icon class="btn-icon rotate-270 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="white" />
@@ -82,6 +82,7 @@ import ValidatorsSummary from 'src/components/ValidatorsSummary.vue';
 import ValidatorsTable from 'src/components/ValidatorsTable.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
 import SendDialog from 'src/components/SendDialog.vue';
+import QrCodeDialog from 'src/components/QrCodeDialog.vue';
 
 export default defineComponent({
   name: 'Portfolio',
@@ -120,6 +121,15 @@ export default defineComponent({
       });
     }
 
+    const openReceiveDialog = () => {
+      quasar.dialog({
+        component: QrCodeDialog,
+        componentProps: {
+          address: session.value?.address
+        }
+      });
+    }
+
     return {
       loading,
       session,
@@ -130,7 +140,8 @@ export default defineComponent({
       undelegationsLoaded,
       quasar,
       openClaimDialog,
-      openSendDialog
+      openSendDialog,
+      openReceiveDialog
     }
   }
 });
