@@ -34,6 +34,7 @@ import { flattenDeep } from 'lodash';
 import { getProposalSummary } from './common-reducer';
 import { Tally } from '@cosmjs/launchpad/build/lcdapi/gov';
 import Store from 'src/store';
+import { coinImages } from 'src/constants';
 
 const proposalTypeEnumDictionary: { [key: string]: string } = {
   TextProposal: 'TEXT',
@@ -92,7 +93,7 @@ export function undelegationReducer(undelegation: UnbondingDelegationFlat, valid
   }
 }
 
-export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[]): Balance {
+export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[], symbol?: string): Balance {
   const isStakingDenom = lunieCoin.denom === Store.state.authentication.network.stakingDenom;
 
   const delegatedStake = delegations.reduce(
@@ -113,14 +114,18 @@ export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[]
     ? new BigNumber(lunieCoin.amount).plus(delegatedStake).plus(undelegatingStake).toString()
     : lunieCoin.amount;
 
+  const coinSymbol = symbol ? symbol : lunieCoin.denom;
+
   return {
     id: lunieCoin.denom,
     type: isStakingDenom ? 'STAKE' : 'CURRENCY',
     total,
+    symbol: coinSymbol,
     denom: lunieCoin.denom,
     available: lunieCoin.amount,
     staked: 0,
     sourceChain: lunieCoin.sourceChain,
+    image: coinImages.find(img => img.symbol === coinSymbol)?.image
   };
 }
 

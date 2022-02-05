@@ -19,3 +19,6 @@ export * from './wallet';
 export * from './account';
 export * from './supply';
 export * from './inflaction';
+export * from './coin-gecko';
+export * from './imperator';
+export * from './coin-image';

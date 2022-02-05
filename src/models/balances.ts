@@ -8,9 +8,11 @@ export interface Balance {
   totalFiat?: string;
   availableFiat?: string;
   denom: string;
+  symbol?: string;
   available: string | number | BigNumber;
   staked: number;
   sourceChain: string | undefined;
+  image?: string;
 }
 
 export interface Pagination {

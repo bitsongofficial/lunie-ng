@@ -52,6 +52,22 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     );
   },
+  ibcBalances({ balances }) {
+    const ibc = balances.filter(el => el.id.includes('ibc'));
+
+    return sortBy(ibc, 'symbol').map(
+      balance => {
+        const total = getStakingCoinViewAmount(new BigNumber(balance.total).toString());
+        const available = getStakingCoinViewAmount(new BigNumber(balance.available).toString());
+
+        return ({
+          ...balance,
+          total: shortDecimals(total),
+          available: shortDecimals(available),
+        });
+      }
+    );
+  },
   totalDelegated(_, { validatorsOfDelegations }) {
     const validators = validatorsOfDelegations as Validator[];
     const totalAmount = reduce(validators, (prev: BigNumber, curr: Validator) => {
@@ -72,7 +88,7 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
     const price = getCurrentPrince as number;
     const totalFiat = fiatConverter(price, balance?.total ?? '0');
-    const availableFiat = fiatConverter(price, balance?.total ?? '0');
+    const availableFiat = fiatConverter(price, balance?.available ?? '0');
 
     if (balance) {
       return {

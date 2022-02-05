@@ -109,7 +109,7 @@ export default defineComponent({
 
     const apr = computed(() => store.getters['data/getAprInfo'] as string | null);
     const inflation = computed(() => store.getters['data/getInflation'] as string | null);
-    const validatorsCount = computed(() => store.state.data.validators.filter(el => el.status === ValidatorStatus.ACTIVE).length);
+    const validatorsCount = computed(() => store.state.data.validators.filter(el => el.status === ValidatorStatus.ACTIVE).length.toString());
     const bondedTokens = computed(() => store.getters['data/getBondedTokens'] as string | null);
     const bondedTokensPercentage = computed(() => store.getters['data/getBondedTokensPercentage'] as string | null);
     const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading || store.state.authentication.loading || store.state.authentication.changing);
