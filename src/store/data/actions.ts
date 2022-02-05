@@ -26,6 +26,7 @@ import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-ma
 import { getAPR } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
+import { getCoinGeckoDetails } from 'src/services/coin-gecko';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -69,6 +70,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
       try {
         commit('setLoading', true);
+        await dispatch('getCoinGeckoDetails');
         await dispatch('getBalances', { address });
         await dispatch('getRewards', { address });
         await dispatch('getDelegations', address);
@@ -418,6 +420,18 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
     const accountInfo = await getAccountInfo(address);
 
     return accountInfo;
+  },
+  async getCoinGeckoDetails({ rootState, commit }) {
+    try {
+      commit('setLoadingCoinDetails', true);
+      const responseCoinDetails = await getCoinGeckoDetails(rootState.authentication.network.coinGeckoId);
+
+      commit('setCoinDetails', responseCoinDetails.data);
+    } catch (error) {
+      throw error;
+    } finally {
+      commit('setLoadingCoinDetails', false);
+    }
   },
   async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {
     try {

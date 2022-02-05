@@ -1,5 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
 import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { CoinGeckoResponse } from 'src/models/coin-gecko';
 import { MutationTree } from 'vuex';
 import { DataStateInterface } from './state';
 
@@ -105,7 +106,14 @@ const mutation: MutationTree<DataStateInterface> = {
   setCommunityPool(state, communityPool: Coin[]) {
     state.communityPool = communityPool;
   },
+  setCoinDetails(state, coinDetails: CoinGeckoResponse) {
+    state.coinDetails = coinDetails;
+  },
+  setLoadingCoinDetails(state, loadingCoinDetails: boolean) {
+    state.loadingCoinDetails = loadingCoinDetails;
+  },
   resetSessionData(state) {
+    state.coinDetails = null;
     state.supplyInfo = null;
     state.inflation = null;
     state.supply = null;
@@ -133,6 +141,7 @@ const mutation: MutationTree<DataStateInterface> = {
     state.loadingDataDetails = false;
     state.loadingSupplyInfo = false;
     state.loadingApr = false;
+    state.loadingCoinDetails = false;
   },
 }
 

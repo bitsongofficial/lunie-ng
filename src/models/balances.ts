@@ -5,6 +5,8 @@ export interface Balance {
   id: string;
   type: string;
   total: string | number | BigNumber;
+  totalFiat?: string;
+  availableFiat?: string;
   denom: string;
   available: string | number | BigNumber;
   staked: number;
