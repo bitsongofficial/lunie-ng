@@ -31,7 +31,7 @@
           </h2>
         </div>
 
-        <balances-table :rows="balances" :loading="!balancesLoaded || loading" />
+        <balances-table :rows="ibcBalances" :loading="!balancesLoaded || loading" ibc />
       </div>
     </transition>
   </q-page>
@@ -57,7 +57,7 @@ export default defineComponent({
 
     const network = computed(() => store.state.authentication.network);
     const currency = computed(() => store.state.settings.currency);
-    const balances = computed(() => store.getters['data/balances'] as Balance[]);
+    const ibcBalances = computed(() => store.getters['data/ibcBalances'] as Balance[]);
     const balancesLoaded = computed(() => store.state.data.balancesLoaded);
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
@@ -75,7 +75,7 @@ export default defineComponent({
     return {
       network,
       currentPrice,
-      balances,
+      ibcBalances,
       balancesLoaded,
       currency,
       loading

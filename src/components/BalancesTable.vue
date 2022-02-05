@@ -31,10 +31,21 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="balances-table-row cursor-pointer" :props="props">
+        <q-td key="image" class="text-subtitle2 text-white" :props="props">
+          <q-avatar class="token" size="24px" :color="props.row.image ? 'transparent' : 'primary'">
+            <img :src="props.row.image" v-if="props.row.image">
+            <p class="text-subtitle2 text-uppercase q-my-none" v-else-if="props.row.symbol">
+              {{ props.row.symbol[0] }}
+            </p>
+            <p class="text-subtitle2 text-uppercase q-my-none" v-else>
+              {{ props.row.denom[0] }}
+            </p>
+          </q-avatar>
+        </q-td>
         <q-td key="name" class="text-subtitle2 text-white" :props="props">
           <div class="row no-wrap items-center">
             <p class="balance-name q-my-none text-subtitle2">
-              {{ props.row.denom }}
+              {{ ibc && props.row.symbol ? props.row.symbol : props.row.denom }}
             </p>
           </div>
         </q-td>
@@ -82,6 +93,10 @@ export default defineComponent({
       type: Array as PropType<Balance[]>,
       default: () => [],
     },
+    ibc: {
+      type: Boolean,
+      default: false,
+    }
   },
   setup() {
     const store = useStore();
@@ -95,6 +110,12 @@ export default defineComponent({
     };
 
     const columns = computed(() => [
+      {
+        name: 'image',
+        label: '',
+        align: 'left',
+        field: 'image',
+      },
       {
         name: 'name',
         label: 'Name',
@@ -119,7 +140,7 @@ export default defineComponent({
       },
     ]);
 
-    const visibleColumns = computed<string[]>(() => ['name', 'total', 'available', 'actions']);
+    const visibleColumns = computed<string[]>(() => ['image', 'name', 'total', 'available', 'actions']);
 
     const openSendDialog = (balance: Balance) => {
       quasar.dialog({
@@ -162,10 +183,6 @@ export default defineComponent({
   }
 }
 
-.id-cell {
-  width: 60px;
-}
-
 .balances-table-row {
   background: none;
   backdrop-filter: blur(60px);
@@ -176,13 +193,15 @@ export default defineComponent({
     height: 60px;
 
     &:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+      padding-left: 24px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
 
     &:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+      padding-right: 24px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
   }
 }
