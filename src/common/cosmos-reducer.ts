@@ -93,7 +93,7 @@ export function undelegationReducer(undelegation: UnbondingDelegationFlat, valid
   }
 }
 
-export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[], symbol?: string): Balance {
+export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[], undelegations: UnbondingDelegation[], name: string, symbol?: string): Balance {
   const isStakingDenom = lunieCoin.denom === Store.state.authentication.network.stakingDenom;
 
   const delegatedStake = delegations.reduce(
@@ -125,7 +125,8 @@ export function balanceReducer(lunieCoin: BalanceCoin, delegations: Delegation[]
     available: lunieCoin.amount,
     staked: 0,
     sourceChain: lunieCoin.sourceChain,
-    image: coinImages.find(img => img.symbol === coinSymbol)?.image
+    image: coinImages.find(img => img.symbol === coinSymbol)?.image,
+    name
   };
 }
 

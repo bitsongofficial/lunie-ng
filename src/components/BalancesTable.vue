@@ -5,6 +5,7 @@
     :visible-columns="visibleColumns"
     :loading="loading"
     :pagination="pagination"
+    :hide-header="hideHeader"
     row-key="id"
     class="balances-table"
     flat
@@ -24,6 +25,9 @@
           :key="col.name"
           :props="props"
           class="text-body4 text-uppercase text-half-transparent-white text-weight-medium balances-table-head-col"
+          :class="{
+            [col.name]: true,
+          }"
         >
           {{ col.label }}
         </q-th>
@@ -31,43 +35,35 @@
     </template>
     <template v-slot:body="props">
       <q-tr class="balances-table-row cursor-pointer" :props="props">
-        <q-td key="image" class="text-subtitle2 text-white" :props="props">
-          <q-avatar class="token" size="24px" :color="props.row.image ? 'transparent' : 'primary'">
-            <img :src="props.row.image" v-if="props.row.image">
-            <p class="text-subtitle2 text-uppercase q-my-none" v-else-if="props.row.symbol">
-              {{ props.row.symbol[0] }}
-            </p>
-            <p class="text-subtitle2 text-uppercase q-my-none" v-else>
-              {{ props.row.denom[0] }}
-            </p>
-          </q-avatar>
-        </q-td>
-        <q-td key="name" class="text-subtitle2 text-white" :props="props">
+        <q-td key="name" class="text-subtitle2 text-white name" :props="props">
           <div class="row no-wrap items-center">
-            <p class="balance-name q-my-none text-subtitle2">
-              {{ ibc && props.row.symbol ? props.row.symbol : props.row.denom }}
+            <q-avatar class="token" size="24px" :color="props.row.image ? 'transparent' : 'primary'">
+              <img :src="props.row.image" v-if="props.row.image">
+              <p class="text-subtitle2 text-uppercase q-my-none" v-else-if="props.row.symbol">
+                {{ props.row.symbol[0] }}
+              </p>
+              <p class="text-subtitle2 text-uppercase q-my-none" v-else>
+                {{ props.row.denom[0] }}
+              </p>
+            </q-avatar>
+            <p class="balance-name q-my-none text-subtitle2 text-capitalize">
+              {{ props.row.name }}
+              <span class="text-half-transparent-white">{{ ibc && props.row.symbol ? props.row.symbol.toLowerCase() : props.row.denom.toLowerCase() }}</span>
             </p>
           </div>
         </q-td>
-        <q-td key="total" class="text-subtitle2 text-white" :props="props">
-          <p class="text-subtitle2 q-my-none">
-            {{ props.row.total }}
-          </p>
-        </q-td>
-        <q-td key="available" class="text-subtitle2 text-white" :props="props">
+        <q-td key="available" class="text-subtitle2 text-white available" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ props.row.available }}
           </p>
         </q-td>
-        <q-td key="actions" :props="props">
-          <q-btn flat unelevated padding="2px" @click.stop="">
-            <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
+        <q-td key="actions" class="actions" :props="props">
+          <q-btn class="action-btn" flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr')">
+            <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
+          </q-btn>
 
-            <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
-              <q-item class="menu-item" active-class="active" disable v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Send</q-item-section>
-              </q-item>
-            </q-menu>
+          <q-btn class="action-btn receive-btn" flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr') || ibc">
+            <q-icon class="rotate-90" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
         </q-td>
       </q-tr>
@@ -96,13 +92,18 @@ export default defineComponent({
     ibc: {
       type: Boolean,
       default: false,
-    }
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {
     const store = useStore();
     const quasar = useQuasar();
 
     const network = computed(() => store.state.authentication.network);
+    const session = computed(() => store.state.authentication.session);
 
     const pagination = {
       descending: true,
@@ -111,22 +112,10 @@ export default defineComponent({
 
     const columns = computed(() => [
       {
-        name: 'image',
+        name: 'name',
         label: '',
         align: 'left',
-        field: 'image',
-      },
-      {
-        name: 'name',
-        label: 'Name',
-        align: 'left',
         field: 'name',
-      },
-      {
-        name: 'total',
-        label: 'Total',
-        align: 'center',
-        field: 'total',
       },
       {
         name: 'available',
@@ -140,13 +129,14 @@ export default defineComponent({
       },
     ]);
 
-    const visibleColumns = computed<string[]>(() => ['image', 'name', 'total', 'available', 'actions']);
+    const visibleColumns = computed<string[]>(() => ['name', 'available', 'actions']);
 
     const openSendDialog = (balance: Balance) => {
       quasar.dialog({
         component: SendDialog,
         componentProps: {
           denom: balance.denom === network.value.stakingDenom ? undefined : balance.denom,
+          symbol: balance.symbol
         },
         fullWidth: true,
         maximized: true
@@ -154,6 +144,7 @@ export default defineComponent({
     }
 
     return {
+      session,
       pagination,
       columns,
       visibleColumns,
@@ -169,17 +160,25 @@ export default defineComponent({
 
   &::v-deep(.q-table) {
     border-spacing: 0 6px;
-    padding-bottom: 20px;
+
+    & tr {
+      height: unset;
+    }
   }
 }
 
 .balances-table-head-col {
-  padding-top: 21px;
-  padding-bottom: 21px;
+  padding-top: 0;
+  padding-bottom: 6px;
   border: none;
+  width: auto;
 
-  &:first-of-type {
-    width: 60px;
+  &.actions {
+    width: 10%;
+  }
+
+  &.available {
+    width: 20%;
   }
 }
 
@@ -190,6 +189,7 @@ export default defineComponent({
   & .q-td {
     background: $transparent-gray2;
     border-bottom: none;
+    width: auto;
     height: 60px;
 
     &:first-child {
@@ -203,21 +203,36 @@ export default defineComponent({
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
     }
+
+    &.actions {
+      width: 10%;
+    }
+
+    &.available {
+      width: 20%;
+    }
   }
 }
 
 .balance-name {
-  margin-left: 17px;
-  margin-right: 12px;
+  margin-left: 24px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box !important;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   white-space: normal;
+
+  & span {
+    margin-left: 24px;
+  }
 }
 
-.info-icon {
-  min-width: 13px;
+.receive-btn {
+  margin-left: 24px;
+}
+
+.action-btn.disabled {
+  opacity: 0.3 !important;
 }
 </style>
