@@ -8,6 +8,9 @@ const mutation: MutationTree<SettingsStateInterface> = {
   setCurrency(state, currency: string) {
     state.currency = currency;
   },
+  setDisclaimer(state, disclaimer: boolean) {
+    state.disclaimer = disclaimer;
+  },
 }
 
 export default mutation;

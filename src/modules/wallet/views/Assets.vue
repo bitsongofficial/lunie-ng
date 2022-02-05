@@ -35,7 +35,8 @@
           </h2>
         </div>
 
-        <balances-table :rows="ibcBalances" :loading="!balancesLoaded || loading" ibc />
+        <balances-table :rows="ibcBalances" :loading="!balancesLoaded || loading" ibc v-if="ibcBalances.length > 0 || (!balancesLoaded || loading)" />
+        <ibc-tokens-summary v-else />
       </div>
     </transition>
   </q-page>
@@ -49,12 +50,14 @@ import { shortDecimals, splitDecimals } from 'src/common/numbers';
 
 import BalancesTable from 'src/components/BalancesTable.vue';
 import ChainStats from 'src/components/ChainStats.vue';
+import IbcTokensSummary from 'src/components/IbcTokensSummary.vue';
 
 export default defineComponent({
   name: 'Assets',
   components: {
     BalancesTable,
-    ChainStats
+    ChainStats,
+    IbcTokensSummary
   },
   setup() {
     const store = useStore();

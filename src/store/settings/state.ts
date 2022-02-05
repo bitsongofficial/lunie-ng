@@ -1,12 +1,14 @@
 export interface SettingsStateInterface {
   language: string;
   currency: string;
+  disclaimer: boolean;
 }
 
 function state (): SettingsStateInterface {
   return {
     language: 'en-US',
-    currency: 'usd'
+    currency: 'usd',
+    disclaimer: false
   };
 }
 
