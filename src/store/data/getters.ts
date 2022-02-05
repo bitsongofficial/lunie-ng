@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { GetterTree } from 'vuex';
 import { StateInterface } from '../index';
 import { DataStateInterface } from './state';
-import { shortDecimals, percent, splitDecimals } from 'src/common/numbers';
+import { shortDecimals, percent, splitDecimals, fiatConverter } from 'src/common/numbers';
 import { Dictionary, keyBy, reduce, reverse, sortBy, take } from 'lodash';
 import { Validator, ValidatorMap, Reward, ValidatorStatus, ProposalStatus } from 'src/models';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
@@ -52,14 +52,35 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     );
   },
-  currentBalance({ balances }, _getters, { authentication }) {
+  totalDelegated(_, { validatorsOfDelegations }) {
+    const validators = validatorsOfDelegations as Validator[];
+    const totalAmount = reduce(validators, (prev: BigNumber, curr: Validator) => {
+      const currAmount = new BigNumber(curr.delegation?.amount ?? 0);
+
+      return prev.plus(currAmount);
+    }, new BigNumber(0));
+
+    return shortDecimals(totalAmount.toFixed());
+  },
+  fiatDelegated(_, { totalDelegated, getCurrentPrince }) {
+    const price = getCurrentPrince as number;
+    const totalAmount = totalDelegated as string;
+
+    return fiatConverter(price, totalAmount);
+  },
+  currentBalance({ balances }, { getCurrentPrince }, { authentication }) {
     const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
+    const price = getCurrentPrince as number;
+    const totalFiat = fiatConverter(price, balance?.total ?? '0');
+    const availableFiat = fiatConverter(price, balance?.total ?? '0');
 
     if (balance) {
       return {
         ...balance,
         total: shortDecimals(new BigNumber(balance.total).toString()),
         available: shortDecimals(new BigNumber(balance.available).toString()),
+        totalFiat,
+        availableFiat
       }
     }
   },
@@ -172,6 +193,19 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   getAprInfo({ apr }) {
     return apr ? percent(new BigNumber(apr).toFixed(4)) : null;
   },
+  getBondedTokensPercentage({ pool, supplyInfo }) {
+    if (pool) {
+      const bondedTokensNumber = new BigNumber(getStakingCoinViewAmount(pool.bonded_tokens));
+
+      if (supplyInfo) {
+        const totalSupply = new BigNumber(supplyInfo.totalSupply);
+
+        return percent(bondedTokensNumber.div(totalSupply).toFixed(4));
+      }
+    }
+
+    return null;
+  },
   getInflation({ inflation }) {
     if (inflation) {
       return percent(new BigNumber(inflation).toFixed(4));
@@ -186,6 +220,27 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
     }
 
     return null;
+  },
+  getCurrentPrince({ coinDetails }, _, { settings }) {
+    if (coinDetails) {
+      return coinDetails.market_data.current_price[settings.currency];
+    }
+
+    return 0;
+  },
+  getMarketCap({ coinDetails }, _, { settings }) {
+    if (coinDetails) {
+      return coinDetails.market_data.market_cap[settings.currency];
+    }
+
+    return 0;
+  },
+  getTotalVolume({ coinDetails }, _, { settings }) {
+    if (coinDetails) {
+      return coinDetails.market_data.total_volume[settings.currency];
+    }
+
+    return 0;
   },
 }
 

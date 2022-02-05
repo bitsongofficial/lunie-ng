@@ -109,8 +109,7 @@ export default defineComponent({
   margin: 0 auto 16px;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    margin: 0 48px 0 0;
-    padding-left: 32px;
+    margin: 0 32px 0 0;
   }
 }
 

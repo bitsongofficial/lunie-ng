@@ -24,12 +24,16 @@ import { KeplrStateInterface } from './keplr/state';
 import ledger from './ledger';
 import { LedgerStateInterface } from './ledger/state';
 
+import settings from './settings';
+import { SettingsStateInterface } from './settings/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
   authentication: AuthenticationStateInterface;
   data: DataStateInterface;
   keplr: KeplrStateInterface;
   ledger: LedgerStateInterface;
+  settings: SettingsStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -44,7 +48,7 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 
 const plugins: Plugin<StateInterface>[] = [
   createPersistedState({
-    paths: ['authentication', 'data', 'keplr', 'ledger']
+    paths: ['authentication', 'data', 'keplr', 'ledger', 'settings']
   }),
 ];
 
@@ -57,7 +61,8 @@ const modules = {
   authentication,
   data,
   keplr,
-  ledger
+  ledger,
+  settings
 };
 
 const Store = createStore<StateInterface>({

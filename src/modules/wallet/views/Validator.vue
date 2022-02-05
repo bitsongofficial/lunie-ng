@@ -72,7 +72,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .validator {
-  padding-top: 60px;
+  padding-top: 40px;
   padding-bottom: 20px;
 }
 

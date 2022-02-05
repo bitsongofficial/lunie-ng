@@ -1,6 +1,6 @@
 <template>
   <q-page class="proposal">
-    <proposal-status v-if="proposal" :status="proposal.status" />
+    <proposal-status v-if="proposal && !loading" :status="proposal.status" />
 
     <div class="row proposal-header justify-between">
       <div class="column col-12 col-md-9" v-if="!loading">
@@ -193,7 +193,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .proposal {
-  padding-top: 20px;
+  padding-top: 40px;
   padding-bottom: 100px;
 }
 

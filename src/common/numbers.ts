@@ -129,3 +129,10 @@ export const splitDecimals = (value: string): SplittedDecimals | null => {
     right: splitted.pop()
   };
 }
+
+export const fiatConverter = (price: string | number | BigNumber, value: string | number | BigNumber) => {
+  const currentPrice = new BigNumber(price);
+  const amount = new BigNumber(value);
+
+  return shortDecimals(currentPrice.multipliedBy(amount).toFixed());
+};

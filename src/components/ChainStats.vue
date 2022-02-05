@@ -6,7 +6,7 @@
           {{ title }}
         </h3>
 
-        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" color="transparent-accent-3"></q-badge>
+        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" :color="!coin ? 'transparent-accent-3' : 'accent-2'"></q-badge>
       </div>
 
       <template v-if="!loading">
@@ -38,13 +38,17 @@ export default defineComponent({
       required: true
     },
     splittedDecimals: {
-      type: Object as PropType<SplittedDecimals>,
+      type: Object as PropType<SplittedDecimals | null | undefined>,
     },
     quantity: {
       type: String,
     },
     denom: {
       type: String,
+    },
+    coin: {
+      type: Boolean,
+      default: false
     }
   },
 });
