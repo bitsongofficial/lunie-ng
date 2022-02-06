@@ -16,7 +16,7 @@
     virtual-scroll
   >
     <template v-slot:no-data>
-      <h5 class="text-half-transparent-white text-weight-medium">No assets available</h5>
+      <h5 class="text-half-transparent-white text-weight-medium">{{ $t('errors.emptyBalances') }}</h5>
     </template>
     <template v-slot:header="props">
       <q-tr :props="props" class="balances-table-head-row">
@@ -29,7 +29,7 @@
             [col.name]: true,
           }"
         >
-          {{ col.label }}
+          {{ $t(col.label ?? '') }}
         </q-th>
       </q-tr>
     </template>
@@ -120,7 +120,7 @@ export default defineComponent({
       },
       {
         name: 'available',
-        label: 'Available',
+        label: 'general.availableTable',
         align: 'center',
         field: 'available',
       },

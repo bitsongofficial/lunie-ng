@@ -2,7 +2,7 @@
   <q-page class="proposals">
     <div class="section-header row items-center no-wrap">
       <h2 class="section-title text-body-large text-white">
-        Proposals
+        {{ $t('menu.proposals') }}
       </h2>
     </div>
 
@@ -46,6 +46,7 @@ import { ProposalStatus } from 'src/models';
 
 import ProposalItem from 'src/components/ProposalItem.vue';
 import ProposalsSummary from 'src/components/ProposalsSummary.vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Proposals',
@@ -54,6 +55,7 @@ export default defineComponent({
     ProposalsSummary
   },
   setup() {
+    const i18n = useI18n();
     const store = useStore();
     const type = ref<ProposalStatus>();
 
@@ -71,8 +73,12 @@ export default defineComponent({
       loading,
       proposals,
       type,
-      options: proposalsTypeOptions.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-subtitle2' }))
-    }
+      options: proposalsTypeOptions.map(el => ({
+        ...el,
+        label: i18n.t(el.label),
+        class: 'no-hoverable text-capitalize text-subtitle2'
+      }))
+    };
   }
 });
 </script>

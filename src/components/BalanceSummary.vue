@@ -2,7 +2,7 @@
   <div class="balance-summary">
     <div class="balance-section column no-wrap">
       <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-        TOTAL {{ network.stakingDenom }}
+        {{ $t('general.total') }} {{ network.stakingDenom }}
       </h3>
 
       <template v-if="!loadingBalance && !loading">
@@ -20,7 +20,7 @@
 
     <div class="balance-section column no-wrap">
       <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-        DELEGATED ({{ network.stakingDenom }})
+        {{ $t('general.delegated', { denom: network.stakingDenom }) }}
       </h3>
 
       <template v-if="!loadingBalance && !loading">
@@ -38,7 +38,7 @@
 
     <div class="balance-section column no-wrap">
       <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-        AVAILABLE ({{ network.stakingDenom }})
+        {{ $t('general.available', { denom: network.stakingDenom }) }}
       </h3>
 
       <template v-if="!loadingBalance && !loading">
@@ -56,7 +56,7 @@
 
     <div class="balance-section column no-wrap">
       <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-        REWARDS ({{ network.stakingDenom }})
+        {{ $t('general.rewards', { denom: network.stakingDenom }) }}
       </h3>
 
       <template v-if="!loadingBalance && !loading">
@@ -200,6 +200,7 @@ export default defineComponent({
 
 .balance-title {
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .balance-section {

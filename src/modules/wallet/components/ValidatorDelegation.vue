@@ -1,6 +1,6 @@
 <template>
   <div class="validator-delegation column items-center">
-    <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">MY DELEGATION</label>
+    <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.myDelegation') }}</label>
 
     <h5 class="validator-delegation-amount text-body5 text-white" v-if="!loading">
       {{ delegated }}
@@ -9,13 +9,13 @@
 
     <div class="btns row items-center justify-evenly q-gutter-sm">
       <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent-2" text-color="white" @click="openStakeDialog(validator)">
-        delegate
+        {{ $t('actions.delegate') }}
       </q-btn>
       <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="secondary" text-color="white" @click="openUnstakeDialog(validator)">
-        undelegate
+        {{ $t('actions.undelegate') }}
       </q-btn>
       <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="accent" text-color="white" @click="openRestakeDialog(validator)">
-        redelegate
+        {{ $t('actions.redelegate') }}
       </q-btn>
     </div>
   </div>

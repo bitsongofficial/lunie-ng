@@ -2,15 +2,15 @@
   <q-page class="portfolio">
     <div class="section-header row items-center">
       <h2 class="section-title text-body-large text-white text-weight-medium col-12 col-md-auto">
-        Your Balances
+        {{ $t('portfolio.balanceTitle') }}
       </h2>
 
       <div class="portfolio-btns col-12 col-md-6">
         <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openReceiveDialog" outline class="receive-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="accent-2" padding="12px 24px 10px 26px">
-          <label class="cursor-pointer text-white">Receive</label> <q-icon class="rotate-90 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="accent-2" />
+          <label class="cursor-pointer text-white">{{ $t('actions.receive') }}</label> <q-icon class="rotate-90 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="accent-2" />
         </q-btn>
         <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
-          SEND <q-icon class="btn-icon rotate-270 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="white" />
+          {{ $t('actions.send') }} <q-icon class="btn-icon rotate-270 q-ml-auto" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="white" />
         </q-btn>
       </div>
     </div>
@@ -26,7 +26,7 @@
       <div class="undelegation-section" v-if="validatorsOfUndelegations.length > 0">
         <div class="section-header-small row items-center no-wrap">
           <h2 class="section-title text-body-large text-white text-weight-medium">
-            Undelegated
+            {{ $t('portfolio.undelegatedTitle') }}
           </h2>
         </div>
 
@@ -40,7 +40,7 @@
         'section-header-small': validatorsOfDelegations.length > 0,
       }">
         <h2 class="delegations-title section-title text-body-large text-white text-weight-medium">
-          Your Delegations
+          {{ $t('portfolio.delegationsTitle') }}
         </h2>
 
         <q-btn
@@ -53,7 +53,7 @@
           text-color="white"
           :padding="!quasar.screen.lt.md ? '8px 30px' : '8px 20px'"
         >
-          {{ !quasar.screen.lt.md ? 'CLAIM REWARD' : 'CLAIM' }}
+          {{ !quasar.screen.lt.md ? $t('actions.claimRewards') : $t('actions.claim') }}
         </q-btn>
       </div>
 

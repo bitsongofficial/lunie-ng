@@ -1,14 +1,10 @@
 import { useQuasar } from 'quasar';
-import { computed } from 'vue';
 import { MessageTypes, Validator } from 'src/models';
 import DelegationDialog from 'src/components/DelegationDialog.vue';
 import ClaimDialog from 'src/components/ClaimDialog.vue';
-import { useStore } from 'src/store';
 
 export const useDelegatorActions = () => {
-  const store = useStore();
   const quasar = useQuasar();
-  const network = computed(() => store.state.authentication.network);
 
   const openClaimDialog = (validator: Validator) => {
     quasar.dialog({
@@ -26,12 +22,12 @@ export const useDelegatorActions = () => {
       component: DelegationDialog,
       componentProps: {
         type: MessageTypes.STAKE,
-        title: 'Delegate',
-        toLabel: 'Delegate to',
-        amountLabel: 'Amount to delegate',
-        submit: 'Delegate',
-        successTitle: 'Successfully delegate',
-        successSubtitle: `You have successfully delegated your ${network.value.stakingDenom}s.`,
+        title: 'actions.delegate',
+        toLabel: 'general.delegateTo',
+        amountLabel: 'general.delegateAmount',
+        submit: 'actions.delegate',
+        successTitle: 'success.delegateTitle',
+        successSubtitle: 'success.delegateDescription',
         defaultTo: validator
       },
       fullWidth: true,
@@ -44,13 +40,13 @@ export const useDelegatorActions = () => {
       component: DelegationDialog,
       componentProps: {
         type: MessageTypes.UNSTAKE,
-        title: 'Undelegate',
-        toLabel: 'Undelegate to',
-        fromLabel: 'Undelegate from',
-        amountLabel: 'Amount to undelegate',
-        submit: 'Undelegate',
-        successTitle: 'Successfully undelegated',
-        successSubtitle: `You have successfully undelegated your ${network.value.stakingDenom}s.`,
+        title: 'actions.undelegate',
+        toLabel: 'general.undelegateTo',
+        fromLabel: 'general.undelegateFrom',
+        amountLabel: 'general.undelegateAmount',
+        submit: 'actions.undelegate',
+        successTitle: 'success.undelegateTitle',
+        successSubtitle: 'success.undelegateDescription',
         defaultFrom: validator
       },
       fullWidth: true,
@@ -63,12 +59,13 @@ export const useDelegatorActions = () => {
       component: DelegationDialog,
       componentProps: {
         type: MessageTypes.RESTAKE,
-        title: 'Redelegate',
-        toLabel: 'Redelegate to',
-        amountLabel: 'Amount to redelegate',
-        submit: 'Redelegate',
-        successTitle: 'Successfully redelegated',
-        successSubtitle: `You have successfully redelegated your ${network.value.stakingDenom}s.`,
+        title: 'actions.redelegate',
+        toLabel: 'general.redelegateTo',
+        fromLabel: 'general.redelegateFrom',
+        amountLabel: 'general.redelegateAmount',
+        submit: 'actions.redelegate',
+        successTitle: 'success.redelegateTitle',
+        successSubtitle: 'success.redelegateDescription',
         defaultFrom: validator
       },
       fullWidth: true,
