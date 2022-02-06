@@ -2,7 +2,7 @@
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="body column items-center">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none">Receive</h2>
+        <h2 class="title text-body-large text-white q-my-none">{{ $t('actions.receive') }}</h2>
 
         <q-btn
           unelevated
@@ -12,7 +12,7 @@
           padding="2px"
           @click="close"
         >
-          <label class="text-body4 text-uppercase no-pointer-events">close</label>
+          <label class="text-body4 text-uppercase no-pointer-events">{{ $t('actions.close') }}</label>
           <q-icon class="close-icon" name="svguse:icons.svg#close|0 0 12 12" size="10px" />
         </q-btn>
       </div>
@@ -23,12 +23,12 @@
 
       <div class="row justify-between items-end full-width footer">
         <div class="column">
-          <p class="address-title text-caption-2 text-half-transparent-white text-weight-medium">PUBLIC ADDRESS</p>
+          <p class="address-title text-caption-2 text-half-transparent-white text-weight-medium">{{ $t('general.publicAddress') }}</p>
           <p class="address text-body2 text-white">{{ formatShortAddress(address) }}</p>
         </div>
 
         <q-btn class="copy-btn btn-medium-extra-small text-caption" rounded unelevated color="accent-2" text-color="white" padding="4px 16px" @click="onCopy(address)">
-          COPY
+          {{ $t('actions.copy') }}
         </q-btn>
       </div>
     </q-card>

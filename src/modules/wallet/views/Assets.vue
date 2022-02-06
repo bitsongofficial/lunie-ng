@@ -7,9 +7,9 @@
       appear
     >
       <div class="chain-stats-grid">
-        <chain-stats title="TOTAL ASSETS" :denom="currency" :splittedDecimals="available" />
-        <chain-stats title="TOTAL STAKED" :denom="currency" :splittedDecimals="totalDelegated" />
-        <chain-stats :title="network.stakingDenom + ' PRICE'" :denom="currency" :splittedDecimals="currentPrice" :loading="loading" />
+        <chain-stats :title="$t('general.totalAssets')" :denom="currency" :splittedDecimals="available" />
+        <chain-stats :title="$t('general.totalStaked')" :denom="currency" :splittedDecimals="totalDelegated" />
+        <chain-stats :title="network.stakingDenom + ' ' + $t('general.price')" :denom="currency" :splittedDecimals="currentPrice" :loading="loading" />
       </div>
     </transition>
     <transition
@@ -31,7 +31,7 @@
       <div class="balance-section">
         <div class="section-header-small row items-center no-wrap">
           <h2 class="section-title text-body-large text-white">
-            IBC Tokens
+            {{ $t('assets.ibcTokens') }}
           </h2>
         </div>
 
@@ -83,10 +83,9 @@ export default defineComponent({
 
     const available = computed(() => {
       const availableFiat = currentBalance.value && currentBalance.value.availableFiat ? currentBalance.value.availableFiat : '0';
-      const short = shortDecimals(availableFiat);
 
-      if (short) {
-        return splitDecimals(short);
+      if (availableFiat) {
+        return splitDecimals(availableFiat);
       }
 
       return null;

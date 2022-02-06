@@ -2,7 +2,7 @@
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="body column items-center">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">Claim</h2>
+        <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">{{ $t('actions.claim') }}</h2>
 
         <q-btn
           unelevated
@@ -12,7 +12,7 @@
           padding="2px"
           @click="close"
         >
-          <label class="text-body4 text-uppercase no-pointer-events">close</label>
+          <label class="text-body4 text-uppercase no-pointer-events">{{ $t('actions.close') }}</label>
           <q-icon class="close-icon" name="svguse:icons.svg#close|0 0 12 12" size="10px" />
         </q-btn>
       </div>
@@ -20,7 +20,7 @@
       <template v-if="!error">
         <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width" v-for="(reward, index) in totalRewards" :key="index">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Amount</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t('general.amount') }}</label>
 
             <q-input
               v-model="reward.amount"
@@ -34,11 +34,11 @@
               disable
               class="quantity-input full-width large"
               :rules="[
-                val => !!val || 'Required field',
-                val => !isNaN(val) || 'Amount must be a decimal value',
-                val => gtnZero(val) || 'Amount must be a greater then zero',
-                val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
-                val => !isNegative(val) || 'Amount must be greater then zero'
+                val => !!val || $t('errors.required'),
+                val => !isNaN(val) || $t('errors.nan'),
+                val => gtnZero(val) || $t('errors.gtnZero'),
+                val => compareBalance(val, availableCoins) || $t('errors.balanceMissing'),
+                val => !isNegative(val) || $t('errors.negative')
               ]"
             >
               <template v-slot:append>
@@ -51,8 +51,6 @@
                 </div>
               </template>
             </q-input>
-
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none" v-if="isLedger">Claim will only withdraw rewards from 5 validators at a time because of a limitation with the Ledger Nano.</p>
           </div>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -64,11 +62,11 @@
               padding="2px"
               @click="close"
             >
-              <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
+              <label class="text-h5 text-capitalize no-pointer-events">{{ $t('actions.cancel') }}</label>
             </q-btn>
 
             <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
-              claim
+              {{ $t('actions.claim') }}
             </q-btn>
           </div>
         </q-form>
@@ -76,12 +74,12 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Successful withdrawal!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t('success.withdraw') }}</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">You have successfully withdrawn your rewards.</p>
+          <p class="text-h4 text-half-transparent-white text-center">{{ $t('success.withdrawDescription') }}</p>
 
           <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
-            See your transaction
+            {{ $t('actions.transactions') }}
           </q-btn>
         </div>
       </template>
@@ -89,7 +87,7 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t('errors.title') }}</h3>
 
         <p class="text-h4 text-half-transparent-white word-break-break-word text-center">{{ error }}</p>
       </div>

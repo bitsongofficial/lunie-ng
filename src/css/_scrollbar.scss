@@ -1,6 +1,6 @@
 body,
 .scroll {
-  overflow: overlay !important;
+  overflow: overlay;
 
   &::-webkit-scrollbar {
     width: 21px;

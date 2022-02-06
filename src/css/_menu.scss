@@ -36,6 +36,24 @@
   }
 }
 
+.settings-menu {
+  position: relative;
+  background: $alternative-5;
+  overflow: visible !important;
+  min-width: 206px;
+  padding: 26px 21px;
+  box-shadow: none;
+}
+
+.settings-icon {
+  font-size: 32px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: $alternative-5;
+}
+
 .q-select__dialog {
   background: $secondary;
 }

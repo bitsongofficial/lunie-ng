@@ -2,7 +2,7 @@
   <q-page class="stats">
     <div class="section-header row items-center no-wrap">
       <h2 class="section-title text-body-large text-white">
-        Chain Stats
+        {{ $t('stats.title') }}
       </h2>
     </div>
 
@@ -14,68 +14,68 @@
     >
       <div class="chain-stats-grid">
         <chain-stats
-          title="CIRCULATING SUPPLY"
+          :title="$t('general.circulatingSupply')"
           :denom="network.stakingDenom"
           :splittedDecimals="supplyInfo?.circulatingSupply"
           :loading="loadingSupplyInfo"
           coin
         />
         <chain-stats
-          title="TOTAL SUPPLY"
+          :title="$t('general.totalSupply')"
           :denom="network.stakingDenom"
           :splittedDecimals="supplyInfo?.totalSupply"
           :loading="loadingSupplyInfo"
           coin
         />
         <chain-stats
-          title="COMMUNITY POOL"
+          :title="$t('general.communityPool')"
           :denom="network.stakingDenom"
           :splittedDecimals="supplyInfo?.communityPool"
           :loading="loadingSupplyInfo"
           coin
         />
         <chain-stats
-          title="MARKET CAP"
+          :title="$t('general.marketCap')"
           :denom="currency"
           :splittedDecimals="marketCap"
           :loading="loadingSupplyInfo"
         />
         <chain-stats
-          title="TOTAL VOLUME"
+          :title="$t('general.totalVolume')"
           :denom="currency"
           :splittedDecimals="totalVolume"
           :loading="loadingSupplyInfo"
         />
         <chain-stats
-          title="PRICE"
+          :title="$t('general.price')"
           :denom="currency"
           :splittedDecimals="currentPrice"
           :loading="loadingSupplyInfo"
         />
         <chain-stats
-          title="APR"
+          :title="$t('general.apr')"
           :quantity="apr"
           :loading="loadingApr"
         />
         <chain-stats
-          title="TOKEN BONDED"
+          :title="$t('general.tokenBonded')"
           :denom="network.stakingDenom"
           :splittedDecimals="bondedTokens"
           :loading="loadingApr"
           coin
         />
         <chain-stats
-          title="% TOKEN BONDED"
+          :title="'% ' + $t('general.tokenBonded')"
           :quantity="bondedTokensPercentage"
           :loading="loadingApr"
         />
         <chain-stats
-          title="VALIDATORS"
+          :title="$t('menu.validators')"
           :quantity="validatorsCount"
           :loading="loadingApr"
         />
         <chain-stats
-          title="ANNUAL INFLATION"
+          :title="$t('general.annualInflation')"
           :quantity="inflation"
           :loading="loadingApr"
         />

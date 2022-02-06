@@ -37,14 +37,14 @@
         'q-col-gutter-md': quasar.screen.lt.md
       }">
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">APR</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.apr') }}</label>
 
           <p class="text-body-large text-white q-my-none">
             {{ validator.expectedReturns ? bigFigureOrPercent(validator.expectedReturns) : 'N/A' }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">VOTING POWER</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.votingPower') }}</label>
 
           <p class="text-body-large text-white q-my-none">
             {{ bigFigureOrPercent(validator.votingPower) }}
@@ -53,14 +53,14 @@
           <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(validator.tokens) }} {{ network.stakingDenom }}</label>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">SELF STAKE</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.selfStake') }}</label>
 
           <p class="text-body-large text-white q-my-none">
             {{ shortDecimals(selfStake) }}
           </p>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">STAKERS</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.stakers') }}</label>
 
           <p class="text-body-large text-white q-my-none">
             {{ validatorDelegations.length }}
@@ -73,24 +73,24 @@
         'q-col-gutter-md': quasar.screen.lt.md
       }">
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">APR</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.apr') }}</label>
 
           <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">VOTING POWER</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.votingPower') }}</label>
 
           <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
 
           <q-skeleton class="q-mt-xs" type="text" width="80px" height="12px" animation-speed="700" dark square></q-skeleton>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">SELF STAKE</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.selfStake') }}</label>
 
           <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
         </div>
         <div class="column items-center col-6 col-md-auto">
-          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">STAKERS</label>
+          <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.stakers') }}</label>
 
           <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
         </div>

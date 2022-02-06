@@ -3,7 +3,7 @@
     <div class="timeline-entry column items-center col-12 col-md-auto" v-for="(entry, index) in entries" :key="index">
       <q-icon class="timeline-entry-icon" name="svguse:icons.svg#check-outlined|0 0 20 20" :color="entry.active ? 'white' : 'accent'" />
 
-      <h6 class="text-subtitle2 text-weight-medium q-mt-sm q-mb-xs" :class="{
+      <h6 class="text-subtitle2 text-weight-medium q-mt-sm q-mb-xs text-capitalize" :class="{
         'text-white': entry.active,
         'text-accent': !entry.active,
       }">{{ entry.label }}</h6>

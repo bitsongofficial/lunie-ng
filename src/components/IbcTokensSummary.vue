@@ -5,7 +5,7 @@
       'items-center': !quasar.screen.lt.md
     }">
       <p class="description text-subtitle2 text-half-transparent-white col-12 col-md-6">
-        No IBC Tokens in your portfolio.
+        {{ $t('assets.emptyIbcTokens') }}
       </p>
     </div>
   </div>
