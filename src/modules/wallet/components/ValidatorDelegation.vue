@@ -71,7 +71,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .validator-delegation {
-  background-color: $transparent-gray;
+  background-color: $transparent-gray2;
   backdrop-filter: blur(60px);
   border-radius: 10px;
   padding: 24px 12px;

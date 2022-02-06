@@ -46,11 +46,12 @@
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
             </p>
-            <!-- <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" /> -->
           </div>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
-          <validator-status :status="props.row.status" small />
+          <div class="validator-status bg-secondary">
+            <div class="validators-status-dot" :class="props.row.status === 'ACTIVE' ? 'bg-info' : 'bg-accent-6'"></div>
+          </div>
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
@@ -116,14 +117,10 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
 import { fromNow } from 'src/common/date';
-import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
 
 export default defineComponent({
   name: 'ValidatorsTable',
-  components: {
-    ValidatorStatus
-  },
   props: {
     loading: {
       type: Boolean,
@@ -341,5 +338,20 @@ export default defineComponent({
 
 .info-icon {
   min-width: 13px;
+}
+
+.validator-status {
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.validators-status-dot {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  border-radius: 50%;
 }
 </style>

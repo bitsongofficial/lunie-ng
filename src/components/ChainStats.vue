@@ -1,5 +1,5 @@
 <template>
-  <div class="chain-stats">
+  <div class="chain-stats large">
     <div class="chain-stats-section">
       <div class="chain-stats-header row justify-between">
         <h3 class="chain-stats-title q-my-none text-half-transparent-white text-caption text-weight-medium text-uppercase">
@@ -49,7 +49,7 @@ export default defineComponent({
     coin: {
       type: Boolean,
       default: false
-    }
+    },
   },
 });
 </script>
@@ -60,6 +60,10 @@ export default defineComponent({
   box-shadow: $full-secondary-box-shadow;
   border-radius: $generic-border-radius;
   padding: 24px 34px;
+
+  &.large {
+    min-height: 153px;
+  }
 }
 
 .chain-stats-header {
@@ -72,6 +76,11 @@ export default defineComponent({
 }
 
 .chain-stats-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+
   & .chain-stats-title {
     flex: 1;
     word-break: break-word;

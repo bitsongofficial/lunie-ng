@@ -90,7 +90,7 @@ export default defineComponent({
 .validator-address {
   position: relative;
   grid-gap: 76px;
-  background-color: $transparent-gray;
+  background-color: $transparent-gray2;
   backdrop-filter: blur(60px);
   border-radius: 10px;
   padding: 24px;

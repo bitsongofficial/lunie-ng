@@ -1,13 +1,13 @@
 <template>
   <div class="validator-resume column">
-    <div class="row items-center">
-      <q-avatar class="validator-avatar col-auto" size="100px" :color="validator.picture ? 'transparent' : 'secondary'" v-if="validator">
+    <div class="validator-top row items-center">
+      <q-avatar class="validator-avatar col-auto" size="132px" :color="validator.picture ? 'transparent' : 'secondary'" v-if="validator">
         <img :src="validator.picture" v-if="validator.picture">
         <p class="text-h3 text-uppercase text-white q-my-none" v-else>
           {{ validator.name[0] }}
         </p>
       </q-avatar>
-      <q-skeleton class="validator-avatar col-auto" type="QAvatar" width="100px" height="100px" animation-speed="700" dark v-else-if="loading"></q-skeleton>
+      <q-skeleton class="validator-avatar col-auto" type="QAvatar" width="132px" height="132px" animation-speed="700" dark v-else-if="loading"></q-skeleton>
 
       <div class="validator-header col-12 col-md">
         <div class="validator-header-row row items-center">
@@ -18,22 +18,25 @@
 
           <validator-status class="validator-status" :status="validator.status" v-if="validator" />
           <q-skeleton class="validator-status" type="QBadge" width="74px" height="24px" animation-speed="700" dark v-else-if="loading"></q-skeleton>
+
+          <a :href="validator.website" target="_blank" class="website text-subtitle2 text-transparent-gray4 col-md-auto q-my-none q-ml-auto" v-if="validator && validator.website && validator.website.length > 0">
+            {{ validator.website }}
+          </a>
         </div>
         <div class="row items-center justify-between">
-          <p class="text-h4 text-white q-my-none col-12 col-md-8" v-if="validator">
+          <p class="text-h4 text-half-transparent-gray4 q-my-none col-12 col-md-8" v-if="validator">
             {{ validator.details }}
           </p>
           <q-skeleton type="text" width="180px" height="30px" animation-speed="700" dark square v-else-if="loading"></q-skeleton>
-
-          <a :href="validator.website" target="_blank" class="website text-subtitle2 text-half-transparent-white col-md-auto q-my-none" v-if="validator && validator.website && validator.website.length > 0">
-            {{ validator.website }}
-          </a>
         </div>
       </div>
     </div>
 
     <div class="validator-footer" v-if="validator">
-      <div class="row items-start justify-around" :class="{
+      <div class="socials">
+        <q-icon color="gray4" name="svguse:icons.svg#twitter|0 0 30 24" size="30px" />
+      </div>
+      <div v-if="!loadingDetails " class="stats row items-start justify-between" :class="{
         'q-col-gutter-md': quasar.screen.lt.md
       }">
         <div class="column items-center col-6 col-md-auto">
@@ -43,6 +46,9 @@
             {{ validator.expectedReturns ? bigFigureOrPercent(validator.expectedReturns) : 'N/A' }}
           </p>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.votingPower') }}</label>
 
@@ -50,8 +56,11 @@
             {{ bigFigureOrPercent(validator.votingPower) }}
           </p>
 
-          <label class="text-body4 text-weight-medium text-uppercase text-white q-mt-xs">{{ shortDecimals(validator.tokens) }} {{ network.stakingDenom }}</label>
+          <label class="text-body4 text-weight-medium text-uppercase text-half-transparent-white q-mt-xs">{{ shortDecimals(validator.tokens) }} {{ network.stakingDenom }}</label>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.selfStake') }}</label>
 
@@ -59,6 +68,9 @@
             {{ shortDecimals(selfStake) }}
           </p>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.stakers') }}</label>
 
@@ -67,32 +79,37 @@
           </p>
         </div>
       </div>
-    </div>
-    <div class="validator-footer" v-else-if="loading">
-      <div class="row items-start justify-around" :class="{
+      <div v-else class="stats row items-start justify-between" :class="{
         'q-col-gutter-md': quasar.screen.lt.md
       }">
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.apr') }}</label>
 
-          <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark></q-skeleton>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.votingPower') }}</label>
 
-          <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
-
-          <q-skeleton class="q-mt-xs" type="text" width="80px" height="12px" animation-speed="700" dark square></q-skeleton>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark></q-skeleton>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.selfStake') }}</label>
 
-          <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark></q-skeleton>
         </div>
+
+        <q-separator class="stats-separator" color="full-transparent-white" vertical />
+
         <div class="column items-center col-6 col-md-auto">
           <label class="validator-footer-title text-body4 text-weight-medium text-uppercase text-half-transparent-white">{{ $t('general.stakers') }}</label>
 
-          <q-skeleton type="text" width="60px" height="30px" animation-speed="700" dark square></q-skeleton>
+          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark></q-skeleton>
         </div>
       </div>
     </div>
@@ -134,7 +151,10 @@ export default defineComponent({
     const quasar = useQuasar();
     const network = computed(() => store.state.authentication.network);
 
+    const loadingDetails = computed(() => store.state.data.validatorDelegationsLoading || store.state.data.selfStakeValidatorLoading);
+
     return {
+      loadingDetails,
       quasar,
       network,
       bigFigureOrPercent,
@@ -146,17 +166,6 @@ export default defineComponent({
 
 
 <style lang="scss" scoped>
-.validator-resume {
-  background-color: $transparent-gray;
-  backdrop-filter: blur(60px);
-  border-radius: 10px;
-  padding: 32px;
-
-  @media screen and (min-width: $breakpoint-md-min) {
-    padding: 45px 47px 17px;
-  }
-}
-
 .website {
   margin-top: 16px;
 
@@ -166,15 +175,14 @@ export default defineComponent({
 }
 
 .validator-avatar {
-  min-width: 100px;
-  margin-right: 35px;
-  box-shadow: $black-box-shadow;
-}
+  min-width: 132px;
+  margin-bottom: 28px;
+  box-shadow: $black-box-shadow2;
 
-.validator-header {
-  padding-top: 10px;
-  padding-bottom: 38px;
-  border-bottom: 1px solid transparentize($color: $accent-3, $amount: 0.5);
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-right: 28px;
+    margin-bottom: 0;
+  }
 }
 
 .validator-header-row {
@@ -186,11 +194,63 @@ export default defineComponent({
   margin-left: 15px;
 }
 
+.validator-header {
+  margin-bottom: 30px;
+}
+
 .validator-footer {
-  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $transparent-gray2;
+  box-shadow: $full-secondary-box-shadow;
+  backdrop-filter: blur(60px);
+  border-radius: 20px;
+  flex-direction: column;
+  padding: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    flex-direction: row;
+    min-height: 120px;
+    padding-left: 86px;
+    padding-right: 76px;
+  }
 }
 
 .validator-footer-title {
   margin-bottom: 6px;
+}
+
+.validator-top {
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: -18px;
+    z-index: 1;
+    padding-left: 32px;
+  }
+}
+
+.socials {
+  opacity: 0.1;
+  margin-bottom: 24px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-right: 100px;
+    margin-bottom: 0;
+  }
+}
+
+.stats {
+  flex: 1;
+}
+
+.stats-separator {
+  margin: auto 0;
+  height: 61px;
+  display: none;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 0;
+    display: block;
+  }
 }
 </style>

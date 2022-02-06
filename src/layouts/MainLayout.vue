@@ -79,7 +79,7 @@
         >
           <template v-slot:selected-item="{ opt }">
             <div class="row items-center cursor-pointer">
-              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
+              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="14px" />
 
               <label class="text-white text-body2 q-ml-md q-mr-lg cursor-pointer">{{ opt.name }}</label>
             </div>
