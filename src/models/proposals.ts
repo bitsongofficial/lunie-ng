@@ -38,6 +38,18 @@ export enum ProposalType {
   TREASURY = 'TREASURY',
 }
 
+export enum ProposalSubmitType {
+  TEXT = 'ProposalTypeText',
+}
+
+export interface ProposalSubmitRequest {
+  id?: number;
+  title: string;
+  typology: ProposalSubmitType;
+  initialDeposit: string;
+  description: string;
+}
+
 export interface DepositParams {
   max_deposit_period: string;
   min_deposit: Coin[];

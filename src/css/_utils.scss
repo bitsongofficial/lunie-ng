@@ -131,6 +131,10 @@
   background: $transparent-accent !important;
 }
 
+.bg-transparent-gray2 {
+  background: $transparent-gray2 !important;
+}
+
 .bg-gradient {
   background: radial-gradient(59.94% 60.98% at 27.46% 2.76%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 64.03%), rgba(255, 255, 255, 0.04);
 }
@@ -176,4 +180,14 @@
 
 .text-underline {
   text-decoration: underline;
+}
+
+.q-col-gutter-custom {
+  margin-top: -46px;
+  margin-left: -28px;
+}
+
+.q-col-gutter-custom > * {
+  padding-top: 46px;
+  padding-left: 28px;
 }

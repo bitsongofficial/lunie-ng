@@ -1,6 +1,6 @@
 import Transport from '@ledgerhq/hw-transport';
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
-import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
+import { MsgDeposit, MsgSubmitProposal, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
 import { Coin } from '@cosmjs/stargate';
 import { NetworkConfig } from './network';
 import { Validator } from './validators';
@@ -34,6 +34,8 @@ export interface WalletSignData {
 export interface TransactionRequest {
   type: MessageTypes;
   memo?: string;
+  title?: string;
+  description?: string;
   proposalId?: string;
   voteOption?: number;
   password?: string;
@@ -42,6 +44,7 @@ export interface TransactionRequest {
   froms?: string[];
   amounts?: Coin[];
   amount: Coin;
+  deposit?: Coin;
 }
 
 export interface SignBroadcastRequest {
@@ -75,5 +78,5 @@ export interface SignMessageRequest {
         amount: string;
         denom: string;
     } | undefined)[];
-  } | MsgWithdrawDelegatorReward | MsgVote | MsgDeposit;
+  } | MsgWithdrawDelegatorReward | MsgVote | MsgDeposit | MsgSubmitProposal;
 }
