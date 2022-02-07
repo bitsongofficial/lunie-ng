@@ -5,44 +5,44 @@
     <div class="validator-address-left column col-12 col-md">
       <div class="validator-address-row row items-center justify-between no-wrap">
         <div class="column">
-          <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">operator address</label>
+          <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.operatorAddress') }}</label>
 
           <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ address }}</h5>
         </div>
 
         <q-btn class="copy-btn btn-extra-small text-body4" rounded unelevated color="accent-2" text-color="white" padding="10px 20px" @click="onCopy(validator.operatorAddress)">
-          COPY
+          {{ $t('actions.claim') }}
         </q-btn>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">uptime</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.uptime') }}</label>
 
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.uptimePercentage ? percent(validator.uptimePercentage) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">MAX COMMISSION RATE</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.maxCommissionRate') }}</label>
 
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxCommission ? percent(validator.maxCommission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">LAST COMMISSION CHANGE</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.lastCommissionChange') }}</label>
 
-        <h5 class="text-white q-mt-none q-mb-xs">{{ fromNow(validator.commissionUpdateTime) }} ago</h5>
+        <h5 class="text-white q-mt-none q-mb-xs">{{ $t('validator.ago', { time: fromNow(validator.commissionUpdateTime) }) }}</h5>
       </div>
     </div>
     <div class="validator-address-right column col-12 col-md">
       <div class="validator-address-row column" v-if="userAddress">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">ACCOUNT ADDRESS</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.accountAddress') }}</label>
 
         <h5 class="text-white q-mt-none q-mb-xs word-break-break-word">{{ userAddress }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">CURRENT COMMISSION RATE</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.currentCommissionRate') }}</label>
 
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.commission ? percent(validator.commission) : 'N/A' }}</h5>
       </div>
       <div class="validator-address-row column">
-        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">Max Daily Commission Change</label>
+        <label class="title text-body3 text-weight-medium text-half-transparent-white text-uppercase">{{ $t('validator.maxDailyCommissionChange') }}</label>
 
         <h5 class="text-white q-mt-none q-mb-xs">{{ validator.maxChangeCommission ? percent(validator.maxChangeCommission) : 'N/A' }}</h5>
       </div>
@@ -90,7 +90,7 @@ export default defineComponent({
 .validator-address {
   position: relative;
   grid-gap: 76px;
-  background-color: $transparent-gray;
+  background-color: $transparent-gray2;
   backdrop-filter: blur(60px);
   border-radius: 10px;
   padding: 24px;

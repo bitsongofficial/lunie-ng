@@ -4,13 +4,10 @@
       'q-gutter-y-md': quasar.screen.lt.md,
       'items-center': !quasar.screen.lt.md
     }">
-      <p class="description text-subtitle2 text-half-transparent-white col-12 col-md-6">
-        No voting proposals at this moment.<br/>
-        Come back in days to see what’s changed.
-      </p>
+      <p class="description text-subtitle2 text-half-transparent-white col-12 col-md-6" v-html="$t('proposals.empty')"></p>
 
       <q-btn @click="reset" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="white" text-color="secondary" padding="12px 28px 10px 29px">
-        SEE ALL PROPOSALS
+        {{ $t('proposals.allProposals') }}
       </q-btn>
     </div>
   </div>

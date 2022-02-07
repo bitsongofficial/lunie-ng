@@ -5,7 +5,7 @@
     color: $white !important;
 
     &::placeholder {
-      color: $accent-5 !important;
+      color: $half-transparent-white !important;
     }
   }
 
@@ -97,5 +97,40 @@
 
   & .q-field__prepend {
     min-width: unset;
+  }
+}
+
+.q-checkbox {
+  &.q-checkbox--dark {
+    & .q-checkbox__bg {
+      background: $white;
+      border-color: $white;
+      border-radius: 6px;
+    }
+
+    & .q-checkbox__svg {
+      color: $primary;
+    }
+
+    & .q-checkbox__label {
+      color: $white;
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 16px;
+      margin-left: 6px;
+    }
+  }
+}
+
+.q-radio {
+  & .q-radio__label {
+    color: $white;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  & .q-radio__bg path:first-of-type {
+    color: $accent-3;
   }
 }

@@ -14,7 +14,7 @@
     hide-pagination
   >
     <template v-slot:no-data>
-      <h5 class="text-half-transparent-white text-weight-medium">No validators available</h5>
+      <h5 class="text-half-transparent-white text-weight-medium">{{ $t('errors.emptyValidators') }}</h5>
     </template>
     <template v-slot:header="props">
       <q-tr :props="props" class="validators-table-head-row">
@@ -24,7 +24,7 @@
           :props="props"
           class="text-body4 text-uppercase text-half-transparent-white text-weight-medium validators-table-head-col"
         >
-          {{ col.label }}
+          {{ $t(col.label ?? '', { denom: network.stakingDenom }) }}
         </q-th>
       </q-tr>
     </template>
@@ -46,11 +46,12 @@
             <p class="validator-name q-my-none text-subtitle2">
               {{ props.row.name }}
             </p>
-            <!-- <q-icon class="info-icon" name="svguse:icons.svg#info|0 0 15 15" size="13px" color="primary" /> -->
           </div>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
-          <validator-status :status="props.row.status" small />
+          <div class="validator-status bg-secondary">
+            <div class="validators-status-dot" :class="props.row.status === 'ACTIVE' ? 'bg-info' : 'bg-accent-6'"></div>
+          </div>
         </q-td>
         <q-td key="staked" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
@@ -89,16 +90,16 @@
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
               <q-item class="menu-item" active-class="active" clickable @click="openClaimDialog(props.row)" v-if="getRewards(props.row.operatorAddress).length > 0" v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Claim</q-item-section>
+                <q-item-section class="text-center text-subtitle2 text-capitalize">{{ $t('actions.claim') }}</q-item-section>
               </q-item>
               <q-item class="menu-item" active-class="active" clickable @click="openStakeDialog(props.row)" v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Delegate</q-item-section>
+                <q-item-section class="text-center text-subtitle2 text-capitalize">{{ $t('actions.delegate') }}</q-item-section>
               </q-item>
               <q-item class="menu-item" active-class="active" @click="openRestakeDialog(props.row)" :disable="getDelegations(props.row.operatorAddress).length === 0" :clickable="getDelegations(props.row.operatorAddress).length > 0" v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Redelegate</q-item-section>
+                <q-item-section class="text-center text-subtitle2 text-capitalize">{{ $t('actions.redelegate') }}</q-item-section>
               </q-item>
               <q-item class="menu-item" active-class="active" @click="openUnstakeDialog(props.row)" :disable="getDelegations(props.row.operatorAddress).length === 0" :clickable="getDelegations(props.row.operatorAddress).length > 0" v-close-popup>
-                <q-item-section class="text-center text-subtitle2">Undelegate</q-item-section>
+                <q-item-section class="text-center text-subtitle2 text-capitalize">{{ $t('actions.undelegate') }}</q-item-section>
               </q-item>
             </q-menu>
           </q-btn>
@@ -116,14 +117,10 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
 import { fromNow } from 'src/common/date';
-import ValidatorStatus from 'src/components/ValidatorStatus.vue';
 import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
 
 export default defineComponent({
   name: 'ValidatorsTable',
-  components: {
-    ValidatorStatus
-  },
   props: {
     loading: {
       type: Boolean,
@@ -164,43 +161,43 @@ export default defineComponent({
       },
       {
         name: 'name',
-        label: 'Name',
+        label: 'general.name',
         align: 'left',
         field: 'name',
       },
       {
         name: 'status',
-        label: 'Status',
+        label: 'general.status',
         align: 'center',
         field: 'status',
       },
       {
         name: 'staked',
-        label: `Delegated (${network.value.stakingDenom})`,
+        label: 'general.delegated',
         align: 'center',
         field: 'staked',
       },
       {
         name: 'rewards',
-        label: 'APR',
+        label: 'general.apr',
         align: 'center',
         field: 'rewards',
       },
       {
         name: 'votingPower',
-        label: 'Voting Power',
+        label: 'general.votingPower',
         align: 'center',
         field: 'votingPower',
       },
       {
         name: 'unstaked',
-        label: `Undelegated (${network.value.stakingDenom})`,
+        label: 'general.undelegated',
         align: 'center',
         field: 'unstaked',
       },
       {
         name: 'time',
-        label: 'Remaining Time',
+        label: 'general.remainingTime',
         align: 'center',
         field: 'time',
       },
@@ -341,5 +338,20 @@ export default defineComponent({
 
 .info-icon {
   min-width: 13px;
+}
+
+.validator-status {
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.validators-status-dot {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  border-radius: 50%;
 }
 </style>

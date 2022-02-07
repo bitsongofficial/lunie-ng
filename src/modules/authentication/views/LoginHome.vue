@@ -1,6 +1,6 @@
 <template>
   <div class="login-home-content">
-    <h1 class="text-body-large text-white text-weight-medium q-mt-none q-mb-md text-center">Welcome</h1>
+    <h1 class="text-body-large text-white text-weight-medium q-mt-none q-mb-md text-center text-capitalize">{{ $t('login.title') }}</h1>
 
     <q-select
       v-model="network"
@@ -33,22 +33,22 @@
     </q-select>
 
     <q-list>
-      <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" />
-      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" />
-      <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension">
+      <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" :title="$t('login.explore')" />
+      <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" :title="$t('login.keplr')" />
+      <item clickable disable leftIcon="svguse:icons.svg#chrome" :title="$t('login.extension')">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
             <label class="text-center full-width">
-              Soon
+              {{ $t('general.soon') }}
             </label>
           </q-chip>
         </template>
       </item>
-      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App">
+      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable :title="$t('login.mobile')">
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="alternative-4" text-color="white" size="sm">
             <label class="text-center full-width">
-              Soon
+              {{ $t('general.soon') }}
             </label>
           </q-chip>
         </template>
@@ -57,7 +57,7 @@
 
     <div class="column items-center" v-if="session">
       <q-btn @click="signOut" :ripple="false" class="signout-btn text-capitalize text-underline q-mx-auto text-body4 no-hoverable" dense flat unelevated text-color="white" padding="0">
-        Signout
+        {{ $t('actions.signout') }}
       </q-btn>
     </div>
   </div>

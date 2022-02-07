@@ -1,72 +1,105 @@
 <template>
   <div class="balance-summary">
-    <div class="row" :class="{
-      'q-gutter-y-md': quasar.screen.lt.md,
-      'items-center': !quasar.screen.lt.md
-    }">
-      <div class="row col-12 col-md-8 justify-between q-mr-auto">
-        <div class="balance-section column no-wrap col-12 col-md-auto">
-          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-            TOTAL ({{ network.stakingDenom }})
-          </h3>
+    <div class="balance-section column no-wrap">
+      <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+        {{ $t('general.total') }} {{ network.stakingDenom }}
+      </h3>
 
-          <template v-if="!loadingBalance && !loading">
-            <p class="balance-subtitle text-weight-medium text-body-large text-white q-my-none">
-              {{ total ? total.left : 0 }}<span class="text-h4" v-if="total && total.right">.{{ total.right }}</span>
-            </p>
-          </template>
-          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
-        </div>
-        <div class="balance-section column no-wrap col-12 col-md-auto">
-          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-            REWARDS ({{ network.stakingDenom }})
-          </h3>
+      <template v-if="!loadingBalance && !loading">
+        <p class="balance-subtitle text-weight-medium text-body-large text-white q-my-none">
+          {{ total ? total.left : 0 }}<span class="text-h4" v-if="total && total.right">.{{ total.right }}</span>
+        </p>
+        <p class="balance-price text-weight-medium text-h6 text-half-transparent-white text-uppercase text-center q-my-none">
+          {{ balance ? balance.totalFiat : 0 }} {{ currency }}
+        </p>
+      </template>
+      <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+    </div>
 
-          <template v-if="!loadingBalance && !loading">
-            <p class="balance-subtitle text-body-large text-white q-my-none">
-              {{ rewards.left }}<span class="text-h4" v-if="rewards && rewards.right">.{{ rewards.right }}</span>
-            </p>
-          </template>
-          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
-        </div>
-        <div class="balance-section column no-wrap col-12 col-md-auto">
-          <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
-            AVAILABLE ({{ network.stakingDenom }})
-          </h3>
+    <q-separator class="balance-separator" color="full-transparent-white" vertical />
 
-          <p class="balance-subtitle text-body-large text-white q-my-none" v-if="!loadingBalance && !loading">
-            {{ available && balance && balance.type === 'STAKE' ? available.left : 0 }}<span class="text-h4" v-if="available && available.right">.{{ available.right }}</span>
-          </p>
-          <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
-        </div>
-      </div>
+    <div class="balance-section column no-wrap">
+      <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+        {{ $t('general.delegated', { denom: network.stakingDenom }) }}
+      </h3>
 
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
-        SEND <q-icon class="balance-icon rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="half-transparent-white" />
-      </q-btn>
+      <template v-if="!loadingBalance && !loading">
+        <p class="balance-subtitle text-body-large text-white q-my-none" v-if="totalDelegated">
+          {{ totalDelegated.left }}<span class="text-h4" v-if="totalDelegated && totalDelegated.right">.{{ totalDelegated.right }}</span>
+        </p>
+        <p class="balance-price text-weight-medium text-h6 text-half-transparent-white text-uppercase text-center q-my-none">
+          {{ fiatDelegated }} {{ currency }}
+        </p>
+      </template>
+      <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+    </div>
+
+    <q-separator class="balance-separator" color="full-transparent-white" vertical />
+
+    <div class="balance-section column no-wrap">
+      <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+        {{ $t('general.available', { denom: network.stakingDenom }) }}
+      </h3>
+
+      <template v-if="!loadingBalance && !loading">
+        <p class="balance-subtitle text-body-large text-white q-my-none">
+          {{ available && balance && balance.type === 'STAKE' ? available.left : 0 }}<span class="text-h4" v-if="available && available.right">.{{ available.right }}</span>
+        </p>
+        <p class="balance-price text-weight-medium text-h6 text-half-transparent-white text-uppercase text-center q-my-none">
+          {{ balance ? balance.availableFiat : 0 }} {{ currency }}
+        </p>
+      </template>
+      <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
+    </div>
+
+    <q-separator class="balance-separator" color="full-transparent-white" vertical />
+
+    <div class="balance-section column no-wrap">
+      <h3 class="balance-title q-my-none text-half-transparent-white text-body4 text-weight-medium text-center">
+        {{ $t('general.rewards', { denom: network.stakingDenom }) }}
+      </h3>
+
+      <template v-if="!loadingBalance && !loading">
+        <p class="balance-subtitle text-body-large text-white q-my-none" v-if="rewards">
+          {{ rewards.left }}<span class="text-h4" v-if="rewards && rewards.right">.{{ rewards.right }}</span>
+        </p>
+        <p class="balance-price text-weight-medium text-h6 text-half-transparent-white text-uppercase text-center q-my-none">
+          {{ rewardsFiat }} {{ currency }}
+        </p>
+      </template>
+      <q-skeleton class="q-mx-auto" width="80px" height="36px" animation-speed="700" dark v-else></q-skeleton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Dictionary } from 'lodash';
-import { useQuasar } from 'quasar';
 import { shortDecimals, splitDecimals } from 'src/common/numbers';
+import { useFiatConversion } from 'src/hooks/useFiatConversion';
 import { Balance } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, computed } from 'vue';
-import SendDialog from './SendDialog.vue';
 
 export default defineComponent({
   name: 'BalanceSummary',
   setup() {
     const store = useStore();
-    const quasar = useQuasar();
+    const { fiatConverter } = useFiatConversion();
 
-    const session = computed(() => store.state.authentication.session);
+    const currency = computed(() => store.state.settings.currency);
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
-
     const balance = computed(() => store.getters['data/currentBalance'] as Balance | undefined);
+    const fiatDelegated = computed(() => store.getters['data/fiatDelegated'] as string);
+    const totalDelegated = computed(() => {
+      const total = store.getters['data/totalDelegated'] as string;
+
+      if (total) {
+        return splitDecimals(total);
+      }
+
+      return null;
+    });
+
     const total = computed(() => {
       if (balance.value) {
         return splitDecimals((balance.value.total as string))
@@ -116,25 +149,30 @@ export default defineComponent({
       };
     });
 
-    const openSendDialog = () => {
-      quasar.dialog({
-        component: SendDialog,
-        fullWidth: true,
-        maximized: true,
-      });
-    }
+    const rewardsFiat = computed(() => {
+      const totalRewardsPerDenom = store.getters['data/totalRewardsPerDenom'] as Dictionary<number>;
+
+      if (totalRewardsPerDenom && Object.keys(totalRewardsPerDenom).length > 0 && balance.value) {
+        const amount = totalRewardsPerDenom[balance.value.denom];
+
+        return fiatConverter(amount);
+      }
+
+      return '0';
+    });
 
     return {
       available,
       total,
-      session,
       loadingBalance,
       loading,
       network,
       rewards,
       balance,
-      quasar,
-      openSendDialog
+      rewardsFiat,
+      currency,
+      fiatDelegated,
+      totalDelegated
     }
   }
 });
@@ -142,18 +180,31 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .balance-summary {
+  display: grid;
+  grid-template-columns: 1fr;
   background: $transparent-gray2;
   box-shadow: $full-secondary-box-shadow;
   backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
-  padding: 34px 46px 30px 43px;
+  padding: 32px;
+  grid-gap: 32px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    align-items: flex-start;
+    justify-content: space-between;
+    grid-template-columns: auto 1px auto 1px auto 1px auto;
+    grid-gap: 0;
+    padding: 40px 100px;
+  }
 }
 
 .balance-title {
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .balance-section {
+  position: relative;
   margin-bottom: 12px;
 
   @media screen and (min-width: $breakpoint-md-min) {
@@ -168,13 +219,18 @@ export default defineComponent({
   }
 }
 
-.balance-icon {
-  margin-left: 32px;
+.balance-price {
+  margin-top: 4px;
 }
 
-.send-btn {
+.balance-separator {
+  margin: auto 0;
+  height: 61px;
+  display: none;
+
   @media screen and (min-width: $breakpoint-md-min) {
-    max-width: 126px;
+    margin-bottom: 0;
+    display: block;
   }
 }
 </style>

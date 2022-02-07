@@ -1,12 +1,12 @@
 <template>
-  <div class="chain-stats">
+  <div class="chain-stats large">
     <div class="chain-stats-section">
       <div class="chain-stats-header row justify-between">
         <h3 class="chain-stats-title q-my-none text-half-transparent-white text-caption text-weight-medium text-uppercase">
           {{ title }}
         </h3>
 
-        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" color="transparent-accent-3"></q-badge>
+        <q-badge v-if="denom" :label="denom" class="network text-uppercase text-weight-medium text-caption-2" text-color="white" :color="!coin ? 'transparent-accent-3' : 'accent-2'"></q-badge>
       </div>
 
       <template v-if="!loading">
@@ -38,14 +38,18 @@ export default defineComponent({
       required: true
     },
     splittedDecimals: {
-      type: Object as PropType<SplittedDecimals>,
+      type: Object as PropType<SplittedDecimals | null | undefined>,
     },
     quantity: {
       type: String,
     },
     denom: {
       type: String,
-    }
+    },
+    coin: {
+      type: Boolean,
+      default: false
+    },
   },
 });
 </script>
@@ -56,6 +60,10 @@ export default defineComponent({
   box-shadow: $full-secondary-box-shadow;
   border-radius: $generic-border-radius;
   padding: 24px 34px;
+
+  &.large {
+    min-height: 153px;
+  }
 }
 
 .chain-stats-header {
@@ -68,6 +76,11 @@ export default defineComponent({
 }
 
 .chain-stats-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+
   & .chain-stats-title {
     flex: 1;
     word-break: break-word;

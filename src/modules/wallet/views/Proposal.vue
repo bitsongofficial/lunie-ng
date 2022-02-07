@@ -1,6 +1,6 @@
 <template>
   <q-page class="proposal">
-    <proposal-status v-if="proposal" :status="proposal.status" />
+    <proposal-status v-if="proposal && !loading" :status="proposal.status" />
 
     <div class="row proposal-header justify-between">
       <div class="column col-12 col-md-9" v-if="!loading">
@@ -22,15 +22,15 @@
       <div class="column col-12 col-md-3 items-end q-ml-auto" v-if="proposal">
         <template v-if="session && session.sessionType !== 'explore'">
           <q-btn v-if="proposal.status === 'DEPOSIT'" @click="openDepositDialog" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-            deposit
+            {{ $t('actions.deposit') }}
           </q-btn>
           <q-btn v-else @click="openVoteDialog" :disable="proposal.status !== 'VOTING' || voted" class="vote-btn btn-large text-weight-medium text-subtitle2" rounded unelevated color="accent-2" text-color="white" padding="10px 28px">
-            {{ voted ? 'voted' : 'vote' }}
+            {{ voted ? $t('general.voted') : $t('actions.vote') }}
           </q-btn>
         </template>
 
         <q-btn @click="onCopy(href)" class="copy-btn btn-small text-untransform text-h6" rounded unelevated color="alternative-3" text-color="white" padding="11px 20px 10px">
-          Copy link
+          {{ $t('actions.copyLink') }}
 
           <q-icon class="q-ml-md" name="svguse:icons.svg#attachment|0 0 24 12" size="16px" color="white" />
         </q-btn>
@@ -38,16 +38,16 @@
     </div>
 
     <div class="section-header row items-center justify-between" v-if="proposal">
-      <h3 class="text-h4 text-weight-medium text-white q-my-none">Vote</h3>
+      <h3 class="text-h4 text-weight-medium text-white q-my-none">{{ $t('proposal.vote') }}</h3>
 
       <div class="row items-center">
         <div class="row items-center" v-if="proposal.tally && proposal.tally.totalVotedPercentage !== -1">
-          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">VOTED</h5>
+          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none text-uppercase">{{ $t('general.voted') }}</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.tally ? percent(proposal.tally.totalVotedPercentage) : 'N/A' }}</p>
         </div>
 
         <div class="row items-center q-ml-md">
-          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none">QUORUM</h5>
+          <h5 class="section-detail-title text-h6 text-primary text-weight-medium q-my-none text-uppercase">{{ $t('general.quorum') }}</h5>
           <p class="text-h4 text-white text-weight-medium q-my-none">{{ proposal.detailedVotes ? percent(proposal.detailedVotes.votingQuorum) : 'N/A' }}</p>
         </div>
       </div>
@@ -57,14 +57,14 @@
 
     <template v-if="entries.length > 0">
       <div class="section-header row items-center justify-between">
-        <h3 class="text-h4 text-weight-medium text-white q-my-none">Timeline</h3>
+        <h3 class="text-h4 text-weight-medium text-white q-my-none">{{ $t('proposal.timeline') }}</h3>
       </div>
 
       <timeline class="section" :entries="entries" />
     </template>
 
     <div class="section-header row items-center justify-between" v-if="!loading && description">
-      <h3 class="text-h4 text-weight-medium text-white q-my-none">Description</h3>
+      <h3 class="text-h4 text-weight-medium text-white q-my-none">{{ $t('proposal.description') }}</h3>
     </div>
     <div class="section-header row items-center justify-between" v-else-if="loading">
       <q-skeleton type="text" width="200px" height="30px" animation-speed="700" dark square></q-skeleton>
@@ -99,6 +99,7 @@ import Timeline from 'src/components/Timeline.vue';
 import ProposalStatus from 'src/components/ProposalStatus.vue';
 import DepositDialog from 'src/components/DepositDialog.vue';
 import VoteDialog from 'src/components/VoteDialog.vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Proposal',
@@ -114,6 +115,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const i18n = useI18n();
     const quasar = useQuasar();
     const store = useStore();
     const router = useRouter();
@@ -130,7 +132,10 @@ export default defineComponent({
 
     const dataset = computed<ChartData[]>(() => {
       if (proposal.value && proposal.value.detailedVotes) {
-        return getMappedVotes(proposal.value.detailedVotes);
+        return getMappedVotes(proposal.value.detailedVotes).map((el) => ({
+          ...el,
+          label: i18n.t(el.label)
+        }));
       }
 
       return [];
@@ -138,7 +143,10 @@ export default defineComponent({
 
     const entries = computed<TimelineData[]>(() => {
       if (proposal.value && proposal.value.detailedVotes) {
-        return getMappedTimeline(proposal.value.detailedVotes);
+        return getMappedTimeline(proposal.value.detailedVotes).map((el) => ({
+          ...el,
+          label: i18n.t(`general.${el.label.replace(/\s/g, '').toLowerCase()}`)
+        }));
       }
 
       return [];
@@ -193,7 +201,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .proposal {
-  padding-top: 20px;
+  padding-top: 40px;
   padding-bottom: 100px;
 }
 

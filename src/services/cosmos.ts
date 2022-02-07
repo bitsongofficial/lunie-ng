@@ -46,6 +46,7 @@ import { percentage, setDecimalLength } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { decodeB32, encodeB32 } from 'src/common/address';
 import { urlSafeEncode } from 'src/common/b64';
+import { searchSymbolDetails, searchTokenDetails } from './imperator';
 
 const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized from null in golang
 
@@ -298,7 +299,26 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
       });
     }
 
-    return coins.map((coin) => balanceReducer(coin, delegations, undelegations));
+    const mappedCoins = [];
+
+    for (const coin of coins) {
+      if (coin.supported) {
+        mappedCoins.push(
+          balanceReducer(coin, delegations, undelegations, Store.state.authentication.network.name),
+        );
+      } else {
+        const response = await searchSymbolDetails(coin.denom);
+        const symbol = response.data.symbol;
+        const responseName = await searchTokenDetails(symbol);
+        const token = responseName.data.find((el) => el.symbol === symbol);
+
+        mappedCoins.push(
+          balanceReducer(coin, delegations, undelegations, token ? token.name : symbol, symbol),
+        );
+      }
+    }
+
+    return mappedCoins;
   } catch (error) {
     throw error;
   }

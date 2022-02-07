@@ -16,6 +16,51 @@
           </q-btn>
         </q-toolbar-title>
 
+        <q-btn class="settings-btn" padding="4px" dense flat unelevated round>
+          <q-icon name="svguse:icons.svg#setting|0 0 20 20" color="white" size="20px" />
+
+          <q-menu class="settings-menu" anchor="bottom middle" self="top middle" :offset="[0, 26]">
+            <q-icon class="settings-icon" name="svguse:icons.svg#triangle|0 0 22 17" size="32px" />
+
+            <q-btn-toggle
+              v-model="settingType"
+              toggle-color="primary"
+              flat
+              unelevated
+              :ripple="false"
+              text-color="accent"
+              toggle-text-color="white"
+              padding="0 8px"
+              :options="settingsType"
+              stretch
+            />
+
+            <q-separator class="settings-separator" size="2px" color="accent-3" />
+
+            <div class="options-list scroll scroll--transparent">
+              <transition
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+                mode="out-in"
+                appear
+              >
+                <q-option-group
+                  v-if="settingType === 'language'"
+                  v-model="language"
+                  :options="languages"
+                  color="white"
+                />
+                <q-option-group
+                  v-else
+                  v-model="currency"
+                  :options="currencies"
+                  color="white"
+                />
+              </transition>
+            </div>
+          </q-menu>
+        </q-btn>
+
         <q-select
           v-model="network"
           rounded
@@ -34,7 +79,7 @@
         >
           <template v-slot:selected-item="{ opt }">
             <div class="row items-center cursor-pointer">
-              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="16px" />
+              <q-icon name="svguse:icons.svg#world|0 0 18 18" color="half-transparent-white" size="14px" />
 
               <label class="text-white text-body2 q-ml-md q-mr-lg cursor-pointer">{{ opt.name }}</label>
             </div>
@@ -55,17 +100,17 @@
         }" :persistent="true" show-if-above :overlay="quasar.screen.lt.md" v-model="leftDrawer" :width="270" side="left">
           <q-btn class="back-btn btn-medium" rounded unelevated @click="goBack" color="alternative-3" text-color="white" padding="15px 28px 16px 23px" v-if="back">
             <q-icon class="rotate-180 q-mr-md" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
-            <label class="text-h6 text-white text-uppercase no-pointer-events">back</label>
+            <label class="text-h6 text-white text-uppercase no-pointer-events">{{ $t('actions.back') }}</label>
           </q-btn>
 
           <q-list class="menu-links">
-            <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" title="Portfolio" link="/portfolio" />
-            <menu-link icon="svguse:icons.svg#assets|0 0 17 18" title="Assets" link="/assets" />
-            <menu-link icon="svguse:icons.svg#stats|0 0 20 12" title="Stats" link="/stats" />
-            <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
-            <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" title="Proposals" link="/proposals" />
-            <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
-            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
+            <menu-link icon="svguse:icons.svg#suitcase|0 0 18 16" :title="$t('menu.portfolio')" link="/portfolio" />
+            <menu-link icon="svguse:icons.svg#assets|0 0 17 18" :title="$t('menu.assets')" link="/assets" />
+            <menu-link icon="svguse:icons.svg#stats|0 0 20 12" :title="$t('menu.stats')" link="/stats" />
+            <menu-link icon="svguse:icons.svg#stack|0 0 17 17" :title="$t('menu.validators')" link="/validators" />
+            <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" :title="$t('menu.proposals')" link="/proposals" />
+            <menu-link icon="svguse:icons.svg#swap|0 0 21 16" :title="$t('menu.transactions')" :link="explorerURL" external />
+            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" :title="$t('menu.bridge')" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
 
           <q-item class="q-mt-auto profile-item" clickable>
@@ -76,7 +121,7 @@
             </q-item-section>
 
             <q-item-section class="column no-wrap" v-if="session" @click.stop="!loading && session ? onCopy(session.address) : null">
-              <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events">ADDRESS</label>
+              <label class="text-half-transparent-white text-weight-medium q-mb-xs text-caption no-pointer-events text-uppercase">{{ $t('general.address') }}</label>
               <label class="profile-item-address text-white text-body2 no-pointer-events" v-if="!loading">{{ address }}</label>
               <q-skeleton type="text" width="118px" dark v-else></q-skeleton>
             </q-item-section>
@@ -109,9 +154,9 @@ import { defineComponent, ref, computed, watch, onUnmounted, onMounted } from 'v
 import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { formatShortAddress } from 'src/common/address';
-import { useClipboard } from 'src/hooks';
-import { useChangeNetwork, useBack } from 'src/hooks';
+import { useChangeNetwork, useBack, useClipboard } from 'src/hooks';
 import { useRouter } from 'vue-router';
+import { settingsType, currencies, languages } from 'src/constants';
 
 import MenuLink from 'src/components/MenuLink.vue';
 
@@ -131,6 +176,19 @@ export default defineComponent({
     const address = computed(() => formatShortAddress(store.state.authentication.session?.address));
     const loading = computed(() => store.state.authentication.loading);
     const votingProposalsCount = computed(() => store.getters['data/votingProposalsCount'] as number);
+    const settingType = ref('language');
+    const language = computed({
+      get: () => store.state.settings.language,
+      set: (value) => {
+        store.commit('settings/setLanguage', value);
+      }
+    });
+    const currency = computed({
+      get: () => store.state.settings.currency,
+      set: (value) => {
+        store.commit('settings/setCurrency', value);
+      }
+    });
 
     const explorerURL = computed(() => {
       const session = store.state.authentication.session;
@@ -188,6 +246,12 @@ export default defineComponent({
       quasar,
       leftDrawer,
       back,
+      settingType,
+      currency,
+      currencies,
+      language,
+      languages,
+      settingsType: settingsType.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-body2 text-weight-medium' })),
       goToAuthentication,
       goBack,
       ...useClipboard(),
@@ -257,8 +321,22 @@ export default defineComponent({
   }
 }
 
+.settings-btn {
+  margin-right: 48px;
+}
+
 .back-btn {
   max-width: 112px;
   margin-bottom: 84px;
+}
+
+.settings-separator {
+  margin-top: 16px;
+  margin-bottom: 24px;
+  opacity: 0.1;
+}
+
+.options-list {
+  max-height: 200px;
 }
 </style>

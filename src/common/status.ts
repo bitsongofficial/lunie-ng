@@ -5,7 +5,7 @@ export const getValidatorStatusColor = (status: ValidatorStatus) => {
     case ValidatorStatus.ACTIVE:
       return 'info';
     case ValidatorStatus.INACTIVE:
-      return 'negative';
+      return 'accent-6';
     default:
       return 'gray2';
   }

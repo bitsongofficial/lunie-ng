@@ -1,0 +1,57 @@
+.v-md-editor {
+  background: $transparent-gray2 !important;
+
+  & * {
+    border-color: $white;
+    font-family: $typography-font-family;
+  }
+
+  & .v-md-textarea-editor {
+    & textarea {
+      background: transparent !important;
+      color: $white;
+    }
+  }
+
+  & .vuepress-markdown-body {
+    background: transparent !important;
+    color: $white;
+  }
+
+  & .v-md-prism-javascript {
+    background: $alternative-5 !important;
+  }
+
+  & .v-md-editor__menu {
+    background: $alternative-5 !important;
+
+    & * {
+      color: $white;
+    }
+  }
+
+  & .v-md-editor__menu-item {
+    &:hover {
+      background: transparentize($color: $alternative-4, $amount: 0.5) !important;
+    }
+  }
+
+  & .v-md-editor__toolbar-item {
+    color: $white;
+    background: none;
+
+    &:hover {
+      background: none;
+    }
+  }
+
+  & .v-md-editor__tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: $secondary;
+    border-radius: 4px;
+    padding: 4px;
+  }
+}
