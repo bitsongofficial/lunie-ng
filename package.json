@@ -1,8 +1,8 @@
 {
-  "name": "lunie-ng",
-  "version": "0.0.1",
-  "description": "BItsong Network",
-  "productName": "Network",
+  "name": "wallet-dapp",
+  "version": "1.3.0",
+  "description": "Bitsong Wallet DApp",
+  "productName": "Wallet DApp",
   "author": "Davide Segullo <davidesegullo@gmail.com>",
   "private": true,
   "scripts": {

@@ -67,7 +67,11 @@ export default {
     myDelegation: 'my delegation',
     disclaimer: 'Use this software at your own risk, never enter your seed phrase into untrusted software.',
     disclaimerFull: 'Use this software at your own risk, never enter your seed phrase into untrusted software. Beware of phishing scams and spoof sites.',
-    note: 'Note'
+    note: 'Note',
+    typology: 'Typology',
+    initialDeposit: 'Initial deposit',
+    textProposal: 'Text Proposal',
+    draft: 'draft'
   },
   actions: {
     receive: 'Receive',
@@ -90,7 +94,10 @@ export default {
     transactions: 'See your transaction',
     back: 'back',
     deposit: 'deposit',
-    proceed: 'proceed'
+    proceed: 'proceed',
+    createNew: 'create new',
+    publish: 'publish',
+    saveDraft: 'save draft'
   },
   errors: {
     title: 'Error!',
@@ -102,7 +109,8 @@ export default {
     gtnZero: 'Amount must be a greater then zero',
     balanceMissing: 'You don\'t have enough coins',
     negative: 'Amount must be greater then zero',
-    general: 'Something went wrong'
+    general: 'Something went wrong, please try again later',
+    minimumAmount: 'Minimum amount required {amount} {symbol}'
   },
   success: {
     title: 'Success!',
@@ -117,6 +125,7 @@ export default {
     redelegateTitle: 'Successfully redelegated',
     redelegateDescription: 'You have successfully redelegated your {symbol}s.',
     depositDescription: 'You have successfully deposited your {symbol}s.',
+    proposalDescription: 'Proposal submission success!'
   },
   portfolio: {
     balanceTitle: 'Your Balances',
@@ -154,6 +163,9 @@ export default {
     vote: 'Vote',
     timeline: 'Timeline',
     description: 'Description'
+  },
+  proposalSubmit: {
+    title: 'Create New Proposals',
   },
   login: {
     title: 'welcome',

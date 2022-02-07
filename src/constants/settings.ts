@@ -12,10 +12,10 @@ export const settingsType: Option[] = [
 ];
 
 export const languages: Option[] = [
-  {
+  /* {
     label: 'Italian',
     value: 'it-IT',
-  },
+  }, */
   {
     label: 'English',
     value: 'en-US',
