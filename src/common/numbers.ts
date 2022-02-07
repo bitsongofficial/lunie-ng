@@ -91,6 +91,13 @@ export const compareBalance = (amount: string, compare: string): boolean => {
   return number.lte(compareNumber);
 }
 
+export const minAmount = (amount: string, compare: string): boolean => {
+  const number = new BigNumber(amount);
+  const compareNumber = new BigNumber(compare);
+
+  return number.lt(compareNumber);
+}
+
 export const isNegative = (amount: string): boolean => {
   const number = new BigNumber(amount);
 
