@@ -19,6 +19,10 @@ export default {
     redelegateTo: 'Redelegate to',
     redelegateFrom: 'Redelegate from',
     redelegateAmount: 'Amount to redelegate',
+    to: 'To',
+    from: 'From',
+    addressTo: 'To address',
+    addressFrom: 'From address',
     amount: 'amount',
     publicAddress: 'Public address',
     address: 'address',
@@ -67,6 +71,8 @@ export default {
     myDelegation: 'my delegation',
     disclaimer: 'Use this software at your own risk, never enter your seed phrase into untrusted software.',
     disclaimerFull: 'Use this software at your own risk, never enter your seed phrase into untrusted software. Beware of phishing scams and spoof sites.',
+    disclaimerBridge: 'This is a newly developed tool and Bitsong assumes no responsibility for bugs or token losses due to inappropriate use of it.\n\nBefore executing transactions with a large amount of tokens it is highly recommended to test the tool with smaller amounts.',
+    risk: 'I have read the alert and understood the risks',
     note: 'Note',
     typology: 'Typology',
     initialDeposit: 'Initial deposit',
@@ -125,7 +131,8 @@ export default {
     redelegateTitle: 'Successfully redelegated',
     redelegateDescription: 'You have successfully redelegated your {symbol}s.',
     depositDescription: 'You have successfully deposited your {symbol}s.',
-    proposalDescription: 'Proposal submission success!'
+    proposalDescription: 'Proposal submission success!',
+    transferDescription: 'You have successfully transferred your {symbol}s.'
   },
   portfolio: {
     balanceTitle: 'Your Balances',

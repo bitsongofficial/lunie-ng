@@ -22,3 +22,4 @@ export * from './inflaction';
 export * from './coin-gecko';
 export * from './imperator';
 export * from './coin-image';
+export * from './ibc-transfer';

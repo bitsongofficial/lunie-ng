@@ -32,6 +32,14 @@ export default [
         },
       },
       {
+        path: 'bridge',
+        name: 'bridge',
+        component: () => import('./views/Bridge.vue'),
+        meta: {
+          title: 'Bridge'
+        },
+      },
+      {
         path: 'validators',
         name: 'validators',
         component: () => import('./views/Validators.vue'),

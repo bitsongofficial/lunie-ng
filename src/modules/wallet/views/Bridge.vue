@@ -1,0 +1,285 @@
+<template>
+  <q-page class="deposit">
+    <div class="section-header row items-center">
+      <h2 class="section-title text-body-large text-white text-weight-medium col-12 col-md-auto">
+        {{ $t('menu.bridge') }}
+      </h2>
+    </div>
+    <div class="row items-start justify-center">
+      <div class="col-12 col-md-6">
+        <div class="form">
+          <q-form class="column q-col-gutter-y-md" @submit="submit">
+            <div class="row q-col-gutter-y-md">
+              <div class="col-12 col-md-5">
+                <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.from') }}</p>
+
+                <q-select
+                  v-model="transferRequest.from"
+                  rounded
+                  standout
+                  map-options
+                  :options="fromChains"
+                  bg-color="transparent-white"
+                  color="transparent-white"
+                  label-color="primary"
+                  class="full-width large"
+                  option-label="name"
+                  no-error-icon
+                  hide-bottom-space
+                  :rules="[val => !!val || $t('errors.required')]"
+                >
+                  <template v-slot:selected-item="{ opt }">
+                    <div class="row items-center cursor-pointer">
+                      <q-avatar class="coin-avatar" size="32px">
+                        <img :src="opt.icon">
+                      </q-avatar>
+
+                      <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+                    </div>
+                  </template>
+                  <template v-slot:option="{ itemProps, opt }">
+                    <q-item class="row items-center cursor-pointer bg-secondary q-px-md q-py-sm" v-bind="itemProps">
+                      <q-avatar class="coin-avatar" size="32px">
+                        <img :src="opt.icon">
+                      </q-avatar>
+
+                      <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+              <div class="column items-center justify-center col-12 col-md-2 gt-sm">
+                <q-icon class="arrow-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="16px" />
+              </div>
+              <div class="col-12 col-md-5">
+                <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.to') }}</p>
+
+                <q-select
+                  v-model="transferRequest.to"
+                  :disable="!transferRequest.from"
+                  rounded
+                  standout
+                  map-options
+                  :options="toChains"
+                  bg-color="transparent-white"
+                  color="transparent-white"
+                  label-color="primary"
+                  option-label="name"
+                  class="full-width large"
+                  no-error-icon
+                  hide-bottom-space
+                  :rules="[val => !!val || $t('errors.required')]"
+                >
+                  <template v-slot:selected-item="{ opt }">
+                    <div class="row items-center cursor-pointer">
+                      <q-avatar class="coin-avatar" size="32px">
+                        <img :src="opt.icon">
+                      </q-avatar>
+
+                      <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+                    </div>
+                  </template>
+                  <template v-slot:option="{ itemProps, opt }">
+                    <q-item class="row items-center cursor-pointer bg-secondary q-px-md q-py-sm" v-bind="itemProps">
+                      <q-avatar class="coin-avatar" size="32px">
+                        <img :src="opt.icon">
+                      </q-avatar>
+
+                      <label class="text-white text-body2 cursor-pointer">{{ opt.name }}</label>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressFrom') }}</p>
+
+              <q-input
+                readonly
+                class="large"
+                color="transparent-gray"
+                label-color="half-transparent-white"
+                bg-color="transparent-gray"
+                rounded
+                standout
+                v-model="transferRequest.fromAddress"
+                :rules="[val => !!val || $t('errors.required'), val => !(transferRequest.from && !isValidAddress(val, transferRequest.from.addressPrefix)) || $t('errors.invalidAddress')]"
+                no-error-icon
+                hide-bottom-space
+              >
+                <template v-slot:append>
+                  <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
+                </template>
+              </q-input>
+            </div>
+
+            <div class="col-12">
+              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressTo') }}</p>
+
+              <q-input
+                :disable="!transferRequest.to"
+                class="large"
+                color="transparent-gray"
+                label-color="half-transparent-white"
+                bg-color="transparent-gray"
+                rounded
+                standout
+                v-model="transferRequest.toAddress"
+                :rules="[val => !!val || $t('errors.required'), val => !(transferRequest.to && !isValidAddress(val, transferRequest.to.addressPrefix)) || $t('errors.invalidAddress')]"
+                no-error-icon
+                hide-bottom-space
+              >
+                <template v-slot:append>
+                  <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
+                </template>
+              </q-input>
+            </div>
+
+            <div class="col-12">
+              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.amount') }}</p>
+
+              <q-input
+                color="transparent-white"
+                label-color="accent-5"
+                bg-color="transparent-white"
+                round
+                standout
+                v-model="transferRequest.amount"
+                no-error-icon
+                hide-bottom-space
+                reverse-fill-mask
+                :disable="!transferRequest.from || !transferRequest.to"
+                class="quantity-input full-width large"
+                :rules="[
+                  val => !!val || $t('errors.required'),
+                  val => !isNaN(val) || $t('errors.nan'),
+                  val => gtnZero(val) || $t('errors.gtnZero'),
+                  val => compareBalance(val, totalBtsg) || $t('errors.balanceMissing'),
+                  val => !isNegative(val) || $t('errors.negative')
+                ]"
+              >
+                <template v-slot:append>
+                  <q-btn @click="maxClick" class="max-btn btn-super-extra-small text-body3 q-mr-md" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+                    {{ $t('actions.max') }}
+                  </q-btn>
+                  <label class="text-body2 text-primary text-uppercase">BTSG</label>
+                </template>
+              </q-input>
+
+              <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: totalBtsg }) }} <span class="text-uppercase">BTSG</span></p>
+            </div>
+
+            <div class="col-12">
+              <alert-box class="col-12 full-width" color="primary" :title="$t('general.disclaimerBridge')" />
+            </div>
+
+            <div class="col-12">
+              <q-checkbox v-model="enableForm" color="primary" dark>
+                <label class="text-subtitle2 text-white text-weight-medium cursor-pointer q-ml-sm">{{ $t('general.risk') }}</label>
+              </q-checkbox>
+            </div>
+
+            <div class="col-12">
+              <q-btn type="submit" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :disable="!enableForm" :loading="sending">
+                {{ $t('actions.send') }}
+              </q-btn>
+            </div>
+          </q-form>
+        </div>
+      </div>
+    </div>
+  </q-page>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
+import { isValidAddress } from 'src/common/address';
+import { useIbcTransfer } from 'src/hooks';
+
+import AlertBox from 'src/components/AlertBox.vue';
+
+export default defineComponent({
+  name: 'Bridge',
+  components: {
+    AlertBox,
+  },
+  setup() {
+    const {
+      fromChains,
+      toChains,
+      totalBtsg,
+      sending,
+      transferRequest,
+      submit
+    } = useIbcTransfer();
+
+    const enableForm = ref<boolean>(false);
+
+    const maxClick = () => {
+      transferRequest.amount = totalBtsg.value;
+    };
+
+    return {
+      enableForm,
+      transferRequest,
+      sending,
+      fromChains,
+      toChains,
+      totalBtsg,
+      maxClick,
+      isValidAddress,
+      compareBalance,
+      isNegative,
+      isNaN,
+      gtnZero,
+      submit
+    }
+  }
+});
+</script>
+
+<style lang="scss" scoped>
+.deposit {
+  padding-top: 40px;
+}
+
+.section-header {
+  margin-top: 0;
+  margin-bottom: 16px;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin-bottom: 34px;
+  }
+}
+
+.section-title {
+  margin: 0 auto 0 0;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    margin: 0 32px 0 0;
+  }
+}
+
+.form {
+  background: $transparent-gray2;
+  box-shadow: $full-secondary-box-shadow;
+  backdrop-filter: blur(60px);
+  border-radius: $generic-border-radius;
+  padding: 24px;
+}
+
+.coin-avatar {
+  margin-right: 16px;
+  box-shadow: $black-box-shadow;
+}
+
+.separator {
+  opacity: 0.3;
+}
+
+.arrow-icon {
+  margin-top: 23px;
+}
+</style>

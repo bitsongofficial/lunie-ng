@@ -30,6 +30,9 @@ import { SettingsStateInterface } from './settings/state';
 import proposal from './proposal';
 import { ProposalStateInterface } from './proposal/state';
 
+import transfer from './transfer';
+import { TransferStateInterface } from './transfer/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
   authentication: AuthenticationStateInterface;
@@ -38,6 +41,7 @@ export interface StateInterface {
   ledger: LedgerStateInterface;
   settings: SettingsStateInterface;
   proposal: ProposalStateInterface;
+  transfer: TransferStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -67,7 +71,8 @@ const modules = {
   keplr,
   ledger,
   settings,
-  proposal
+  proposal,
+  transfer
 };
 
 const Store = createStore<StateInterface>({

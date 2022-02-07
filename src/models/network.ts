@@ -1,3 +1,5 @@
+import { Dictionary } from 'lodash';
+
 export interface CoinLookUp {
   viewDenom: string;
   chainDenom: string;
@@ -17,6 +19,17 @@ export interface IBCInfo extends NetworkConfigFeeOption {
 export interface NetworkConfigFee {
   gasEstimate: number;
   feeOptions: NetworkConfigFeeOption[],
+}
+
+export interface IBCChannel {
+  channel: string;
+  ibcDenom: string;
+}
+
+export interface IBCChain {
+  id: string;
+  btsgDenom: string;
+  ibc: Dictionary<IBCChannel>
 }
 
 export interface NetworkConfig {
