@@ -19,10 +19,6 @@
   background: $half-transparent-white !important;
 }
 
-.text-half-transparent-white {
-  color: $half-transparent-white !important;
-}
-
 .bg-quart-transparent-white {
   background: $quart-transparent-white !important;
 }
@@ -32,6 +28,7 @@
 }
 
 .bg-transparent-gray {
+  // PER GIANNETTO
   background: $transparent-gray !important;
 }
 
@@ -65,6 +62,10 @@
 
 .text-half-transparent-white {
   color: $half-transparent-white !important;
+}
+
+.text-thirty-transparent-white {
+  color: $thirty-transparent-white !important;
 }
 
 .text-accent-2 {
@@ -156,4 +157,8 @@
 
 .text-underline {
   text-decoration: underline;
+}
+
+.thirty-opacity {
+  opacity: 0.3;
 }

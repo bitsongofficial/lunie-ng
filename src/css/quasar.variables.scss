@@ -27,10 +27,10 @@ $alternative-4: #27273E;
 
 $white: #fff;
 $transparent-white: transparentize($white, 0.85);
-$quart-transparent-white: transparentize($white, 0.7);
 $half-transparent-white: transparentize($white, 0.5);
 $quart-transparent-white: transparentize($white, 0.75);
 $full-transparent-white: transparentize($white, 0.9);
+$thirty-transparent-white: transparentize($white, 0.7);
 $full-transparent-dark: rgba(255, 255, 255, 0.1);
 $dark: #1D1D1D;
 

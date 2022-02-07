@@ -5,7 +5,7 @@
     color: $white !important;
 
     &::placeholder {
-      color: $accent-5 !important;
+      opacity: 0.3 !important;
     }
   }
 
@@ -55,6 +55,19 @@
       padding-right: 28px;
     }
   }
+
+  &.xxl {
+    & .q-field__control {
+      height: 60px;
+      padding: 0 38px;
+    }
+  }
+
+  &.xxxl {
+    & .q-field__control {
+      height: 100px;
+    }
+  }
 }
 
 .q-textarea .q-field__native {
@@ -86,6 +99,10 @@
     .q-select__dropdown-icon {
       background: url('../assets/keyboard-arrow-down-white.svg') no-repeat center;
     }
+
+  }
+  &.q-field--highlighted .bg-transparent-white {
+    background-color: #27273E !important;
   }
 }
 
@@ -93,6 +110,11 @@
   & .q-field__native {
     font-size: 32px;
     line-height: 40px;
+  }
+
+  &.xxxl .q-field__native {
+    font-size: 42px;
+    line-height: 53px;
   }
 
   & .q-field__prepend {

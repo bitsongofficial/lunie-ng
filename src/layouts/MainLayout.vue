@@ -65,7 +65,9 @@
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" title="Validators" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" title="Proposals" link="/proposals" />
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" title="Transactions" :link="explorerURL" external />
-            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" :link="bridgeURL" newLink external v-if="bridgeURL" />
+            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" title="Bridge" link="/bridge" 
+            :disable="!session || (session && session.sessionType !== 'keplr')"
+            />
           </q-list>
 
           <q-item class="q-mt-auto profile-item" clickable>
@@ -142,7 +144,7 @@ export default defineComponent({
       return network.value.explorerURL;
     });
 
-    const bridgeURL = computed(() => 'https://bridge.bitsong.io/');
+    // const bridgeURL = computed(() => 'https://bridge.bitsong.io/');
 
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
@@ -177,7 +179,7 @@ export default defineComponent({
 
     return {
       votingProposalsCount,
-      bridgeURL,
+      // bridgeURL,
       loadingNetwork,
       network,
       networks,

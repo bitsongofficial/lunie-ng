@@ -68,6 +68,14 @@ export default [
           back: true,
         },
         props: true
+      },
+      {
+        path: 'bridge',
+        name: 'bridge',
+        component: () => import('./views/Bridge.vue'),
+        meta: {
+          title: 'Bridge',
+        },
       }
     ]
   }
