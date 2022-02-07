@@ -143,3 +143,13 @@ export const fiatConverter = (price: string | number | BigNumber, value: string 
 
   return shortDecimals(currentPrice.multipliedBy(amount).toFixed());
 };
+
+export const toDecimal = (amount: string, factor = 1000000): string => {
+  const number = new BigNumber(amount);
+  return number.div(factor).toFixed(6);
+}
+
+export const toUbtsg = (amount: string, factor = 1000000): string => {
+  const number = new BigNumber(amount);
+  return number.multipliedBy(factor).toFixed(0);
+}
