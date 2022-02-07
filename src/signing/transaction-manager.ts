@@ -2,16 +2,14 @@ import { BitsongSignBroadcastRequest, MessageTypes, SignBroadcastRequest, SignMe
 import { getNetworkFee } from 'src/common/fees';
 import { BigNumber } from 'bignumber.js';
 import { coins } from '@cosmjs/amino';
-import {
-  SigningStargateClient,
-  assertIsBroadcastTxSuccess,
-  BroadcastTxResponse,
-} from '@cosmjs/stargate';
+import { assertIsDeliverTxSuccess, SigningStargateClient } from '@cosmjs/stargate';
 import { getSigner } from './signer';
 import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx } from './messages';
 import { getCoinLookup } from 'src/common/network';
-import Store from 'src/store';
 import { SigningBitsongClient, Constants } from '@bitsongjs/sdk';
+
+import Store from 'src/store';
+import { DeliverTxResponse } from '@cosmjs/stargate';
 
 export const getFees = (transactionType: string, feeDenom: string) => {
   const { gasEstimate, feeOptions } = getNetworkFee(transactionType)
@@ -128,7 +126,7 @@ export const createSignBroadcast = async ({
     memo || ''
   );
 
-  assertIsBroadcastTxSuccess(txResult);
+  assertIsDeliverTxSuccess(txResult);
 
   return {
     hash: txResult.transactionHash,
@@ -185,7 +183,7 @@ export const createBitsongSignBroadcast = async ({
       signer
     );
 
-    let txResult: BroadcastTxResponse | undefined = undefined;
+    let txResult: DeliverTxResponse | undefined = undefined;
 
     const amount = new BigNumber(message.amount ? message.amount : '0')
       .div(1e-6)
@@ -248,7 +246,7 @@ export const createBitsongSignBroadcast = async ({
     }
 
     if (txResult) {
-      assertIsBroadcastTxSuccess(txResult);
+      assertIsDeliverTxSuccess(txResult);
 
       return {
         hash: txResult.transactionHash,
