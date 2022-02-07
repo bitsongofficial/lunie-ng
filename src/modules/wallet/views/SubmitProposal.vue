@@ -69,6 +69,8 @@
                   val => !!val || $t('errors.required'),
                   val => !isNaN(val) || $t('errors.nan'),
                   val => gtnZero(val) || $t('errors.gtnZero'),
+                  val => !minAmount(val, minDeposit) || $t('errors.minimumAmount', { amount: minDeposit, symbol: network.stakingDenom }),
+                  val => compareBalance(val, availableCoins) || $t('errors.balanceMissing'),
                   val => !isNegative(val) || $t('errors.negative')
                 ]"
                 placeholder="0"
@@ -121,14 +123,15 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, ref, onMounted } from 'vue';
-import { isNegative, isNaN, gtnZero } from 'src/common/numbers';
+import { isNegative, isNaN, gtnZero, compareBalance, minAmount } from 'src/common/numbers';
 import { useStore } from 'src/store';
-import { MessageTypes, ProposalSubmitRequest, ProposalSubmitType } from 'src/models';
+import { Balance, MessageTypes, ProposalSubmitRequest, ProposalSubmitType } from 'src/models';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { QForm } from 'quasar';
 import { proposalsSubmitTypeOptions } from 'src/constants';
+import { BigNumber } from 'bignumber.js';
 
 export default defineComponent({
   name: 'SubmitProposal',
@@ -150,6 +153,18 @@ export default defineComponent({
       typology: ProposalSubmitType.TEXT,
       initialDeposit: '',
       description: ''
+    });
+
+    const balance = computed(() => {
+      return store.getters['data/currentRawBalance'] as Balance | undefined;
+    });
+
+    const minDeposit = computed(() => {
+      return store.getters['data/minDeposit'] as string;
+    });
+
+    const availableCoins = computed(() => {
+      return new BigNumber(balance.value ? balance.value.available : '0');
     });
 
     const loading = ref(false);
@@ -211,6 +226,8 @@ export default defineComponent({
         label: i18n.t(el.label),
       })),
       proposalForm,
+      availableCoins,
+      minDeposit,
       loading,
       network,
       session,
@@ -219,7 +236,9 @@ export default defineComponent({
       saveDraft,
       isNegative,
       isNaN,
-      gtnZero
+      gtnZero,
+      compareBalance,
+      minAmount
     };
   },
 });

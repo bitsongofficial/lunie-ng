@@ -1,10 +1,13 @@
 import { Coin } from '@cosmjs/stargate';
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { Balance, BlockReduced, Delegation, DepositParams, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
 import { CoinGeckoResponse } from 'src/models/coin-gecko';
 import { MutationTree } from 'vuex';
 import { DataStateInterface } from './state';
 
 const mutation: MutationTree<DataStateInterface> = {
+  setDepositParams(state, depositParams: DepositParams) {
+    state.depositParams = depositParams;
+  },
   setFirstBlock(state, firstBlock: BlockReduced) {
     state.firstBlock = firstBlock;
   },

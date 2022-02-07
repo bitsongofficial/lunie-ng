@@ -17,7 +17,8 @@ import {
   getPool,
   getInflation,
   getCommunityPool,
-  getSupplyByDenom
+  getSupplyByDenom,
+  getDeposit
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
@@ -38,6 +39,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       dispatch('getSupplyInfo').catch(err => console.error(err));
       await dispatch('getFirstBlock');
       await dispatch('getBlock');
+      await dispatch('getDepositParams');
       await dispatch('getValidators');
 
       await dispatch('refreshSession');
@@ -370,6 +372,23 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       }
     } finally {
       commit('setGovernanceOverviewLoaded', true);
+    }
+  },
+  async getDepositParams({ commit }) {
+    try {
+      const { deposit_params: depositParams } = await getDeposit();
+      commit('setDepositParams', depositParams);
+    } catch (err) {
+      if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting deposit params failed:' + err.message,
+          },
+          { root: true }
+        );
+      }
     }
   },
   async getValidatorDelegations({ commit }, validator: Validator) {
