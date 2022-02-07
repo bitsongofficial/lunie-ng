@@ -24,12 +24,16 @@ import { KeplrStateInterface } from './keplr/state';
 import ledger from './ledger';
 import { LedgerStateInterface } from './ledger/state';
 
+import transfer from './transfer'
+import { TransferStateInterface } from './transfer/state';
+
 export interface StateInterface {
   notifications: NotificationsStateInterface;
   authentication: AuthenticationStateInterface;
   data: DataStateInterface;
   keplr: KeplrStateInterface;
   ledger: LedgerStateInterface;
+  transfer: TransferStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -57,7 +61,8 @@ const modules = {
   authentication,
   data,
   keplr,
-  ledger
+  ledger,
+  transfer,
 };
 
 const Store = createStore<StateInterface>({

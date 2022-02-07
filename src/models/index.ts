@@ -4,6 +4,8 @@ export * from './proposals';
 export * from './chart';
 export * from './timeline';
 export * from './network';
+export * from './chain';
+export * from './ibc-transfer';
 export * from './notifications';
 export * from './block';
 export * from './balances';
