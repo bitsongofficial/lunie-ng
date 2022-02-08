@@ -207,7 +207,7 @@
         </div>
       </div>
 
-      <div class="col-11" v-if="ethereumAddress">
+      <div class="col-11" v-if="ethereumAddress && transactions.length > 0">
         <transactions-table class="transactions-table" :rows="transactions" />
       </div>
     </div>

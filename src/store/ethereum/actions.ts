@@ -155,7 +155,6 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         to: process.env.VUE_APP_BTSG_CONTRACT
       });
     } catch (err) {
-      commit('setApproveLoading', false)
       console.error(err);
 
       if (err instanceof Error) {
@@ -170,6 +169,8 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       }
 
       throw err;
+    } finally {
+      commit('setApproveLoading', false);
     }
   },
   async deposit({ commit, dispatch, state }, to: string) {
@@ -185,7 +186,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       );
 
       const tx = await contract.deposit(
-        state.balance.div(10).toString(),
+        state.balance.div(100).toString(), // WARNING TO REMOVE
         to
       );
 
@@ -197,7 +198,6 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         to: process.env.VUE_APP_BRIDGE_CONTRACT
       });
     } catch (err) {
-      commit('setDepositLoading', false);
       console.error(err);
 
       if (err instanceof Error) {
@@ -212,6 +212,8 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       }
 
       throw err;
+    } finally {
+      commit('setDepositLoading', false);
     }
   },
   addPendingTransaction({ commit, dispatch }, payload) {

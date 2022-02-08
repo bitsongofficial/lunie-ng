@@ -4,7 +4,7 @@
     :columns="columns"
     :loading="loading"
     :pagination="pagination"
-    row-key="id"
+    row-key="hash"
     class="transactions-table"
     flat
     square
@@ -28,7 +28,7 @@
       </q-tr>
     </template>
     <template v-slot:body="props">
-      <q-tr class="transactions-table-row cursor-pointer" :props="props">
+      <q-tr class="transactions-table-row cursor-pointer" @click="txClick(props.row)" :props="props">
         <q-td key="hash" class="text-subtitle2 text-white" :props="props">
           <p class="hash-name q-my-none text-subtitle2 text-uppercase">
             {{ shortHashTx(props.row.hash) }}
@@ -108,13 +108,18 @@ export default defineComponent({
       },
     ]);
 
+    const txClick = (row: Transaction) => {
+      window.open(`${process.env.VUE_APP_ETHERSCAN}tx/${row.hash}`)
+    }
+
     return {
       pagination,
       columns,
       fromNow,
       compareNow,
       shortHashTx,
-      formatAddress
+      formatAddress,
+      txClick
     };
   }
 });

@@ -14,7 +14,7 @@
     hide-pagination
   >
     <template v-slot:no-data>
-      <h5 class="text-half-transparent-white text-weight-medium">{{ $t('errors.emptyValidators') }}</h5>
+      <h5 class="text-half-transparent-white text-weight-medium white-space-break-spaces">{{ $t('errors.emptyValidators') }}</h5>
     </template>
     <template v-slot:header="props">
       <q-tr :props="props" class="validators-table-head-row">

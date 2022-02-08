@@ -26,16 +26,18 @@ const mutation: MutationTree<EthereumStateInterface> = {
     state.mustApprove = mustApprove;
   },
   addPendingTransaction(state, transaction: Transaction) {
-    state.pendingTransactions.push(transaction)
+    state.pendingTransactions = [...state.pendingTransactions, transaction];
   },
   editPendingTransaction(state, transaction: Transaction) {
-    const updated = { ...transaction };
-    const index = state.pendingTransactions.findIndex(({ hash }) => hash === hash);
+    const pendingTransactions = [...state.pendingTransactions];
 
-    state.pendingTransactions[index] = {
-      ...state.pendingTransactions[index],
-      ...updated,
-    };
+    state.pendingTransactions = pendingTransactions.map((el) => {
+      if (el.hash === transaction.hash) {
+        return transaction;
+      }
+
+      return el;
+    });
   },
 }
 
