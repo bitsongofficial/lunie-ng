@@ -8,6 +8,7 @@ import { StateInterface } from '../index';
 import { EthereumStateInterface } from './state';
 
 import * as Abi from 'src/constants/abi';
+import { TranscationStatus } from 'src/models';
 
 let provider: providers.Web3Provider;
 let subscription: NodeJS.Timeout;
@@ -43,6 +44,9 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         commit('setAddress', address);
 
         dispatch('getBalance').catch(error => console.error(error));
+
+        await dispatch('unsubscribe').catch(error => { throw error; });
+        await dispatch('subscribe').catch(error => { throw error; });
       }
     } catch (err) {
       console.error(err);
@@ -217,7 +221,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
   },
   subscribe({ state, commit, dispatch }) {
     subscription = setInterval(async () => {
-      const pendingTxs = state.pendingTransactions;
+      const pendingTxs = state.pendingTransactions.filter(({ status }) => status === TranscationStatus.PENDING);
 
       if (pendingTxs.length > 0) {
         const provider = new providers.Web3Provider(window.ethereum as providers.ExternalProvider);
@@ -225,9 +229,23 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         for (const tx of pendingTxs) {
           const response = await provider.getTransactionReceipt(tx.hash);
 
-          // TODO: add check for status (0 error, 1 success)
           if (response !== null) {
-            commit('removePendingTransaction', tx);
+            const transaction = state.pendingTransactions.find(({ hash }) => hash === response.transactionHash);
+
+            if (transaction) {
+              if (response.status === 1) {
+                commit('editPendingTransaction', {
+                  ...transaction,
+                  status: 'SUCCESS'
+                });
+              } else {
+                commit('editPendingTransaction', {
+                  ...transaction,
+                  status: 'FAILED'
+                });
+              }
+            }
+
             dispatch('getBalance').catch(error => console.error(error));
           }
         }

@@ -314,13 +314,13 @@ export default defineComponent({
     height: 60px;
 
     &:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
 
     &:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
   }
 }

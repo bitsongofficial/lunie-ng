@@ -206,12 +206,16 @@
           </q-form>
         </div>
       </div>
+
+      <div class="col-11" v-if="ethereumAddress">
+        <transactions-table class="transactions-table" :rows="transactions" />
+      </div>
     </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { compareBalance, isNegative, isNaN, gtnZero, toErc20btsg } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
 import { useIbcTransfer } from 'src/hooks';
@@ -219,11 +223,13 @@ import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 
 import AlertBox from 'src/components/AlertBox.vue';
+import TransactionsTable from 'src/components/TransactionsTable.vue';
 
 export default defineComponent({
   name: 'Bridge',
   components: {
     AlertBox,
+    TransactionsTable
   },
   setup() {
     const {
@@ -242,6 +248,7 @@ export default defineComponent({
     const ethereumAddress = computed(() => store.state.ethereum.address);
     const depositLoading = computed(() => store.state.ethereum.depositLoading);
     const approveLoading = computed(() => store.state.ethereum.approveLoading);
+    const transactions = computed(() => store.state.ethereum.pendingTransactions);
     const mustApprove = computed(() => store.state.ethereum.mustApprove);
     const erc20Balance = computed(() => toErc20btsg(store.state.ethereum.balance.toString()));
 
@@ -285,13 +292,6 @@ export default defineComponent({
       }
     }, { immediate: true });
 
-    onMounted(async () => {
-      if (transferRequest.from && transferRequest.from.id === 'ethereum') {
-        await store.dispatch('ethereum/unsubscribe');
-        await store.dispatch('ethereum/subscribe');
-      }
-    });
-
     return {
       enableForm,
       transferRequest,
@@ -307,6 +307,7 @@ export default defineComponent({
       gtnZero,
       submit,
       // Ethereum
+      transactions,
       approveLoading,
       mustApprove,
       depositLoading,
@@ -365,5 +366,9 @@ export default defineComponent({
 
 .arrow-icon {
   margin-top: 23px;
+}
+
+.transactions-table {
+  margin-top: 62px;
 }
 </style>

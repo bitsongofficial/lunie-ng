@@ -50,6 +50,14 @@ export const formatAddress = (address: string | undefined, start = 9, end = 6 ) 
   return `${address.substring(0, start)}...${address.slice(-end)}`;
 }
 
+export const shortHashTx = (address: string | undefined, start = 19, end = 9) => {
+  if (!address) {
+    return 'Address Not Found';
+  }
+
+  return `${address.substring(0, start)}...${address.slice(-end)}`;
+}
+
 export const formatShortAddress = (address: string | undefined, end = 6 ) => {
   if (!address) {
     return 'Address Not Found';

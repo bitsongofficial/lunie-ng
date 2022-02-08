@@ -77,7 +77,10 @@ export default {
     typology: 'Typology',
     initialDeposit: 'Initial deposit',
     textProposal: 'Text Proposal',
-    draft: 'draft'
+    draft: 'draft',
+    txhash: 'hash',
+    time: 'time',
+    receiverAddress: 'receiver address'
   },
   actions: {
     receive: 'Receive',
