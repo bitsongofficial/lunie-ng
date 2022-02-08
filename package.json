@@ -10,6 +10,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
+    "@metamask/providers": "^8.1.1",
+    "ethers": "^5.4.7",
     "@bitsongjs/sdk": "1.0.0-dev-9",
     "@cosmjs/amino": "^0.26.5",
     "@cosmjs/encoding": "^0.26.5",

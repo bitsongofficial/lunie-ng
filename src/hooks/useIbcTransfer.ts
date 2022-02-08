@@ -1,7 +1,7 @@
 import { BroadcastTxResponse, SigningStargateClient } from '@cosmjs/stargate';
 import { useQuasar } from 'quasar';
 import { toDecimal } from 'src/common/numbers';
-import { networks, ibcChains, suggestChains } from 'src/constants';
+import { networks, ibcChains, suggestChains, ethereum } from 'src/constants';
 import { NetworkConfig } from 'src/models';
 import { useStore } from 'src/store';
 import { reactive, ref, computed, watch, onUnmounted, watchEffect } from 'vue';
@@ -12,15 +12,16 @@ export const useIbcTransfer = () => {
   const quasar = useQuasar();
   const store = useStore();
 
-  const btsgChain = networks.find(el => el.id === 'bitsong-2b');
-  const osmoChain = networks.find(el => el.id === 'osmosis-1');
+  const allNetworks = computed(() => [...networks, ethereum]);
+  const btsgChain = allNetworks.value.find(el => el.id === 'bitsong-2b');
+  const ethereumChain = allNetworks.value.find(el => el.id === 'ethereum');
 
   const totalBtsg = ref<string>('0');
   const sending = computed(() => store.state.transfer.sending);
 
   const transferRequest = reactive({
-    from: ref<NetworkConfig | undefined>(btsgChain),
-    to: ref<NetworkConfig | undefined>(osmoChain),
+    from: ref<Partial<NetworkConfig> | undefined>(ethereumChain),
+    to: ref<Partial<NetworkConfig> | undefined>(btsgChain),
     fromAddress: ref<string>(''),
     toAddress: ref<string>(''),
     amount: ref<string>(''),
@@ -28,48 +29,56 @@ export const useIbcTransfer = () => {
 
   const ibc = computed(() => ibcChains.find(el => el.id === transferRequest.from?.id));
 
-  const toChains = computed<NetworkConfig[]>(() => {
+  const toChains = computed<Partial<NetworkConfig>[]>(() => {
     if (transferRequest.from) {
       if (ibc.value) {
         const availableIBC = Object.keys(ibc.value.ibc);
 
-        return networks.filter(el => availableIBC.includes(el.id));
+        return allNetworks.value.filter(el => el.id && availableIBC.includes(el.id));
       }
     }
 
     return [];
   });
 
-  const fromChains = computed<NetworkConfig[]>(() => {
+  const fromChains = computed<Partial<NetworkConfig>[]>(() => {
     const availableIBC = ibcChains.map(el => el.id);
 
-    return networks.filter(el => availableIBC.includes(el.id));
+    return allNetworks.value.filter(el => el.id && availableIBC.includes(el.id));
   });
 
-  const updateFromData = async (prevFrom: NetworkConfig | undefined = undefined) => {
+  const updateFromData = async (prevFrom: Partial<NetworkConfig> | undefined = undefined) => {
     try {
-      if (window.keplr && transferRequest.from) {
-        await window.keplr.enable(transferRequest.from.id);
+      if (transferRequest.from && transferRequest.from.id) {
+        if (window.keplr && transferRequest.from.id !== 'ethereum') {
+          await window.keplr.enable(transferRequest.from.id);
 
-        if (prevFrom) {
-          transferRequest.to = undefined;
-        }
+          if (prevFrom) {
+            transferRequest.to = undefined;
+          }
 
-        const offlineSigner = window.keplr.getOfflineSignerOnlyAmino(transferRequest.from.id);
-        const [account] = await offlineSigner.getAccounts();
-        const fromAddress = account.address;
+          const offlineSigner = window.keplr.getOfflineSignerOnlyAmino(transferRequest.from.id);
+          const [account] = await offlineSigner.getAccounts();
+          const fromAddress = account.address;
 
-        transferRequest.fromAddress = fromAddress;
+          transferRequest.fromAddress = fromAddress;
 
-        const client = await SigningStargateClient.connectWithSigner(
-          transferRequest.from.rpcURL,
-          offlineSigner
-        );
+          if (transferRequest.from.rpcURL) {
+            const client = await SigningStargateClient.connectWithSigner(
+              transferRequest.from.rpcURL,
+              offlineSigner
+            );
 
-        if (ibc.value) {
-          const res = await client.getBalance(fromAddress, ibc.value.btsgDenom);
+            if (ibc.value) {
+              const res = await client.getBalance(fromAddress, ibc.value.btsgDenom);
 
-          totalBtsg.value = toDecimal(res.amount);
+              totalBtsg.value = toDecimal(res.amount);
+            }
+          }
+        } else if(transferRequest.from.id === 'ethereum') {
+          if (prevFrom) {
+            transferRequest.to = btsgChain;
+          }
         }
       }
     } catch (error) {
@@ -89,7 +98,7 @@ export const useIbcTransfer = () => {
   const submit = async () => {
     try {
       const res = await store.dispatch('transfer/transferIBC', transferRequest) as BroadcastTxResponse;
-      console.log(res);
+
       await updateFromData();
 
       quasar.dialog({
@@ -142,7 +151,7 @@ export const useIbcTransfer = () => {
   );
 
   const keplrWatch = watchEffect(async () => {
-    if (window.keplr && transferRequest.from) {
+    if (window.keplr && transferRequest.from && transferRequest.from.id && transferRequest.from.id !== 'ethereum') {
       try {
         await window.keplr.enable(transferRequest.from.id);
       } catch (error) {
