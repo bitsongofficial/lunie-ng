@@ -30,10 +30,6 @@ const actions: ActionTree<TransferStateInterface, StateInterface> = {
 
         const ibc = ibcChains.find(el => el.id === payload.from.id);
 
-        console.log(payload.from.fees.ibcTransfer.feeOptions.map(
-          (feeCoin) => coin(feeCoin.amount.toString(), feeCoin.denom),
-        ));
-
         if (ibc) {
           const result = await client.sendIbcTokens(
             fromAddress,

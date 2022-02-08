@@ -109,8 +109,8 @@
             <menu-link icon="svguse:icons.svg#stats|0 0 20 12" :title="$t('menu.stats')" link="/stats" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" :title="$t('menu.validators')" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" :title="$t('menu.proposals')" link="/proposals" />
+            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" :title="$t('menu.bridge')" link="/bridge" v-if="network.id === 'bitsong-2b'" />
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" :title="$t('menu.transactions')" :link="explorerURL" external />
-            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" :title="$t('menu.bridge')" link="/bridge" />
           </q-list>
 
           <q-item class="q-mt-auto profile-item" clickable>

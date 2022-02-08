@@ -100,10 +100,12 @@ export default {
     transactions: 'See your transaction',
     back: 'back',
     deposit: 'deposit',
+    approve: 'approve',
     proceed: 'proceed',
     createNew: 'create new',
     publish: 'publish',
-    saveDraft: 'save draft'
+    saveDraft: 'save draft',
+    connectWallet: 'connect metamask'
   },
   errors: {
     title: 'Error!',

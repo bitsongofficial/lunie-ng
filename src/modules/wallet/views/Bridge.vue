@@ -6,9 +6,12 @@
       </h2>
     </div>
     <div class="row items-start justify-center">
-      <div class="col-12 col-md-6">
+      <div class="col-12">
         <div class="form">
-          <q-form class="column q-col-gutter-y-md" @submit="submit">
+          <q-form
+            class="column q-col-gutter-y-md"
+            @submit="transferRequest.from && transferRequest.from.id !== 'ethereum' ? submit() : ethereumSubmit()"
+          >
             <div class="row q-col-gutter-y-md">
               <div class="col-12 col-md-5">
                 <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.from') }}</p>
@@ -92,7 +95,7 @@
               </div>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" v-if="transferRequest.from">
               <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressFrom') }}</p>
 
               <q-input
@@ -104,7 +107,6 @@
                 rounded
                 standout
                 v-model="transferRequest.fromAddress"
-                :rules="[val => !!val || $t('errors.required'), val => !(transferRequest.from && !isValidAddress(val, transferRequest.from.addressPrefix)) || $t('errors.invalidAddress')]"
                 no-error-icon
                 hide-bottom-space
               >
@@ -126,7 +128,10 @@
                 rounded
                 standout
                 v-model="transferRequest.toAddress"
-                :rules="[val => !!val || $t('errors.required'), val => !(transferRequest.to && !isValidAddress(val, transferRequest.to.addressPrefix)) || $t('errors.invalidAddress')]"
+                :rules="[
+                  val => !!val || $t('errors.required'),
+                  val => !(transferRequest.to && !isValidAddress(val, transferRequest.to.addressPrefix)) || $t('errors.invalidAddress')
+                ]"
                 no-error-icon
                 hide-bottom-space
               >
@@ -149,15 +154,15 @@
                 no-error-icon
                 hide-bottom-space
                 reverse-fill-mask
-                :disable="!transferRequest.from || !transferRequest.to"
+                :disable="!transferRequest.from || !transferRequest.to || (transferRequest.from && transferRequest.from.id === 'ethereum')"
                 class="quantity-input full-width large"
-                :rules="[
+                :rules="transferRequest.from && transferRequest.from.id !== 'ethereum' ? [
                   val => !!val || $t('errors.required'),
                   val => !isNaN(val) || $t('errors.nan'),
                   val => gtnZero(val) || $t('errors.gtnZero'),
                   val => compareBalance(val, totalBtsg) || $t('errors.balanceMissing'),
                   val => !isNegative(val) || $t('errors.negative')
-                ]"
+                ] : []"
               >
                 <template v-slot:append>
                   <q-btn @click="maxClick" class="max-btn btn-super-extra-small text-body3 q-mr-md" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
@@ -167,7 +172,7 @@
                 </template>
               </q-input>
 
-              <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: totalBtsg }) }} <span class="text-uppercase">BTSG</span></p>
+              <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: transferRequest.from && transferRequest.from.id !== 'ethereum' ? totalBtsg : (erc20Balance) }) }} <span class="text-uppercase">BTSG</span></p>
             </div>
 
             <div class="col-12">
@@ -180,10 +185,23 @@
               </q-checkbox>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" v-if="transferRequest.from && transferRequest.from.id !== 'ethereum'">
               <q-btn type="submit" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :disable="!enableForm" :loading="sending">
                 {{ $t('actions.send') }}
               </q-btn>
+            </div>
+            <div class="col-12" v-else>
+              <q-btn v-if="!ethereumAddress" type="submit" :disable="!enableForm" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :loading="sending">
+                {{ $t('actions.connectWallet') }}
+              </q-btn>
+              <template v-else>
+                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                  {{ $t('actions.approve') }}
+                </q-btn>
+                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                  {{ $t('actions.deposit') }}
+                </q-btn>
+              </template>
             </div>
           </q-form>
         </div>
@@ -193,10 +211,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
+import { defineComponent, ref, computed, onMounted } from 'vue';
+import { compareBalance, isNegative, isNaN, gtnZero, toErc20btsg } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
 import { useIbcTransfer } from 'src/hooks';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
 
 import AlertBox from 'src/components/AlertBox.vue';
 
@@ -215,11 +235,62 @@ export default defineComponent({
       submit
     } = useIbcTransfer();
 
+    const store = useStore();
+    const router = useRouter();
     const enableForm = ref<boolean>(false);
+
+    const ethereumAddress = computed(() => store.state.ethereum.address);
+    const depositLoading = computed(() => store.state.ethereum.depositLoading);
+    const approveLoading = computed(() => store.state.ethereum.approveLoading);
+    const mustApprove = computed(() => store.state.ethereum.mustApprove);
+    const erc20Balance = computed(() => toErc20btsg(store.state.ethereum.balance.toString()));
+
+    const connectMetamask = async () => {
+      await store.dispatch('ethereum/connectMetamask');
+
+      if (store.state.ethereum.address) {
+        transferRequest.fromAddress = store.state.ethereum.address;
+      }
+    };
+
+    const ethereumSubmit = async () => {
+      if (!ethereumAddress.value) {
+        await connectMetamask();
+      } else {
+        if (mustApprove.value) {
+          await store.dispatch('ethereum/setApprove');
+        } else {
+          await store.dispatch('ethereum/deposit', transferRequest.toAddress);
+        }
+      }
+    };
 
     const maxClick = () => {
       transferRequest.amount = totalBtsg.value;
     };
+
+    store.watch((state) => state.ethereum.balance, (balance) => {
+      if (transferRequest.from && transferRequest.from.id === 'ethereum') {
+        transferRequest.amount = toErc20btsg(balance.toString());
+
+        if (store.state.ethereum.address) {
+          transferRequest.fromAddress = store.state.ethereum.address;
+        }
+      }
+    }, { immediate: true });
+
+    store.watch((state) => state.authentication.network, async (currentNet) => {
+      if (currentNet.id !== 'bitsong-2b') {
+        await router.replace({ name: 'wallet' });
+      }
+    }, { immediate: true });
+
+    onMounted(async () => {
+      if (transferRequest.from && transferRequest.from.id === 'ethereum') {
+        await store.dispatch('ethereum/unsubscribe');
+        await store.dispatch('ethereum/subscribe');
+      }
+    });
 
     return {
       enableForm,
@@ -234,7 +305,14 @@ export default defineComponent({
       isNegative,
       isNaN,
       gtnZero,
-      submit
+      submit,
+      // Ethereum
+      approveLoading,
+      mustApprove,
+      depositLoading,
+      erc20Balance,
+      ethereumAddress,
+      ethereumSubmit
     }
   }
 });
@@ -243,6 +321,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .deposit {
   padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .section-header {
@@ -268,11 +347,16 @@ export default defineComponent({
   backdrop-filter: blur(60px);
   border-radius: $generic-border-radius;
   padding: 24px;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-md-min) {
+    max-width: 520px;
+    margin: 0 auto;
+  }
 }
 
 .coin-avatar {
   margin-right: 16px;
-  box-shadow: $black-box-shadow;
 }
 
 .separator {

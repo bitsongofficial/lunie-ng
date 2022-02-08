@@ -105,10 +105,7 @@ export const createSignBroadcast = async ({
       messages = [...rewards];
       break;
     case MessageTypes.SUBMIT_PROPOSAL:
-      console.log(message);
       const proposal = SubmitProposalTx(senderAddress, message, Store.state.authentication.network);
-
-      console.log(proposal);
 
       if (proposal) {
         messages.push(proposal);

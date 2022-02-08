@@ -49,4 +49,14 @@ export const ibcChains: IBCChain[] = [
       },
     }
   },
+  {
+    id: 'ethereum',
+    btsgDenom: '',
+    ibc: {
+      'bitsong-2b': {
+        channel: '',
+        ibcDenom: ''
+      },
+    }
+  },
 ];
