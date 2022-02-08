@@ -143,11 +143,11 @@ export default {
     balanceTitle: 'Your Balances',
     undelegatedTitle: 'Undelegated',
     delegationsTitle: 'Your Delegations',
-    emptyValidators: 'No validators in your portfolio.<br/>Head over the validator list to start staking.',
+    emptyValidators: 'No validators in your portfolio.\nHead over the validator list to start staking.',
     validatorList: 'Validator List'
   },
   proposals: {
-    empty: 'No voting proposals at this moment.<br/>Come back in days to see what’s changed.',
+    empty: 'No voting proposals at this moment.\nCome back in days to see what’s changed.',
     allProposals: 'see all proposals'
   },
   assets: {
@@ -188,6 +188,6 @@ export default {
   },
   disclaimer: {
     title: 'Before you begin using the wallet',
-    description: 'BitSong is a decentralized blockchain ecosystem built for the music industry.<br/>The BitSong blockchain and the BitSong wallet are based on public, open-source software. Your use of the BitSong wallet involves various risks, including, but not limited to, financial exposure to the volatility of cryptocurrencies and/or potential misuse of wallet credentials. Blockchain transactions are irreversible and BitSong accepts no liability for any transaction resulting from the use of this wallet. Before using the BitSong wallet, please ensure that you have read and understood all relevant documentation and are satisfied that you accept the risks of investing in digital assets.',
+    description: 'BitSong is a decentralized blockchain ecosystem built for the music industry.\nThe BitSong blockchain and the BitSong wallet are based on public, open-source software. Your use of the BitSong wallet involves various risks, including, but not limited to, financial exposure to the volatility of cryptocurrencies and/or potential misuse of wallet credentials. Blockchain transactions are irreversible and BitSong accepts no liability for any transaction resulting from the use of this wallet. Before using the BitSong wallet, please ensure that you have read and understood all relevant documentation and are satisfied that you accept the risks of investing in digital assets.',
   }
 };

@@ -7,7 +7,7 @@
 
       <div class="disclaimer-wrapper">
         <div class="disclaimer text-white text-body3 scroll scroll--transparent">
-          <p v-html="$t('disclaimer.description')"></p>
+          <p class="white-space-break-spaces">{{ $t('disclaimer.description') }}</p>
         </div>
       </div>
 
