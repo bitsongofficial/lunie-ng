@@ -19,6 +19,9 @@
           :key="col.name"
           :props="props"
           class="text-body4 text-uppercase text-half-transparent-white text-weight-medium transactions-table-head-col"
+          :class="{
+            [col.name]: true,
+          }"
         >
           {{ $t(col.label) }}
         </q-th>
@@ -27,23 +30,25 @@
     <template v-slot:body="props">
       <q-tr class="transactions-table-row cursor-pointer" :props="props">
         <q-td key="hash" class="text-subtitle2 text-white" :props="props">
-          <p class="validator-name q-my-none text-subtitle2">
-            {{ props.row.hash }}
+          <p class="hash-name q-my-none text-subtitle2 text-uppercase">
+            {{ shortHashTx(props.row.hash) }}
           </p>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
           <div class="transaction-status bg-secondary">
-            <div class="transaction-status-dot" :class="props.row.status === 'ACTIVE' ? 'bg-info' : 'bg-accent-6'"></div>
+            <div class="transaction-status-dot bg-warning" v-if="props.row.status === 'PENDING'"></div>
+            <div class="transaction-status-dot bg-accent-6" v-else-if="props.row.status === 'FAILED'"></div>
+            <div class="transaction-status-dot bg-info" v-else></div>
           </div>
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
-            {{ props.row.undelegation ? fromNow(props.row.time) : 'N/A' }}
+            {{ props.row.time ? `${fromNow(props.row.time)} ${!compareNow(props.row.time) ? 'ago' : 'left'}` : 'N/A' }}
           </p>
         </q-td>
         <q-td key="hash" class="text-subtitle2 text-white" :props="props">
-          <p class="validator-name q-my-none text-subtitle2">
-            {{ props.row.to }}
+          <p class="hash-name q-my-none text-subtitle2 text-center text-uppercase">
+            {{ formatAddress(props.row.to) }}
           </p>
         </q-td>
       </q-tr>
@@ -54,7 +59,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue';
 import { Transaction } from 'src/models';
-import { fromNow } from 'src/common/date';
+import { fromNow, compareNow } from 'src/common/date';
+import { shortHashTx, formatAddress } from 'src/common/address';
 
 export default defineComponent({
   name: 'TransactionsTable',
@@ -105,7 +111,10 @@ export default defineComponent({
     return {
       pagination,
       columns,
-      fromNow
+      fromNow,
+      compareNow,
+      shortHashTx,
+      formatAddress
     };
   }
 });
@@ -117,17 +126,25 @@ export default defineComponent({
 
   &::v-deep(.q-table) {
     border-spacing: 0 6px;
-    padding-bottom: 20px;
+
+    & tr {
+      height: unset;
+    }
   }
 }
 
 .transactions-table-head-col {
-  padding-top: 21px;
-  padding-bottom: 21px;
+  padding-top: 0;
+  padding-bottom: 8px;
   border: none;
+  width: auto;
 
-  &:first-of-type {
-    width: 60px;
+  &.status {
+    width: 10%;
+  }
+
+  &.time {
+    width: 20%;
   }
 }
 
@@ -138,29 +155,51 @@ export default defineComponent({
   & .q-td {
     background: $transparent-gray2;
     border-bottom: none;
+    width: auto;
     height: 60px;
 
     &:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+      padding-left: 24px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
 
     &:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+      padding-right: 24px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    &.actions {
+      width: 10%;
+    }
+
+    &.available {
+      width: 20%;
     }
   }
 }
 
-.validator-name {
-  margin-left: 17px;
-  margin-right: 12px;
+.hash-name {
+  margin-left: 24px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box !important;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   white-space: normal;
+
+  & span {
+    margin-left: 24px;
+  }
+}
+
+.receive-btn {
+  margin-left: 24px;
+}
+
+.action-btn.disabled {
+  opacity: 0.3 !important;
 }
 
 .transaction-status {

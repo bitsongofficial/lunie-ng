@@ -28,6 +28,15 @@ const mutation: MutationTree<EthereumStateInterface> = {
   addPendingTransaction(state, transaction: Transaction) {
     state.pendingTransactions.push(transaction)
   },
+  editPendingTransaction(state, transaction: Transaction) {
+    const updated = { ...transaction };
+    const index = state.pendingTransactions.findIndex(({ hash }) => hash === hash);
+
+    state.pendingTransactions[index] = {
+      ...state.pendingTransactions[index],
+      ...updated,
+    };
+  },
 }
 
 export default mutation;
