@@ -100,11 +100,11 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
               average: 0.025,
               high: 0.04,
             },
-            features: ['stargate', 'ibc-transfer'],
+            features: ['stargate', 'ibc-transfer', 'no-legacy-stdTx', 'ibc-go'],
           });
           await window.keplr.enable(block.chainId);
 
-          const offlineSigner = window.keplr.getOfflineSignerOnlyAmino(block.chainId);
+          const offlineSigner = await window.keplr.getOfflineSignerAuto(block.chainId);
 
           // You can get the address/public keys by `getAccounts` method.
           // It can return the array of address/public key.

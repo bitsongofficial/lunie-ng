@@ -23,7 +23,7 @@ export const getSigner = async (signingType: SessionType, { address, password }:
       return result.ledger;
     }
   } else if (signingType === SessionType.KEPLR && window.keplr) {
-    return window.keplr.getOfflineSigner(chainId);
+    return await window.keplr.getOfflineSignerAuto(chainId);
   }
 
   throw new Error(`Signing via ${signingType} is not supported`);
