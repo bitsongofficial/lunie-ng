@@ -201,10 +201,10 @@
                 {{ $t('actions.connectWallet') }}
               </q-btn>
               <template v-else>
-                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
                   {{ $t('actions.approve') }}
                 </q-btn>
-                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
                   {{ $t('actions.deposit') }}
                 </q-btn>
               </template>
@@ -215,6 +215,12 @@
 
       <div class="col-11" v-if="ethereumAddress && transactions.length > 0" id="transactions-table">
         <transactions-table class="transactions-table" :rows="transactions" />
+      </div>
+
+      <div class="col-12 text-center countdown" v-if="ethereumAddress && pendingTransactions.length > 0">
+        <vue-countdown class="text-quart-transparent-white" ref="countdown" auto-start @end="onCountdownEnd" :time="countdownSeconds" v-slot="{ totalSeconds }">
+          {{ $t('general.nextRefresh', { time: totalSeconds }) }}
+        </vue-countdown>
       </div>
     </div>
   </q-page>
@@ -231,6 +237,7 @@ import { scroll } from 'quasar';
 
 import AlertBox from 'src/components/AlertBox.vue';
 import TransactionsTable from 'src/components/TransactionsTable.vue';
+import { VueCountdown } from 'src/models';
 
 export default defineComponent({
   name: 'Bridge',
@@ -253,6 +260,8 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const enableForm = ref<boolean>(false);
+    const countdown = ref<VueCountdown>();
+    const countdownSeconds = ref<number>(parseInt(process.env.VUE_APP_BRIDGE_REFRESH));
 
     const maxClick = () => {
       transferRequest.amount = totalBtsg.value;
@@ -275,7 +284,23 @@ export default defineComponent({
       }
     }
 
+    const onCountdownEnd = () => {
+      if (countdown.value) {
+        countdownSeconds.value = 0;
+
+        setTimeout(() => {
+          countdownSeconds.value = parseInt(process.env.VUE_APP_BRIDGE_REFRESH);
+
+          setTimeout(() => {
+            countdown.value?.start();
+          }, 0);
+        }, 0);
+      }
+    }
+
     return {
+      countdown,
+      countdownSeconds,
       enableForm,
       transferRequest,
       sending,
@@ -290,6 +315,7 @@ export default defineComponent({
       gtnZero,
       submit,
       scrollToTable,
+      onCountdownEnd,
       // Ethereum
       ...useEthereumTransfer(transferRequest, enableForm)
     }
@@ -348,5 +374,9 @@ export default defineComponent({
 
 .transactions-table {
   margin-top: 62px;
+}
+
+.countdown {
+  margin-top: 20px;
 }
 </style>

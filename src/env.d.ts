@@ -13,5 +13,6 @@ declare namespace NodeJS {
     VUE_APP_NETWORK_NAME: string;
     VUE_APP_INFURA: string;
     VUE_APP_ETHERSCAN: string;
+    VUE_APP_BRIDGE_REFRESH: string;
   }
 }

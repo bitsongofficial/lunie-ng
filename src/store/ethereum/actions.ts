@@ -8,7 +8,7 @@ import { StateInterface } from '../index';
 import { EthereumStateInterface } from './state';
 
 import * as Abi from 'src/constants/abi';
-import { TranscationStatus } from 'src/models';
+import { TransactionStatus } from 'src/models';
 
 let provider: providers.Web3Provider;
 let subscription: NodeJS.Timeout;
@@ -186,7 +186,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       );
 
       const tx = await contract.deposit(
-        state.balance.div(100).toString(), // WARNING TO REMOVE
+        state.balance.toString(),
         to
       );
 
@@ -223,7 +223,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
   },
   subscribe({ state, commit, dispatch }) {
     subscription = setInterval(async () => {
-      const pendingTxs = state.pendingTransactions.filter(({ status }) => status === TranscationStatus.PENDING);
+      const pendingTxs = state.pendingTransactions.filter(({ status }) => status === TransactionStatus.PENDING);
 
       if (pendingTxs.length > 0) {
         const provider = new providers.Web3Provider(window.ethereum as providers.ExternalProvider);
@@ -254,7 +254,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       } else {
         dispatch('unsubscribe').catch(error => console.error(error));
       }
-    }, 1500);
+    }, parseInt(process.env.VUE_APP_BRIDGE_REFRESH));
   },
   unsubscribe() {
     clearInterval(subscription);

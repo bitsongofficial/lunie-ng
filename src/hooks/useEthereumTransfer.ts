@@ -1,5 +1,5 @@
 import { toErc20btsg } from 'src/common/numbers';
-import { IBCTransferRequest } from 'src/models';
+import { IBCTransferRequest, TransactionStatus } from 'src/models';
 import { useStore } from 'src/store';
 import { computed, watch, onUnmounted, Ref } from 'vue';
 import { MetaMaskInpageProvider } from '@metamask/providers';
@@ -11,6 +11,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest, enableF
   const depositLoading = computed(() => store.state.ethereum.depositLoading);
   const approveLoading = computed(() => store.state.ethereum.approveLoading);
   const transactions = computed(() => store.state.ethereum.pendingTransactions);
+  const pendingTransactions = computed(() => store.state.ethereum.pendingTransactions.filter(el => el.status === TransactionStatus.PENDING));
   const mustApprove = computed(() => store.state.ethereum.mustApprove);
   const erc20Balance = computed(() => toErc20btsg(store.state.ethereum.balance.toString()));
 
@@ -71,6 +72,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest, enableF
   });
 
   return {
+    pendingTransactions,
     transactions,
     approveLoading,
     mustApprove,

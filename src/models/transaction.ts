@@ -1,4 +1,4 @@
-export enum TranscationStatus {
+export enum TransactionStatus {
   PENDING = 'PENDING',
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED'
@@ -6,7 +6,7 @@ export enum TranscationStatus {
 
 export interface Transaction {
   hash: string;
-  status: TranscationStatus;
+  status: TransactionStatus;
   time: number;
   to: string;
 }
