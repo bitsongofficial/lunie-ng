@@ -4,6 +4,12 @@
       <h2 class="section-title text-body-large text-white text-weight-medium col-12 col-md-auto">
         {{ $t('menu.bridge') }}
       </h2>
+
+      <div class="col-auto q-ml-auto" v-if="ethereumAddress">
+        <q-btn type="submit" @click="scrollToTable" class="btn-medium-large-small text-body2 full-width text-capitalize" :disable="transactions.length === 0" rounded unelevated color="primary" outline text-color="white" padding="12px 33px">
+          {{ $t('actions.pendingTx') }}
+        </q-btn>
+      </div>
     </div>
     <div class="row items-start justify-center">
       <div class="col-12">
@@ -207,7 +213,7 @@
         </div>
       </div>
 
-      <div class="col-11" v-if="ethereumAddress && transactions.length > 0">
+      <div class="col-11" v-if="ethereumAddress && transactions.length > 0" id="transactions-table">
         <transactions-table class="transactions-table" :rows="transactions" />
       </div>
     </div>
@@ -215,12 +221,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import { compareBalance, isNegative, isNaN, gtnZero, toErc20btsg } from 'src/common/numbers';
+import { defineComponent, ref } from 'vue';
+import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
-import { useIbcTransfer } from 'src/hooks';
+import { useIbcTransfer, useEthereumTransfer } from 'src/hooks';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
+import { scroll } from 'quasar';
 
 import AlertBox from 'src/components/AlertBox.vue';
 import TransactionsTable from 'src/components/TransactionsTable.vue';
@@ -241,56 +248,32 @@ export default defineComponent({
       submit
     } = useIbcTransfer();
 
+    const { getScrollTarget, setVerticalScrollPosition } = scroll;
+
     const store = useStore();
     const router = useRouter();
     const enableForm = ref<boolean>(false);
 
-    const ethereumAddress = computed(() => store.state.ethereum.address);
-    const depositLoading = computed(() => store.state.ethereum.depositLoading);
-    const approveLoading = computed(() => store.state.ethereum.approveLoading);
-    const transactions = computed(() => store.state.ethereum.pendingTransactions);
-    const mustApprove = computed(() => store.state.ethereum.mustApprove);
-    const erc20Balance = computed(() => toErc20btsg(store.state.ethereum.balance.toString()));
-
-    const connectMetamask = async () => {
-      await store.dispatch('ethereum/connectMetamask');
-
-      if (store.state.ethereum.address) {
-        transferRequest.fromAddress = store.state.ethereum.address;
-      }
-    };
-
-    const ethereumSubmit = async () => {
-      if (!ethereumAddress.value) {
-        await connectMetamask();
-      } else {
-        if (mustApprove.value) {
-          await store.dispatch('ethereum/setApprove');
-        } else {
-          await store.dispatch('ethereum/deposit', transferRequest.toAddress);
-        }
-      }
-    };
-
     const maxClick = () => {
       transferRequest.amount = totalBtsg.value;
     };
-
-    store.watch((state) => state.ethereum.balance, (balance) => {
-      if (transferRequest.from && transferRequest.from.id === 'ethereum') {
-        transferRequest.amount = toErc20btsg(balance.toString());
-
-        if (store.state.ethereum.address) {
-          transferRequest.fromAddress = store.state.ethereum.address;
-        }
-      }
-    }, { immediate: true });
 
     store.watch((state) => state.authentication.network, async (currentNet) => {
       if (currentNet.id !== 'bitsong-2b') {
         await router.replace({ name: 'wallet' });
       }
     }, { immediate: true });
+
+    const scrollToTable = () => {
+      const el = document.getElementById('transactions-table');
+
+      if (el) {
+        const target = getScrollTarget(el);
+        const offset = el.offsetTop;
+        const duration = 1000;
+        setVerticalScrollPosition(target, offset, duration);
+      }
+    }
 
     return {
       enableForm,
@@ -306,14 +289,9 @@ export default defineComponent({
       isNaN,
       gtnZero,
       submit,
+      scrollToTable,
       // Ethereum
-      transactions,
-      approveLoading,
-      mustApprove,
-      depositLoading,
-      erc20Balance,
-      ethereumAddress,
-      ethereumSubmit
+      ...useEthereumTransfer(transferRequest, enableForm)
     }
   }
 });

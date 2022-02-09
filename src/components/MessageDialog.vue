@@ -55,7 +55,6 @@ export default defineComponent({
     },
     mintscan: {
       type: String,
-      required: true
     },
     hash: {
       type: String,

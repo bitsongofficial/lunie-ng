@@ -3,6 +3,9 @@ declare namespace NodeJS {
     NODE_ENV: string;
     VUE_ROUTER_MODE: 'hash' | 'history' | 'abstract' | undefined;
     VUE_ROUTER_BASE: string | undefined;
+    VUE_APP_COINGECKO_URL: string;
+    VUE_APP_COINGECKO_WEBSITE: string;
+    VUE_APP_IMPERATOR_URL: string;
     VUE_APP_BTSG_CONTRACT: string;
     VUE_APP_BRIDGE_CONTRACT: string;
     VUE_APP_BRIDGE_FEE: number;
