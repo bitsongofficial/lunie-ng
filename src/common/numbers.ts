@@ -156,7 +156,7 @@ export const toUbtsg = (amount: string, factor = 1000000): string => {
 
 export const toErc20btsg = (amount: string, factor = 1e-18): string => {
   const number = new BigNumber(amount);
-  return number.multipliedBy(factor).toFixed(0);
+  return number.multipliedBy(factor).toFixed(6);
 }
 
 export const btsgToErc20 = (amount: string, factor = 1e-18): string => {

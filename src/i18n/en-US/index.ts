@@ -81,7 +81,8 @@ export default {
     txhash: 'hash',
     time: 'time',
     receiverAddress: 'receiver address',
-    coingecko: 'Price Data by CoinGecko'
+    coingecko: 'Price Data by CoinGecko',
+    nextRefresh: 'Next refresh in {time} seconds'
   },
   actions: {
     receive: 'Receive',
