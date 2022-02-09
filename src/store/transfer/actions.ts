@@ -13,7 +13,7 @@ const actions: ActionTree<TransferStateInterface, StateInterface> = {
     try {
       commit('setSending', true);
 
-      if (window.keplr) {
+      if (window.keplr && payload.from && payload.to && payload.from.id && payload.from.rpcURL && payload.to.id && payload.from.fees) {
         await window.keplr.enable(payload.from.id);
 
         const offlineSigner = window.keplr.getOfflineSignerOnlyAmino(payload.from.id);
@@ -28,7 +28,7 @@ const actions: ActionTree<TransferStateInterface, StateInterface> = {
         const height = await client.getHeight();
         const amount = toUbtsg(payload.amount);
 
-        const ibc = ibcChains.find(el => el.id === payload.from.id);
+        const ibc = ibcChains.find(el => payload.from && el.id === payload.from.id);
 
         if (ibc) {
           const result = await client.sendIbcTokens(

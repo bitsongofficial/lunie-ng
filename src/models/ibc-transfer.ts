@@ -15,8 +15,9 @@ export interface IBCTransfer {
 }
 
 export interface IBCTransferRequest {
-  from: NetworkConfig;
-  to: NetworkConfig;
+  from?: Partial<NetworkConfig>;
+  to?: Partial<NetworkConfig>;
   toAddress: string;
+  fromAddress: string;
   amount: string;
 }

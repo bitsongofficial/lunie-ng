@@ -113,7 +113,9 @@
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" :title="$t('menu.transactions')" :link="explorerURL" external />
           </q-list>
 
-          <q-item class="q-mt-auto profile-item" clickable>
+          <a class="coingecko text-center q-mt-auto text-quart-transparent-white text-body4" :href="coingecko" target="_blank">{{ $t('general.coingecko') }}</a>
+
+          <q-item class="profile-item" clickable>
             <q-item-section avatar @click="goToAuthentication">
               <q-btn padding="2px" dense flat unelevated round>
                 <q-icon class="rotate-180" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
@@ -248,6 +250,7 @@ export default defineComponent({
       currencies,
       language,
       languages,
+      coingecko: process.env.VUE_APP_COINGECKO_WEBSITE,
       settingsType: settingsType.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-body2 text-weight-medium' })),
       goToAuthentication,
       goBack,
@@ -335,5 +338,10 @@ export default defineComponent({
 
 .options-list {
   max-height: 200px;
+}
+
+.coingecko {
+  text-decoration: none;
+  margin-bottom: 20px;
 }
 </style>

@@ -80,7 +80,8 @@ export default {
     draft: 'draft',
     txhash: 'hash',
     time: 'time',
-    receiverAddress: 'receiver address'
+    receiverAddress: 'receiver address',
+    coingecko: 'Price Data by CoinGecko'
   },
   actions: {
     receive: 'Receive',
@@ -108,7 +109,8 @@ export default {
     createNew: 'create new',
     publish: 'publish',
     saveDraft: 'save draft',
-    connectWallet: 'connect metamask'
+    connectWallet: 'connect metamask',
+    pendingTx: 'Pending Tx'
   },
   errors: {
     title: 'Error!',

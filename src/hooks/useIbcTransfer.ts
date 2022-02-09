@@ -2,7 +2,7 @@ import { BroadcastTxResponse, SigningStargateClient } from '@cosmjs/stargate';
 import { useQuasar } from 'quasar';
 import { toDecimal } from 'src/common/numbers';
 import { networks, ibcChains, suggestChains, ethereum } from 'src/constants';
-import { NetworkConfig } from 'src/models';
+import { IBCTransferRequest, NetworkConfig } from 'src/models';
 import { useStore } from 'src/store';
 import { reactive, ref, computed, watch, onUnmounted, watchEffect } from 'vue';
 
@@ -19,12 +19,12 @@ export const useIbcTransfer = () => {
   const totalBtsg = ref<string>('0');
   const sending = computed(() => store.state.transfer.sending);
 
-  const transferRequest = reactive({
-    from: ref<Partial<NetworkConfig> | undefined>(ethereumChain),
-    to: ref<Partial<NetworkConfig> | undefined>(btsgChain),
-    fromAddress: ref<string>(''),
-    toAddress: ref<string>(''),
-    amount: ref<string>(''),
+  const transferRequest = reactive<IBCTransferRequest>({
+    from: ethereumChain,
+    to: btsgChain,
+    fromAddress: '',
+    toAddress: '',
+    amount: ''
   });
 
   const ibc = computed(() => ibcChains.find(el => el.id === transferRequest.from?.id));
