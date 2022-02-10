@@ -36,7 +36,7 @@
         </div>
 
         <balances-table :rows="ibcBalances" :loading="!balancesLoaded || loading" ibc v-if="ibcBalances.length > 0 || (!balancesLoaded || loading)" />
-        <ibc-tokens-summary v-else />
+        <ibc-tokens-summary class="ibc-tokens-summary" v-else />
       </div>
     </transition>
   </q-page>
@@ -71,7 +71,7 @@ export default defineComponent({
     const loading = computed(() => store.state.authentication.loading || store.state.authentication.changing);
 
     const currentPrice = computed(() => {
-      const total = store.getters['data/getCurrentPrince'] as number;
+      const total = store.getters['data/getCurrentPrice'] as number;
       const short = shortDecimals(total);
 
       if (short) {
@@ -157,5 +157,9 @@ export default defineComponent({
   @media screen and (min-width: $breakpoint-md-min) {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+.ibc-tokens-summary {
+  margin-top: 40px;
 }
 </style>

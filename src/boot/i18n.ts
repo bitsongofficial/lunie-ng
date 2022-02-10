@@ -7,6 +7,7 @@ const i18n = createI18n({
   locale: 'en-US',
   fallbackLocale: {
     'it': ['it-IT'],
+    'en': ['en-US'],
     'default': ['en-US']
   },
   messages,

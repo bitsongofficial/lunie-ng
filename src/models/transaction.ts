@@ -9,4 +9,5 @@ export interface Transaction {
   status: TransactionStatus;
   time: number;
   to: string;
+  sender: string;
 }

@@ -35,20 +35,17 @@
           </p>
         </q-td>
         <q-td key="status" class="text-subtitle2 text-white" :props="props">
-          <div class="transaction-status bg-secondary">
-            <div class="transaction-status-dot bg-warning" v-if="props.row.status === 'PENDING'"></div>
-            <div class="transaction-status-dot bg-accent-6" v-else-if="props.row.status === 'FAILED'"></div>
-            <div class="transaction-status-dot bg-info" v-else></div>
-          </div>
+          <q-spinner
+            color="primary"
+            size="20px"
+            v-if="props.row.status === 'PENDING'"
+          />
+          <q-icon name="svguse:icons.svg#error-outlined|0 0 70 70" size="20px" color="negative" v-else-if="props.row.status === 'FAILED'" />
+          <q-icon name="svguse:icons.svg#check|0 0 70 70" size="20px" color="positive" v-else />
         </q-td>
         <q-td key="time" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ props.row.time ? `${fromNow(props.row.time)} ${!compareNow(props.row.time) ? 'ago' : 'left'}` : 'N/A' }}
-          </p>
-        </q-td>
-        <q-td key="hash" class="text-subtitle2 text-white" :props="props">
-          <p class="hash-name q-my-none text-subtitle2 text-center text-uppercase">
-            {{ formatAddress(props.row.to) }}
           </p>
         </q-td>
       </q-tr>
@@ -99,12 +96,6 @@ export default defineComponent({
         label: 'general.time',
         align: 'center',
         field: 'time',
-      },
-      {
-        name: 'to',
-        label: 'general.receiverAddress',
-        align: 'center',
-        field: 'to',
       },
     ]);
 

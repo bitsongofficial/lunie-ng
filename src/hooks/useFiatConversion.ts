@@ -6,7 +6,7 @@ import { shortDecimals } from 'src/common/numbers';
 const useFiatConversion = () => {
   const store = useStore();
   const currency = computed(() => store.state.settings.currency);
-  const currentPrice = computed(() => new BigNumber(store.getters['data/getCurrentPrince'] as number));
+  const currentPrice = computed(() => new BigNumber(store.getters['data/getCurrentPrice'] as number));
 
   const fiatConverter = (value: string | number | BigNumber) => {
     const amount = new BigNumber(value);

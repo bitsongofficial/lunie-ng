@@ -41,6 +41,12 @@
           :loading="loadingSupplyInfo"
         />
         <chain-stats
+          :title="$t('general.marketCapFullyDiluited')"
+          :denom="currency"
+          :splittedDecimals="marketCapFullyDiluited"
+          :loading="loadingSupplyInfo"
+        />
+        <chain-stats
           :title="$t('general.totalVolume')"
           :denom="currency"
           :splittedDecimals="totalVolume"
@@ -87,7 +93,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'src/store';
-import { SupplyResponse, ValidatorStatus } from 'src/models';
+import { SplittedDecimals, SupplyResponse, ValidatorStatus } from 'src/models';
 
 import ChainStats from 'src/components/ChainStats.vue';
 import { shortDecimals, splitDecimals } from 'src/common/numbers';
@@ -115,7 +121,7 @@ export default defineComponent({
     const loadingApr = computed(() => store.state.data.loadingApr || store.state.data.loading || store.state.authentication.loading || store.state.authentication.changing);
 
     const currentPrice = computed(() => {
-      const total = store.getters['data/getCurrentPrince'] as number;
+      const total = store.getters['data/getCurrentPrice'] as number;
       const short = shortDecimals(total);
 
       if (short) {
@@ -135,6 +141,8 @@ export default defineComponent({
 
       return null;
     });
+
+    const marketCapFullyDiluited = computed(() => store.getters['data/marketCapFullyDiluited'] as SplittedDecimals | null);
 
     const totalVolume = computed(() => {
       const total = store.getters['data/getTotalVolume'] as number;
@@ -160,6 +168,7 @@ export default defineComponent({
       apr,
       loadingApr,
       supplyInfo,
+      marketCapFullyDiluited,
       loadingSupplyInfo
     }
   }

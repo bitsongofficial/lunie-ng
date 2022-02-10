@@ -1,8 +1,8 @@
 <template>
-  <q-dialog ref="dialogRef" :no-backdrop-dismiss="true" :no-esc-dismiss="true" :no-route-dismiss="true" @hide="onDialogHide">
-    <q-card class="body column items-center">
+  <q-dialog ref="dialogRef" :no-backdrop-dismiss="mintscanLink !== undefined" :no-esc-dismiss="mintscanLink !== undefined" :no-route-dismiss="mintscanLink !== undefined" @hide="onDialogHide">
+    <q-card class="body">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none">{{ $t('actions.send') }}</h2>
+        <h2 class="title text-body-large text-white q-my-none">{{ $t(title) }}</h2>
 
         <q-btn
           unelevated
@@ -21,7 +21,9 @@
         <div class="success col column fit">
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+
+          <p class="text-h4 text-half-transparent-white word-break-break-word text-center" v-if="description">{{ $t(description) }}</p>
 
           <q-btn v-if="mintscanLink" @click="close" type="a" target="_blank" :href="mintscanLink" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
             {{ $t('actions.transactions') }}
@@ -32,7 +34,9 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+
+        <p class="text-h4 text-half-transparent-white word-break-break-word text-center" v-if="description">{{ $t(description) }}</p>
       </div>
     </q-card>
   </q-dialog>
@@ -52,6 +56,9 @@ export default defineComponent({
     subtitle: {
       type: String,
       required: true
+    },
+    description: {
+      type: String,
     },
     mintscan: {
       type: String,
@@ -93,12 +100,15 @@ export default defineComponent({
 
 .body {
   width: 100%;
-  min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
   background: $alternative-4;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
+}
+
+.close {
+  opacity: 0.4;
 }
 
 .close-icon {

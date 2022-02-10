@@ -84,15 +84,15 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return shortDecimals(totalAmount.toFixed());
   },
-  fiatDelegated(_, { totalDelegated, getCurrentPrince }) {
-    const price = getCurrentPrince as number;
+  fiatDelegated(_, { totalDelegated, getCurrentPrice }) {
+    const price = getCurrentPrice as number;
     const totalAmount = totalDelegated as string;
 
     return fiatConverter(price, totalAmount);
   },
-  currentBalance({ balances }, { getCurrentPrince }, { authentication }) {
+  currentBalance({ balances }, { getCurrentPrice }, { authentication }) {
     const balance = [...balances].find(bal => bal.denom === authentication.network.stakingDenom);
-    const price = getCurrentPrince as number;
+    const price = getCurrentPrice as number;
     const totalFiat = fiatConverter(price, balance?.total ?? '0');
     const availableFiat = fiatConverter(price, balance?.available ?? '0');
 
@@ -223,6 +223,19 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
       }
     }
   },
+  marketCapFullyDiluited({ supplyInfo }, getters) {
+    if (supplyInfo) {
+      const price = getters['getCurrentPrice'] as number;
+      const total = new BigNumber(supplyInfo.totalSupply).multipliedBy(price);
+      const short = shortDecimals(total);
+
+      if (short) {
+        return splitDecimals(short);
+      }
+    }
+
+    return null;
+  },
   getAprInfo({ apr }) {
     return apr ? percent(new BigNumber(apr).toFixed(4)) : null;
   },
@@ -254,7 +267,7 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return null;
   },
-  getCurrentPrince({ coinDetails }, _, { settings }) {
+  getCurrentPrice({ coinDetails }, _, { settings }) {
     if (coinDetails) {
       return coinDetails.market_data.current_price[settings.currency];
     }

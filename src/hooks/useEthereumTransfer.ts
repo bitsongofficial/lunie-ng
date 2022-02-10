@@ -1,27 +1,29 @@
 import { toErc20btsg } from 'src/common/numbers';
-import { IBCTransferRequest, TransactionStatus } from 'src/models';
+import { IBCTransferRequest, Transaction, TransactionStatus } from 'src/models';
 import { useStore } from 'src/store';
-import { computed, watch, onUnmounted, Ref } from 'vue';
+import { computed, watch, onUnmounted } from 'vue';
 import { MetaMaskInpageProvider } from '@metamask/providers';
+import { useQuasar } from 'quasar';
 
-export const useEthereumTransfer = (transferRequest: IBCTransferRequest, enableForm: Ref<boolean>) => {
+import MessageDialog from 'src/components/MessageDialog.vue';
+
+export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
+  const quasar = useQuasar();
   const store = useStore();
 
   const ethereumAddress = computed(() => store.state.ethereum.address);
   const depositLoading = computed(() => store.state.ethereum.depositLoading);
   const approveLoading = computed(() => store.state.ethereum.approveLoading);
-  const transactions = computed(() => store.state.ethereum.pendingTransactions);
-  const pendingTransactions = computed(() => store.state.ethereum.pendingTransactions.filter(el => el.status === TransactionStatus.PENDING));
+  const transactions = computed(() => store.getters['ethereum/pendingTransactions'] as Transaction[]);
+  const pendingTransactions = computed(() => transactions.value.filter(el => el.status === TransactionStatus.PENDING));
   const mustApprove = computed(() => store.state.ethereum.mustApprove);
   const erc20Balance = computed(() => toErc20btsg(store.state.ethereum.balance.toString()));
 
   const connectMetamask = async () => {
-    if (enableForm.value) {
-      await store.dispatch('ethereum/connectMetamask');
+    await store.dispatch('ethereum/connectMetamask');
 
-      if (store.state.ethereum.address) {
-        transferRequest.fromAddress = store.state.ethereum.address;
-      }
+    if (store.state.ethereum.address) {
+      transferRequest.fromAddress = store.state.ethereum.address;
     }
   };
 
@@ -31,8 +33,28 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest, enableF
     } else {
       if (mustApprove.value) {
         await store.dispatch('ethereum/setApprove');
+
+        quasar.dialog({
+          component: MessageDialog,
+          componentProps: {
+            title: 'success.title',
+            subtitle: 'success.approveTitle',
+            description: 'success.approveDescription',
+            success: true,
+          },
+        });
       } else {
         await store.dispatch('ethereum/deposit', transferRequest.toAddress);
+
+        quasar.dialog({
+          component: MessageDialog,
+          componentProps: {
+            title: 'success.title',
+            subtitle: 'success.depositEthereumTitle',
+            description: 'success.depositEthereumDescription',
+            success: true,
+          },
+        });
       }
     }
   };
@@ -54,11 +76,16 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest, enableF
         const ethereum = window.ethereum as MetaMaskInpageProvider;
 
         if (from && from.id === 'ethereum') {
-          transferRequest.fromAddress = '';
+          if (ethereumAddress.value) {
+            transferRequest.amount = erc20Balance.value;
+            transferRequest.fromAddress = ethereumAddress.value;
+          } else {
+            transferRequest.fromAddress = '';
+          }
 
-          ethereum.on('accountsChanged', connectMetamask);
+          ethereum.addListener('accountsChanged', connectMetamask);
         } else {
-          ethereum.off('accountsChanged', connectMetamask);
+          ethereum.removeListener('accountsChanged', connectMetamask);
         }
       }
     },

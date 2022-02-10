@@ -101,95 +101,111 @@
               </div>
             </div>
 
-            <div class="col-12" v-if="transferRequest.from">
-              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressFrom') }}</p>
+            <transition
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+              mode="out-in"
+            >
+              <div class="row q-col-gutter-y-md" v-if="transferRequest.from?.id !== 'ethereum' || ethereumAddress">
+                <div class="col-12" v-if="transferRequest.from">
+                  <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressFrom') }}</p>
 
-              <q-input
-                readonly
-                class="large"
-                color="transparent-gray"
-                label-color="half-transparent-white"
-                bg-color="transparent-gray"
-                rounded
-                standout
-                v-model="transferRequest.fromAddress"
-                no-error-icon
-                hide-bottom-space
-              >
-                <template v-slot:append>
-                  <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
-                </template>
-              </q-input>
-            </div>
+                  <q-input
+                    readonly
+                    class="large"
+                    color="transparent-gray"
+                    label-color="half-transparent-white"
+                    bg-color="transparent-gray"
+                    rounded
+                    standout
+                    v-model="transferRequest.fromAddress"
+                    no-error-icon
+                    hide-bottom-space
+                  >
+                    <template v-slot:append>
+                      <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
+                    </template>
+                  </q-input>
+                </div>
 
-            <div class="col-12">
-              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressTo') }}</p>
+                <div class="col-12">
+                  <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.addressTo') }}</p>
 
-              <q-input
-                :disable="!transferRequest.to"
-                class="large"
-                color="transparent-gray"
-                label-color="half-transparent-white"
-                bg-color="transparent-gray"
-                rounded
-                standout
-                v-model="transferRequest.toAddress"
-                :rules="[
-                  val => !!val || $t('errors.required'),
-                  val => !(transferRequest.to && !isValidAddress(val, transferRequest.to.addressPrefix)) || $t('errors.invalidAddress')
-                ]"
-                no-error-icon
-                hide-bottom-space
-              >
-                <template v-slot:append>
-                  <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
-                </template>
-              </q-input>
-            </div>
+                  <q-input
+                    :disable="!transferRequest.to"
+                    class="large"
+                    color="transparent-gray"
+                    label-color="half-transparent-white"
+                    bg-color="transparent-gray"
+                    rounded
+                    standout
+                    v-model="transferRequest.toAddress"
+                    :rules="[
+                      val => !!val || $t('errors.required'),
+                      val => !(transferRequest.to && !isValidAddress(val, transferRequest.to.addressPrefix)) || $t('errors.invalidAddress')
+                    ]"
+                    no-error-icon
+                    hide-bottom-space
+                  >
+                    <template v-slot:append>
+                      <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
+                    </template>
+                  </q-input>
+                </div>
 
-            <div class="col-12">
-              <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.amount') }}</p>
+                <div class="col-12">
+                  <p class="text-uppercase text-primary text-h6 text-weight-medium q-mt-none q-mb-sm">{{ $t('general.amount') }}</p>
 
-              <q-input
-                color="transparent-white"
-                label-color="accent-5"
-                bg-color="transparent-white"
-                round
-                standout
-                v-model="transferRequest.amount"
-                no-error-icon
-                hide-bottom-space
-                reverse-fill-mask
-                :disable="!transferRequest.from || !transferRequest.to || (transferRequest.from && transferRequest.from.id === 'ethereum')"
-                class="quantity-input full-width large"
-                :rules="transferRequest.from && transferRequest.from.id !== 'ethereum' ? [
-                  val => !!val || $t('errors.required'),
-                  val => !isNaN(val) || $t('errors.nan'),
-                  val => gtnZero(val) || $t('errors.gtnZero'),
-                  val => compareBalance(val, totalBtsg) || $t('errors.balanceMissing'),
-                  val => !isNegative(val) || $t('errors.negative')
-                ] : []"
-              >
-                <template v-slot:append>
-                  <q-btn @click="maxClick" class="max-btn btn-super-extra-small text-body3 q-mr-md" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
-                    {{ $t('actions.max') }}
-                  </q-btn>
-                  <label class="text-body2 text-primary text-uppercase">BTSG</label>
-                </template>
-              </q-input>
+                  <q-input
+                    color="transparent-white"
+                    label-color="accent-5"
+                    bg-color="transparent-white"
+                    round
+                    standout
+                    v-model="transferRequest.amount"
+                    no-error-icon
+                    hide-bottom-space
+                    reverse-fill-mask
+                    :disable="!transferRequest.from || !transferRequest.to"
+                    :readonly="transferRequest.from && transferRequest.from.id === 'ethereum'"
+                    class="quantity-input full-width large"
+                    :rules="transferRequest.from && transferRequest.from.id !== 'ethereum' ? [
+                      val => !!val || $t('errors.required'),
+                      val => !isNaN(val) || $t('errors.nan'),
+                      val => gtnZero(val) || $t('errors.gtnZero'),
+                      val => compareBalance(val, totalBtsg) || $t('errors.balanceMissing'),
+                      val => !isNegative(val) || $t('errors.negative')
+                    ] : ethereumAddress ?
+                    [
+                      val => !!val || $t('errors.required'),
+                      val => !isNaN(val) || $t('errors.nan'),
+                      val => gtnZero(val) || $t('errors.gtnZero'),
+                    ] :
+                    []
+                    "
+                  >
+                    <template v-slot:append>
+                      <q-btn v-if="transferRequest.from && transferRequest.from.id !== 'ethereum'" @click="maxClick" class="max-btn btn-super-extra-small text-body3 q-mr-md" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+                        {{ $t('actions.max') }}
+                      </q-btn>
+                      <label class="text-body2 text-primary text-uppercase">BTSG</label>
+                    </template>
+                  </q-input>
 
-              <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: transferRequest.from && transferRequest.from.id !== 'ethereum' ? totalBtsg : (erc20Balance) }) }} <span class="text-uppercase">BTSG</span></p>
-            </div>
+                  <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: transferRequest.from && transferRequest.from.id !== 'ethereum' ? totalBtsg : (erc20Balance) }) }} <span class="text-uppercase">BTSG</span></p>
+                </div>
 
-            <div class="col-12">
-              <alert-box class="col-12 full-width" color="primary" :title="$t('general.disclaimerBridge')" />
-            </div>
+                <div class="col-12">
+                  <alert-box class="col-12 full-width" color="primary" :title="transferRequest.from?.id === 'ethereum' ? $t('general.disclaimerBridgeEthereum') : $t('general.disclaimerBridge')" />
+                </div>
 
-            <div class="col-12">
-              <q-checkbox v-model="enableForm" color="primary" dark>
-                <label class="text-subtitle2 text-white text-weight-medium cursor-pointer q-ml-sm">{{ $t('general.risk') }}</label>
-              </q-checkbox>
-            </div>
+                <div class="col-12">
+                  <q-checkbox v-model="enableForm" color="primary" dark>
+                    <label class="text-subtitle2 text-white text-weight-medium cursor-pointer q-ml-sm">{{ $t('general.risk') }}</label>
+                  </q-checkbox>
+                </div>
+              </div>
+            </transition>
 
             <div class="col-12" v-if="transferRequest.from && transferRequest.from.id !== 'ethereum'">
               <q-btn type="submit" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :disable="!enableForm" :loading="sending">
@@ -197,14 +213,14 @@
               </q-btn>
             </div>
             <div class="col-12" v-else>
-              <q-btn v-if="!ethereumAddress" type="submit" :disable="!enableForm" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :loading="sending">
+              <q-btn v-if="!ethereumAddress" type="submit" class="btn-medium text-body2 full-width q-mt-md" rounded unelevated color="accent-2" text-color="white" padding="16px 48px" :loading="sending">
                 {{ $t('actions.connectWallet') }}
               </q-btn>
               <template v-else>
-                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading || pendingTransactions.length > 0" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
                   {{ $t('actions.approve') }}
                 </q-btn>
-                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading || pendingTransactions.length > 0" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
                   {{ $t('actions.deposit') }}
                 </q-btn>
               </template>
@@ -213,14 +229,8 @@
         </div>
       </div>
 
-      <div class="col-11" v-if="ethereumAddress && transactions.length > 0" id="transactions-table">
+      <div class="col-8" v-if="ethereumAddress && transactions.length > 0" id="transactions-table">
         <transactions-table class="transactions-table" :rows="transactions" />
-      </div>
-
-      <div class="col-12 text-center countdown" v-if="ethereumAddress && pendingTransactions.length > 0">
-        <vue-countdown class="text-quart-transparent-white" ref="countdown" auto-start @end="onCountdownEnd" :time="countdownSeconds" v-slot="{ totalSeconds }">
-          {{ $t('general.nextRefresh', { time: totalSeconds }) }}
-        </vue-countdown>
       </div>
     </div>
   </q-page>
@@ -237,7 +247,7 @@ import { scroll } from 'quasar';
 
 import AlertBox from 'src/components/AlertBox.vue';
 import TransactionsTable from 'src/components/TransactionsTable.vue';
-import { VueCountdown } from 'src/models';
+import { SessionType } from 'src/models';
 
 export default defineComponent({
   name: 'Bridge',
@@ -260,8 +270,6 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const enableForm = ref<boolean>(false);
-    const countdown = ref<VueCountdown>();
-    const countdownSeconds = ref<number>(parseInt(process.env.VUE_APP_BRIDGE_REFRESH));
 
     const maxClick = () => {
       transferRequest.amount = totalBtsg.value;
@@ -269,6 +277,12 @@ export default defineComponent({
 
     store.watch((state) => state.authentication.network, async (currentNet) => {
       if (currentNet.id !== 'bitsong-2b') {
+        await router.replace({ name: 'wallet' });
+      }
+    }, { immediate: true });
+
+    store.watch((state) => state.authentication.session, async (session) => {
+      if (session?.sessionType !== SessionType.KEPLR) {
         await router.replace({ name: 'wallet' });
       }
     }, { immediate: true });
@@ -284,23 +298,7 @@ export default defineComponent({
       }
     }
 
-    const onCountdownEnd = () => {
-      if (countdown.value) {
-        countdownSeconds.value = 0;
-
-        setTimeout(() => {
-          countdownSeconds.value = parseInt(process.env.VUE_APP_BRIDGE_REFRESH);
-
-          setTimeout(() => {
-            countdown.value?.start();
-          }, 0);
-        }, 0);
-      }
-    }
-
     return {
-      countdown,
-      countdownSeconds,
       enableForm,
       transferRequest,
       sending,
@@ -315,9 +313,8 @@ export default defineComponent({
       gtnZero,
       submit,
       scrollToTable,
-      onCountdownEnd,
       // Ethereum
-      ...useEthereumTransfer(transferRequest, enableForm)
+      ...useEthereumTransfer(transferRequest)
     }
   }
 });

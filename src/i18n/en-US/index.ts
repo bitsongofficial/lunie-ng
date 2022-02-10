@@ -42,6 +42,7 @@ export default {
     totalSupply: 'total supply',
     communityPool: 'community pool',
     marketCap: 'market cap',
+    marketCapFullyDiluited: 'fully diluted market cap',
     totalVolume: 'total volume',
     apr: 'apr',
     tokenBonded: 'token bonded',
@@ -72,6 +73,7 @@ export default {
     disclaimer: 'Use this software at your own risk, never enter your seed phrase into untrusted software.',
     disclaimerFull: 'Use this software at your own risk, never enter your seed phrase into untrusted software. Beware of phishing scams and spoof sites.',
     disclaimerBridge: 'This is a newly developed tool and Bitsong assumes no responsibility for bugs or token losses due to inappropriate use of it.\n\nBefore executing transactions with a large amount of tokens it is highly recommended to test the tool with smaller amounts.',
+    disclaimerBridgeEthereum: 'This is a newly developed tool and Bitsong assumes no responsibility for bugs or token losses due to inappropriate use of it.',
     risk: 'I have read the alert and understood the risks',
     note: 'Note',
     typology: 'Typology',
@@ -140,7 +142,11 @@ export default {
     redelegateDescription: 'You have successfully redelegated your {symbol}s.',
     depositDescription: 'You have successfully deposited your {symbol}s.',
     proposalDescription: 'Proposal submission success!',
-    transferDescription: 'You have successfully transferred your {symbol}s.'
+    transferDescription: 'You have successfully transferred your {symbol}s.',
+    approveTitle: 'Your wallet is now connected to the network, you are ready to migrate your tokens.',
+    approveDescription: 'This operation might take several minutes.',
+    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required on your side.',
+    depositEthereumDescription: 'Please wait for ETH network to approve your tx.'
   },
   portfolio: {
     balanceTitle: 'Your Balances',
