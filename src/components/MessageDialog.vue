@@ -2,7 +2,7 @@
   <q-dialog ref="dialogRef" :no-backdrop-dismiss="mintscanLink !== undefined" :no-esc-dismiss="mintscanLink !== undefined" :no-route-dismiss="mintscanLink !== undefined" @hide="onDialogHide">
     <q-card class="body">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none">{{ $t(title) }}</h2>
+        <h2 class="title text-body-large text-white q-my-none" v-if="!hideIcons">{{ $t(title) }}</h2>
 
         <q-btn
           unelevated
@@ -19,7 +19,7 @@
 
       <template v-if="success">
         <div class="success col column fit">
-          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
+          <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" v-if="!hideIcons" />
 
           <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
 
@@ -32,7 +32,7 @@
       </template>
 
       <div class="success col column fit" v-else>
-        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
+        <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" v-if="!hide" />
 
         <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
 
@@ -65,11 +65,14 @@ export default defineComponent({
     },
     hash: {
       type: String,
-      required: true
     },
     success: {
       type: Boolean,
       default: true,
+    },
+    hideIcons: {
+      type: Boolean,
+      default: false,
     }
   },
   emits: [

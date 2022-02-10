@@ -28,6 +28,9 @@ const mutation: MutationTree<EthereumStateInterface> = {
   addPendingTransaction(state, transaction: Transaction) {
     state.pendingTransactions = [...state.pendingTransactions, transaction];
   },
+  addBridgeTransactions(state, transactions: Transaction[]) {
+    state.bridgeTransactions = [...transactions];
+  },
   editPendingTransaction(state, transaction: Transaction) {
     const pendingTransactions = [...state.pendingTransactions];
 
