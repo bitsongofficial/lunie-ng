@@ -10,10 +10,10 @@
       </div>
 
       <template v-if="!loading">
-        <p class="chain-stats-subtitle text-body-large text-weight-medium text-white q-my-none" v-if="splittedDecimals">
-          {{ splittedDecimals && splittedDecimals.left ? splittedDecimals.left : 'N/A' }}<span class="text-h4" v-if="splittedDecimals && splittedDecimals.right">.{{ splittedDecimals.right }}</span>
+        <p class="chain-stats-subtitle text-h3 text-weight-medium text-white q-my-none" v-if="splittedDecimals">
+          {{ splittedDecimals && splittedDecimals.left ? splittedDecimals.left : 'N/A' }}<span class="text-body-large" v-if="splittedDecimals && splittedDecimals.right">.{{ splittedDecimals.right }}</span>
         </p>
-        <p class="chain-stats-subtitle text-body-large text-weight-medium text-white q-my-none" v-else>
+        <p class="chain-stats-subtitle text-h3 text-weight-medium text-white q-my-none" v-else>
           {{ quantity ?? 'N/A'  }}
         </p>
       </template>

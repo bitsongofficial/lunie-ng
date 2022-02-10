@@ -62,6 +62,7 @@ export const useIbcTransfer = () => {
           const fromAddress = account.address;
 
           transferRequest.fromAddress = fromAddress;
+          transferRequest.amount = '0';
 
           if (transferRequest.from.rpcURL) {
             const client = await SigningStargateClient.connectWithSigner(

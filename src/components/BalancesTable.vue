@@ -48,7 +48,7 @@
             </q-avatar>
             <p class="balance-name q-my-none text-subtitle2 text-capitalize">
               {{ props.row.name }}
-              <span class="text-half-transparent-white">{{ ibc && props.row.symbol ? props.row.symbol.toLowerCase() : props.row.denom.toLowerCase() }}</span>
+              <span class="text-half-transparent-white text-uppercase">{{ ibc && props.row.symbol ? props.row.symbol.toLowerCase() : props.row.denom.toLowerCase() }}</span>
             </p>
           </div>
         </q-td>

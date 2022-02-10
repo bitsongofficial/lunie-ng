@@ -152,7 +152,8 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         hash: tx.hash,
         status: 'PENDING',
         time: Date.now(),
-        to: process.env.VUE_APP_BTSG_CONTRACT
+        to: process.env.VUE_APP_BTSG_CONTRACT,
+        sender: state.address
       });
     } catch (err) {
       console.error(err);
@@ -195,7 +196,8 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         hash: tx.hash,
         status: 'PENDING',
         time: Date.now(),
-        to: process.env.VUE_APP_BRIDGE_CONTRACT
+        to: process.env.VUE_APP_BRIDGE_CONTRACT,
+        sender: state.address
       });
     } catch (err) {
       console.error(err);

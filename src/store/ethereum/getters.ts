@@ -12,8 +12,8 @@ const getters: GetterTree<EthereumStateInterface, StateInterface> = {
   depositLoading(state) {
     return state.depositLoading;
   },
-  pendingTransactions(state) {
-    return state.pendingTransactions;
+  pendingTransactions({ pendingTransactions, address }) {
+    return pendingTransactions.filter(el => el.sender === address);
   },
   address(state) {
     return state.address;
