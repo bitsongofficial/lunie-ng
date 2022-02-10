@@ -41,6 +41,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
             subtitle: 'success.approveTitle',
             description: 'success.approveDescription',
             success: true,
+            hideIcons: true
           },
         });
       } else {
@@ -53,6 +54,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
             subtitle: 'success.depositEthereumTitle',
             description: 'success.depositEthereumDescription',
             success: true,
+            hideIcons: true
           },
         });
       }

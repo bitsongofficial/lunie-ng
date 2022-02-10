@@ -8,10 +8,17 @@ import { StateInterface } from '../index';
 import { EthereumStateInterface } from './state';
 
 import * as Abi from 'src/constants/abi';
-import { TransactionStatus } from 'src/models';
+import { CassiniTxStatus, Transaction, TransactionStatus, TransactionType, TransactionWithRelated } from 'src/models';
+import { getCassiniTxs } from 'src/services';
+import { cassiniStatusConverter } from 'src/common/cassini';
+import { toErc20btsg } from 'src/common/numbers';
+
+import { Dialog } from 'quasar';
+import MessageDialog from 'src/components/MessageDialog.vue';
 
 let provider: providers.Web3Provider;
 let subscription: NodeJS.Timeout;
+let subscriptionBridge: NodeJS.Timeout;
 
 const actions: ActionTree<EthereumStateInterface, StateInterface> = {
   async connectMetamask({ commit, dispatch }) {
@@ -45,8 +52,9 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
 
         dispatch('getBalance').catch(error => console.error(error));
 
-        await dispatch('unsubscribe').catch(error => { throw error; });
-        await dispatch('subscribe').catch(error => { throw error; });
+        dispatch('unsubscribe').catch(error => { throw error; });
+        dispatch('subscribe').catch(error => { throw error; });
+        dispatch('subscribeBridge').catch(error => { throw error; });
       }
     } catch (err) {
       console.error(err);
@@ -149,11 +157,13 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
 
       await dispatch('unsubscribe');
       await dispatch('addPendingTransaction', {
+        id: state.pendingTransactions.length,
         hash: tx.hash,
         status: 'PENDING',
         time: Date.now(),
         to: process.env.VUE_APP_BTSG_CONTRACT,
-        sender: state.address
+        sender: state.address,
+        type: TransactionType.APPROVE
       });
     } catch (err) {
       console.error(err);
@@ -193,11 +203,14 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
 
       await dispatch('unsubscribe');
       await dispatch('addPendingTransaction', {
+        id: state.pendingTransactions.length,
         hash: tx.hash,
         status: 'PENDING',
         time: Date.now(),
         to: process.env.VUE_APP_BRIDGE_CONTRACT,
-        sender: state.address
+        amount: toErc20btsg(state.balance.toString()),
+        sender: state.address,
+        type: TransactionType.DEPOSIT
       });
     } catch (err) {
       console.error(err);
@@ -218,10 +231,15 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       commit('setDepositLoading', false);
     }
   },
-  addPendingTransaction({ commit, dispatch }, payload) {
+  addPendingTransaction({ commit, dispatch }, payload: Transaction) {
     commit('addPendingTransaction', payload);
 
     dispatch('subscribe').catch(error => console.error(error));
+  },
+  addBridgeTransactions({ commit, dispatch }, payload: Transaction[]) {
+    commit('addBridgeTransactions', payload);
+
+    dispatch('subscribeBridge').catch(error => console.error(error));
   },
   subscribe({ state, commit, dispatch }) {
     subscription = setInterval(async () => {
@@ -242,6 +260,9 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
                   ...transaction,
                   status: 'SUCCESS'
                 });
+
+                await dispatch('unsubscribeBridge');
+                dispatch('subscribeBridge').catch(error => { throw error; });
               } else {
                 commit('editPendingTransaction', {
                   ...transaction,
@@ -257,6 +278,56 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         dispatch('unsubscribe').catch(error => console.error(error));
       }
     }, parseInt(process.env.VUE_APP_BRIDGE_REFRESH));
+  },
+  subscribeBridge({ dispatch, commit, getters, state }) {
+    subscriptionBridge = setInterval(async () => {
+      const txsRelated = getters['pendingTransactions'] as TransactionWithRelated[];
+      const pendingTxs = txsRelated.filter(el => el.status === TransactionStatus.PENDING && el.type === TransactionType.DEPOSIT);
+
+      if (pendingTxs.length > 0) {
+        for (const tx of pendingTxs) {
+          const response = await getCassiniTxs(tx.sender);
+          const { data } = response.data;
+
+          if (Array.isArray(data)) {
+            const txs: Transaction[] = data.map((el, index) => ({
+              id: Date.now() + index,
+              hash: el.hash,
+              cosmosHash: el.status === CassiniTxStatus.Completed ? el.cosmos_hash : undefined,
+              status: cassiniStatusConverter(el.status),
+              amount: toErc20btsg(el.amount),
+              time: new Date(el.created_at).getTime(),
+              to: el.to,
+              sender: el.from,
+              type: TransactionType.COSMOS,
+              meta: el
+            }));
+
+            txs.forEach((tx) => {
+              const oldTx = state.bridgeTransactions.find(otx => otx.hash === tx.hash);
+
+              if ((!oldTx || (oldTx && oldTx.status !== tx.status)) && tx.status === TransactionStatus.SUCCESS) {
+                Dialog.create({
+                  component: MessageDialog,
+                  componentProps: {
+                    title: 'success.title',
+                    subtitle: 'success.cassiniTitle',
+                    success: true
+                  },
+                });
+              }
+            });
+
+            commit('addBridgeTransactions', txs);
+          }
+        }
+      } else {
+        dispatch('unsubscribeBridge').catch(error => console.error(error));
+      }
+    }, parseInt(process.env.VUE_APP_BRIDGE_REFRESH));
+  },
+  unsubscribeBridge() {
+    clearInterval(subscriptionBridge);
   },
   unsubscribe() {
     clearInterval(subscription);

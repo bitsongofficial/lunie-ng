@@ -84,7 +84,8 @@ export default {
     time: 'time',
     receiverAddress: 'receiver address',
     coingecko: 'Price Data by CoinGecko',
-    nextRefresh: 'Next refresh in {time} seconds'
+    nextRefresh: 'Next refresh in {time} seconds',
+    type: 'Type'
   },
   actions: {
     receive: 'Receive',
@@ -107,6 +108,7 @@ export default {
     transactions: 'See your transaction',
     back: 'back',
     deposit: 'deposit',
+    migrate: 'migrate',
     approve: 'approve',
     proceed: 'proceed',
     createNew: 'create new',
@@ -143,10 +145,11 @@ export default {
     depositDescription: 'You have successfully deposited your {symbol}s.',
     proposalDescription: 'Proposal submission success!',
     transferDescription: 'You have successfully transferred your {symbol}s.',
-    approveTitle: 'Your wallet is now connected to the network, you are ready to migrate your tokens.',
+    approveTitle: 'You authorized the bridge to move your tokens.\nOnce the tx is completed, you can use the bridge to migrate them.',
     approveDescription: 'This operation might take several minutes.',
-    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required on your side.',
-    depositEthereumDescription: 'Please wait for ETH network to approve your tx.'
+    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required from your side.',
+    depositEthereumDescription: 'Please wait for the networks to approve your tx.',
+    cassiniTitle: 'Your funds have correctly been migrated into native BTSG!'
   },
   portfolio: {
     balanceTitle: 'Your Balances',

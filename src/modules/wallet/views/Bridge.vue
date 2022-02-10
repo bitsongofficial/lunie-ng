@@ -221,7 +221,7 @@
                   {{ $t('actions.approve') }}
                 </q-btn>
                 <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading || pendingTransactions.length > 0" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
-                  {{ $t('actions.deposit') }}
+                  {{ $t('actions.migrate') }}
                 </q-btn>
               </template>
             </div>
@@ -293,7 +293,7 @@ export default defineComponent({
       if (el) {
         const target = getScrollTarget(el);
         const offset = el.offsetTop;
-        const duration = 1000;
+        const duration = 500;
         setVerticalScrollPosition(target, offset, duration);
       }
     }

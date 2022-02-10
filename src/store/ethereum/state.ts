@@ -5,7 +5,8 @@ export interface EthereumStateInterface {
   mustApprove: boolean;
   approveLoading: boolean;
   depositLoading: boolean;
-  pendingTransactions: Transaction[];
+  pendingTransactions: Transaction[]; // Ethereum Txs
+  bridgeTransactions: Transaction[]; // Bridge Txs
   address: string | null;
   balance: BigNumber;
   chainId: string | null;
@@ -18,6 +19,7 @@ function state (): EthereumStateInterface {
     approveLoading: false,
     depositLoading: false,
     pendingTransactions: [],
+    bridgeTransactions: [],
     address: null,
     balance: new BigNumber(0),
     chainId: null,
