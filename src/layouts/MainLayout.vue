@@ -109,11 +109,13 @@
             <menu-link icon="svguse:icons.svg#stats|0 0 20 12" :title="$t('menu.stats')" link="/stats" />
             <menu-link icon="svguse:icons.svg#stack|0 0 17 17" :title="$t('menu.validators')" link="/validators" />
             <menu-link icon="svguse:icons.svg#like|0 0 18 18" :count="votingProposalsCount" :title="$t('menu.proposals')" link="/proposals" />
+            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" :title="$t('menu.bridge')" link="/bridge" v-if="network.id === 'bitsong-2b' && session?.sessionType === 'keplr'" />
             <menu-link icon="svguse:icons.svg#swap|0 0 21 16" :title="$t('menu.transactions')" :link="explorerURL" external />
-            <menu-link icon="svguse:icons.svg#3d-cube|0 0 19 19" :title="$t('menu.bridge')" :link="bridgeURL" newLink external v-if="bridgeURL" />
           </q-list>
 
-          <q-item class="q-mt-auto profile-item" clickable>
+          <a class="coingecko text-center q-mt-auto text-quart-transparent-white text-body4" :href="coingecko" target="_blank">{{ $t('general.coingecko') }}</a>
+
+          <q-item class="profile-item" clickable>
             <q-item-section avatar @click="goToAuthentication">
               <q-btn padding="2px" dense flat unelevated round>
                 <q-icon class="rotate-180" name="svguse:icons.svg#arrow-right|0 0 14 14" color="white" size="12px" />
@@ -200,8 +202,6 @@ export default defineComponent({
       return network.value.explorerURL;
     });
 
-    const bridgeURL = computed(() => 'https://bridge.bitsong.io/');
-
     const responsiveWatch = watch(
       () => quasar.screen.lt.md,
       (value) => {
@@ -235,7 +235,6 @@ export default defineComponent({
 
     return {
       votingProposalsCount,
-      bridgeURL,
       loadingNetwork,
       network,
       networks,
@@ -251,6 +250,7 @@ export default defineComponent({
       currencies,
       language,
       languages,
+      coingecko: process.env.VUE_APP_COINGECKO_WEBSITE,
       settingsType: settingsType.map(el => ({ ...el, class: 'no-hoverable text-capitalize text-body2 text-weight-medium' })),
       goToAuthentication,
       goBack,
@@ -338,5 +338,10 @@ export default defineComponent({
 
 .options-list {
   max-height: 200px;
+}
+
+.coingecko {
+  text-decoration: none;
+  margin-bottom: 20px;
 }
 </style>

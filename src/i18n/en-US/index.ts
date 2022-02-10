@@ -19,6 +19,10 @@ export default {
     redelegateTo: 'Redelegate to',
     redelegateFrom: 'Redelegate from',
     redelegateAmount: 'Amount to redelegate',
+    to: 'To',
+    from: 'From',
+    addressTo: 'To address',
+    addressFrom: 'From address',
     amount: 'amount',
     publicAddress: 'Public address',
     address: 'address',
@@ -38,6 +42,7 @@ export default {
     totalSupply: 'total supply',
     communityPool: 'community pool',
     marketCap: 'market cap',
+    marketCapFullyDiluited: 'fully diluted market cap',
     totalVolume: 'total volume',
     apr: 'apr',
     tokenBonded: 'token bonded',
@@ -67,11 +72,20 @@ export default {
     myDelegation: 'my delegation',
     disclaimer: 'Use this software at your own risk, never enter your seed phrase into untrusted software.',
     disclaimerFull: 'Use this software at your own risk, never enter your seed phrase into untrusted software. Beware of phishing scams and spoof sites.',
+    disclaimerBridge: 'This is a newly developed tool and Bitsong assumes no responsibility for bugs or token losses due to inappropriate use of it.\n\nBefore executing transactions with a large amount of tokens it is highly recommended to test the tool with smaller amounts.',
+    disclaimerBridgeEthereum: 'This is a newly developed tool and Bitsong assumes no responsibility for bugs or token losses due to inappropriate use of it.',
+    risk: 'I have read the alert and understood the risks',
     note: 'Note',
     typology: 'Typology',
     initialDeposit: 'Initial deposit',
     textProposal: 'Text Proposal',
-    draft: 'draft'
+    draft: 'draft',
+    txhash: 'hash',
+    time: 'time',
+    receiverAddress: 'receiver address',
+    coingecko: 'Price Data by CoinGecko',
+    nextRefresh: 'Next refresh in {time} seconds',
+    type: 'Type'
   },
   actions: {
     receive: 'Receive',
@@ -94,10 +108,14 @@ export default {
     transactions: 'See your transaction',
     back: 'back',
     deposit: 'deposit',
+    migrate: 'migrate',
+    approve: 'approve',
     proceed: 'proceed',
     createNew: 'create new',
     publish: 'publish',
-    saveDraft: 'save draft'
+    saveDraft: 'save draft',
+    connectWallet: 'connect metamask',
+    pendingTx: 'Pending Tx'
   },
   errors: {
     title: 'Error!',
@@ -125,17 +143,23 @@ export default {
     redelegateTitle: 'Successfully redelegated',
     redelegateDescription: 'You have successfully redelegated your {symbol}s.',
     depositDescription: 'You have successfully deposited your {symbol}s.',
-    proposalDescription: 'Proposal submission success!'
+    proposalDescription: 'Proposal submission success!',
+    transferDescription: 'You have successfully transferred your {symbol}s.',
+    approveTitle: 'You authorized the bridge to move your tokens.\nOnce the tx is completed, you can use the bridge to migrate them.',
+    approveDescription: 'This operation might take several minutes.',
+    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required from your side.',
+    depositEthereumDescription: 'Please wait for the networks to approve your tx.',
+    cassiniTitle: 'Your funds have correctly been migrated into native BTSG!'
   },
   portfolio: {
     balanceTitle: 'Your Balances',
     undelegatedTitle: 'Undelegated',
     delegationsTitle: 'Your Delegations',
-    emptyValidators: 'No validators in your portfolio.<br/>Head over the validator list to start staking.',
+    emptyValidators: 'No validators in your portfolio.\nHead over the validator list to start staking.',
     validatorList: 'Validator List'
   },
   proposals: {
-    empty: 'No voting proposals at this moment.<br/>Come back in days to see what’s changed.',
+    empty: 'No voting proposals at this moment.\nCome back in days to see what’s changed.',
     allProposals: 'see all proposals'
   },
   assets: {
@@ -176,6 +200,6 @@ export default {
   },
   disclaimer: {
     title: 'Before you begin using the wallet',
-    description: 'BitSong is a decentralized blockchain ecosystem built for the music industry.<br/>The BitSong blockchain and the BitSong wallet are based on public, open-source software. Your use of the BitSong wallet involves various risks, including, but not limited to, financial exposure to the volatility of cryptocurrencies and/or potential misuse of wallet credentials. Blockchain transactions are irreversible and BitSong accepts no liability for any transaction resulting from the use of this wallet. Before using the BitSong wallet, please ensure that you have read and understood all relevant documentation and are satisfied that you accept the risks of investing in digital assets.',
+    description: 'BitSong is a decentralized blockchain ecosystem built for the music industry.\nThe BitSong blockchain and the BitSong wallet are based on public, open-source software. Your use of the BitSong wallet involves various risks, including, but not limited to, financial exposure to the volatility of cryptocurrencies and/or potential misuse of wallet credentials. Blockchain transactions are irreversible and BitSong accepts no liability for any transaction resulting from the use of this wallet. Before using the BitSong wallet, please ensure that you have read and understood all relevant documentation and are satisfied that you accept the risks of investing in digital assets.',
   }
 };

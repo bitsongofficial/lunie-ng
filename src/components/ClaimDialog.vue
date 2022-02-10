@@ -1,6 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="body column items-center">
+    <q-card class="body">
       <div class="dialog-header row items-center justify-between full-width">
         <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">{{ $t('actions.claim') }}</h2>
 
@@ -18,7 +18,7 @@
       </div>
 
       <template v-if="!error">
-        <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
+        <q-form class="col column items-center fit no-wrap" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width" v-for="(reward, index) in totalRewards" :key="index">
             <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t('general.amount') }}</label>
 
@@ -197,21 +197,23 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title {
-  padding-left: 9px;
-}
 .dialog-header {
   margin-bottom: 41px;
 }
+
 .body {
   width: 100%;
-  min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
   background: $alternative-4;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
 }
+
+.close {
+  opacity: 0.4;
+}
+
 .close-icon {
   margin-left: 15px;
 }
@@ -260,8 +262,11 @@ export default defineComponent({
 .btns {
   display: flex;
   flex-direction: column;
+  margin-top: 60px;
+
   @media screen and (min-width: $breakpoint-md-min) {
     flex-direction: row;
+    margin-top: 150px;
   }
 }
 .ibc-info {

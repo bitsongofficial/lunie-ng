@@ -1,6 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="body column items-center">
+    <q-card class="body column items-center no-wrap">
       <div class="dialog-header row items-center justify-between full-width">
         <h2 class="title text-body-large text-white q-my-none">{{ $t('actions.receive') }}</h2>
 
@@ -83,7 +83,6 @@ export default defineComponent({
 
 .body {
   width: 100%;
-  min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
   background: $alternative-4;
@@ -91,6 +90,9 @@ export default defineComponent({
   box-shadow: $secondary-box-shadow;
 }
 
+.close {
+  opacity: 0.4;
+}
 .close-icon {
   margin-left: 15px;
 }

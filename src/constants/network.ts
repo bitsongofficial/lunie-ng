@@ -38,8 +38,17 @@ export const network: NetworkConfig = {
         },
       ],
     },
+    ibcTransfer: {
+      gasEstimate: 180000,
+      feeOptions: [
+        {
+          denom: 'ubtsg',
+          amount: 0,
+        },
+      ],
+    },
   },
-  icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+  icon: 'coins/btsg.svg',
   localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
 };
 
@@ -82,8 +91,17 @@ export const networks: NetworkConfig[] = [
           },
         ],
       },
+      ibcTransfer: {
+        gasEstimate: 180000,
+        feeOptions: [
+          {
+            denom: 'ujuno',
+            amount: 0,
+          },
+        ],
+      },
     },
-    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    icon: 'coins/juno.svg',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },
   {
@@ -123,8 +141,17 @@ export const networks: NetworkConfig[] = [
           },
         ],
       },
+      ibcTransfer: {
+        gasEstimate: 180000,
+        feeOptions: [
+          {
+            denom: 'osmo',
+            amount: 0,
+          },
+        ],
+      },
     },
-    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    icon: 'coins/osmosis.svg',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },
   {
@@ -164,8 +191,17 @@ export const networks: NetworkConfig[] = [
           },
         ],
       },
+      ibcTransfer: {
+        gasEstimate: 180000,
+        feeOptions: [
+          {
+            denom: 'atom',
+            amount: 0,
+          },
+        ],
+      },
     },
-    icon: 'https://assets.coingecko.com/coins/images/5041/small/logo_-_2021-01-10T210801.390.png',
+    icon: 'coins/cosmos.svg',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },
   {
@@ -206,7 +242,7 @@ export const networks: NetworkConfig[] = [
         ],
       },
     },
-    icon: 'https://assets.coingecko.com/coins/images/22485/small/logo_transparent_notext.png',
+    icon: 'coins/huahua.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },{
     id: 'likecoin-mainnet-2',
@@ -246,7 +282,7 @@ export const networks: NetworkConfig[] = [
         ],
       },
     },
-    icon: 'https://assets.coingecko.com/coins/images/10212/small/likecoin.png',
+    icon: 'coins/likecoin.svg',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },{
     id: 'stargaze-1',
@@ -286,7 +322,7 @@ export const networks: NetworkConfig[] = [
         ],
       },
     },
-    icon: 'https://assets.coingecko.com/coins/images/22363/small/stargaze.png',
+    icon: 'coins/stars.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   }
 ];

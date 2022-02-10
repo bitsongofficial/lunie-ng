@@ -1,13 +1,16 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="body column items-center">
+    <q-card class="body column items-center no-wrap">
       <div class="dialog-header row items-center justify-between full-width">
         <h2 class="title text-body-large text-white q-my-none">{{ $t('disclaimer.title') }}</h2>
       </div>
 
-      <div class="disclaimer-wrapper">
-        <div class="disclaimer text-white text-body3 scroll scroll--transparent">
-          <p v-html="$t('disclaimer.description')"></p>
+      <div class="disclaimer-wrapper" :class="{
+        'hide-layer': hideLayer
+      }">
+        <div ref="content" class="disclaimer text-white text-body3 scroll scroll--transparent">
+          <p class="white-space-break-spaces">{{ $t('disclaimer.description') }}</p>
+          <q-scroll-observer @scroll="scrollHandler" />
         </div>
       </div>
 
@@ -22,6 +25,8 @@
 
 <script lang="ts">
 import { useDialogPluginComponent } from 'quasar';
+import { normalizeBetweenTwoRanges } from 'src/common/math';
+import { ScrollObserveEvent } from 'src/models';
 import { useStore } from 'src/store';
 import { defineComponent, ref } from 'vue';
 
@@ -34,6 +39,8 @@ export default defineComponent({
     const store = useStore();
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
     const accept = ref(false);
+    const content = ref<HTMLDivElement>();
+    const hideLayer = ref(false);
 
     const close = () => {
       dialogRef.value?.hide();
@@ -44,11 +51,26 @@ export default defineComponent({
       close();
     };
 
+    const scrollHandler = ({ position }: ScrollObserveEvent) => {
+      if (content.value) {
+        const scrollHeight = content.value.scrollHeight;
+        const clientHeight = content.value.clientHeight;
+        const offset = scrollHeight - clientHeight;
+        const top = Math.min(offset, Math.max(1, Math.abs(position.top)));
+        const percentage = normalizeBetweenTwoRanges(offset / top, 1, offset, 0, 1);
+
+        hideLayer.value = percentage <= 0.5;
+      }
+    };
+
     return {
       accept,
       dialogRef,
+      content,
+      hideLayer,
       onDialogHide,
-      onAccept
+      onAccept,
+      scrollHandler
     }
   },
 })
@@ -61,12 +83,15 @@ export default defineComponent({
 
 .body {
   width: 100%;
-  min-height: 480px;
   max-width: 508px;
   border-radius: 10px;
   background: $alternative-4;
   padding: 50px 36px 28px;
   box-shadow: $secondary-box-shadow;
+}
+
+.close {
+  opacity: 0.4;
 }
 
 .close-icon {
@@ -86,6 +111,14 @@ export default defineComponent({
     left: 0;
     bottom: 0;
     border-radius: 10px;
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+  }
+
+  &.hide-layer {
+    &::after {
+      opacity: 0;
+    }
   }
 }
 
