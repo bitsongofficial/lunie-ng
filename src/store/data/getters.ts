@@ -84,9 +84,14 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return shortDecimals(totalAmount.toFixed());
   },
-  fiatDelegated(_, { totalDelegated, getCurrentPrice }) {
+  fiatDelegated(_, { validatorsOfDelegations, getCurrentPrice }) {
+    const validators = validatorsOfDelegations as Validator[];
     const price = getCurrentPrice as number;
-    const totalAmount = totalDelegated as string;
+    const totalAmount = reduce(validators, (prev: BigNumber, curr: Validator) => {
+      const currAmount = new BigNumber(curr.delegation?.amount ?? 0);
+
+      return prev.plus(currAmount);
+    }, new BigNumber(0));
 
     return fiatConverter(price, totalAmount);
   },
