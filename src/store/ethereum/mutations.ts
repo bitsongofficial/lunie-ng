@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { uniqBy } from 'lodash';
 import { Transaction } from 'src/models';
 import { MutationTree } from 'vuex'
 import { EthereumStateInterface } from './state'
@@ -25,11 +26,16 @@ const mutation: MutationTree<EthereumStateInterface> = {
   setApprove(state, mustApprove: boolean) {
     state.mustApprove = mustApprove;
   },
+  setLoadingAllowance(state, loadingAllowance: boolean) {
+    state.loadingAllowance = loadingAllowance;
+  },
   addPendingTransaction(state, transaction: Transaction) {
     state.pendingTransactions = [...state.pendingTransactions, transaction];
   },
   addBridgeTransactions(state, transactions: Transaction[]) {
-    state.bridgeTransactions = [...transactions];
+    const bridgeTransactions = uniqBy([...transactions, ...state.bridgeTransactions], 'hash');
+
+    state.bridgeTransactions = [...bridgeTransactions];
   },
   editPendingTransaction(state, transaction: Transaction) {
     const pendingTransactions = [...state.pendingTransactions];

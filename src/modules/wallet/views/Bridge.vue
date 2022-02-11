@@ -217,10 +217,16 @@
                 {{ $t('actions.connectWallet') }}
               </q-btn>
               <template v-else>
-                <q-btn type="submit" v-if="ethereumAddress && mustApprove" :loading="approveLoading || pendingTransactions.length > 0" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
-                  {{ $t('actions.approve') }}
-                </q-btn>
-                <q-btn type="submit" v-if="ethereumAddress && !mustApprove" :loading="depositLoading || pendingTransactions.length > 0" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                <transition
+                  enter-active-class="animated fadeIn"
+                  leave-active-class="animated fadeOut"
+                  mode="out-in"
+                >
+                  <q-btn type="submit" v-if="mustApprove || loadingAllowance" :loading="approveLoading || pendingTransactions.length > 0 || loadingAllowance" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0 || loadingAllowance" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
+                    {{ $t('actions.approve') }}
+                  </q-btn>
+                </transition>
+                <q-btn type="submit" :loading="depositLoading || pendingTransactions.length > 1" class="btn-medium text-body2 full-width q-mt-md" :disable="!enableForm || pendingTransactions.length > 0 || mustApprove || loadingAllowance" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
                   {{ $t('actions.migrate') }}
                 </q-btn>
               </template>
@@ -243,7 +249,6 @@ import { isValidAddress } from 'src/common/address';
 import { useIbcTransfer, useEthereumTransfer } from 'src/hooks';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
-import { scroll } from 'quasar';
 
 import AlertBox from 'src/components/AlertBox.vue';
 import TransactionsTable from 'src/components/TransactionsTable.vue';
@@ -265,8 +270,6 @@ export default defineComponent({
       submit
     } = useIbcTransfer();
 
-    const { getScrollTarget, setVerticalScrollPosition } = scroll;
-
     const store = useStore();
     const router = useRouter();
     const enableForm = ref<boolean>(false);
@@ -287,17 +290,6 @@ export default defineComponent({
       }
     }, { immediate: true });
 
-    const scrollToTable = () => {
-      const el = document.getElementById('transactions-table');
-
-      if (el) {
-        const target = getScrollTarget(el);
-        const offset = el.offsetTop;
-        const duration = 500;
-        setVerticalScrollPosition(target, offset, duration);
-      }
-    }
-
     return {
       enableForm,
       transferRequest,
@@ -312,7 +304,6 @@ export default defineComponent({
       isNaN,
       gtnZero,
       submit,
-      scrollToTable,
       // Ethereum
       ...useEthereumTransfer(transferRequest)
     }

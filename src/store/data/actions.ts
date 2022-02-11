@@ -103,7 +103,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
     } catch (err) {
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -112,7 +112,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
 
       throw err;
     } finally {
@@ -153,7 +153,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setInflation', inflation.inflation);
     } catch (err) {
       console.error(err);
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -162,7 +162,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
 
       throw err;
     } finally {
@@ -360,7 +360,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const governanceOverview = await getGovernanceOverview(getters['topVoters']);
       commit('setGovernanceOverview', governanceOverview);
     } catch (err) {
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -369,7 +369,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
     } finally {
       commit('setGovernanceOverviewLoaded', true);
     }
@@ -379,7 +379,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const { deposit_params: depositParams } = await getDeposit();
       commit('setDepositParams', depositParams);
     } catch (err) {
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -388,7 +388,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
     }
   },
   async getValidatorDelegations({ commit }, validator: Validator) {
