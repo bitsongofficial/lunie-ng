@@ -109,7 +109,7 @@ export default {
     back: 'back',
     deposit: 'deposit',
     migrate: 'migrate',
-    approve: 'approve',
+    approve: 'allow Cassini Bridge to migrate your tokens',
     proceed: 'proceed',
     createNew: 'create new',
     publish: 'publish',
@@ -145,11 +145,11 @@ export default {
     depositDescription: 'You have successfully deposited your {symbol}s.',
     proposalDescription: 'Proposal submission success!',
     transferDescription: 'You have successfully transferred your {symbol}s.',
-    approveTitle: 'You authorized the bridge to move your tokens.\nOnce the tx is completed, you can use the bridge to migrate them.',
+    approveTitle: 'You authorized the bridge to migrate your tokens.\nOnce the tx is completed, you can use the bridge to migrate them.',
     approveDescription: 'This operation might take several minutes.',
-    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required from your side.',
+    depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required on your side.',
     depositEthereumDescription: 'Please wait for the networks to approve your tx.',
-    cassiniTitle: 'Your funds have correctly been migrated into native BTSG!'
+    cassiniTitle: 'You successfully migrated your erc-20 BTSG to Native BTSG!'
   },
   portfolio: {
     balanceTitle: 'Your Balances',
