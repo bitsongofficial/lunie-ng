@@ -21,10 +21,10 @@
         <qr-code class="svg" tag="svg" :value="address" :size="240" :margin="1" level="M"></qr-code>
       </div>
 
-      <div class="row justify-between items-end full-width footer">
+      <div class="row justify-between items-end full-width footer no-wrap">
         <div class="column">
           <p class="address-title text-caption-2 text-half-transparent-white text-weight-medium">{{ $t('general.publicAddress') }}</p>
-          <p class="address text-body2 text-white">{{ formatShortAddress(address) }}</p>
+          <p class="address text-body2 text-white word-break-break-word">{{ address }}</p>
         </div>
 
         <q-btn class="copy-btn btn-medium-extra-small text-caption" rounded unelevated color="accent-2" text-color="white" padding="4px 16px" @click="onCopy(address)">
@@ -120,5 +120,10 @@ export default defineComponent({
 
 .address {
   margin: 0;
+}
+
+.copy-btn {
+  min-width: 62px !important;
+  margin-left: 24px;
 }
 </style>
