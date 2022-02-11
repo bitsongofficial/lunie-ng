@@ -302,7 +302,7 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
     const mappedCoins = [];
 
     for (const coin of coins) {
-      if (coin.supported) {
+      if (coin.denom === Store.state.authentication.network.stakingDenom) {
         mappedCoins.push(
           balanceReducer(coin, delegations, undelegations, Store.state.authentication.network.name),
         );
