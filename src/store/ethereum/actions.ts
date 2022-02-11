@@ -60,16 +60,14 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       console.error(err);
       commit('setAddress', null);
 
-      if (err instanceof Error) {
-        commit(
-          'notifications/add',
-          {
-            type: 'danger',
-            message: 'Connection to metamask failed:' + err.message,
-          },
-          { root: true }
-        );
-      }
+      Dialog.create({
+        component: MessageDialog,
+        componentProps: {
+          title: 'errors.title',
+          subtitle: 'errors.metamaskConnection',
+          success: false
+        },
+      });
 
       throw err;
     } finally {

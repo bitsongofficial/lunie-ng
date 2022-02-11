@@ -128,7 +128,8 @@ export default {
     balanceMissing: 'You don\'t have enough coins',
     negative: 'Amount must be greater then zero',
     general: 'Something went wrong, please try again later',
-    minimumAmount: 'Minimum amount required {amount} {symbol}'
+    minimumAmount: 'Minimum amount required {amount} {symbol}',
+    metamaskConnection: 'Connection to metamask failed, you have to connect to {network} network.'
   },
   success: {
     title: 'Success!',

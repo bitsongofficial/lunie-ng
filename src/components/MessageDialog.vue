@@ -22,7 +22,7 @@
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" v-if="!info" />
           <q-icon class="success-icon" name="svguse:icons.svg#info|0 0 15 15" size="64px" color="primary" v-else />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg', network: bridgeNetworkName }) }}</h3>
 
           <p class="text-h4 text-half-transparent-white word-break-break-word text-center" v-if="description">{{ $t(description) }}</p>
 
@@ -35,7 +35,7 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" v-if="!info" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg' }) }}</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center white-space-break-spaces">{{ $t(subtitle, { symbol: 'btsg', network: bridgeNetworkName }) }}</h3>
 
         <p class="text-h4 text-half-transparent-white word-break-break-word text-center" v-if="description">{{ $t(description) }}</p>
       </div>
@@ -82,12 +82,14 @@ export default defineComponent({
   setup(props) {
     const { dialogRef, onDialogHide } = useDialogPluginComponent();
     const mintscanLink = props.hash && props.mintscan ? `${props.mintscan}/txs/${props.hash}` : undefined;
+    const bridgeNetworkName = process.env.VUE_APP_NETWORK_NAME;
 
     const close = () => {
       dialogRef.value?.hide();
     };
 
     return {
+      bridgeNetworkName,
       mintscanLink,
       dialogRef,
       close,
