@@ -11,11 +11,12 @@ export interface EthereumStateInterface {
   balance: BigNumber;
   chainId: string | null;
   loadingMetamask: boolean;
+  loadingAllowance: boolean;
 };
 
 function state (): EthereumStateInterface {
   return {
-    mustApprove: true,
+    mustApprove: false,
     approveLoading: false,
     depositLoading: false,
     pendingTransactions: [],
@@ -23,7 +24,8 @@ function state (): EthereumStateInterface {
     address: null,
     balance: new BigNumber(0),
     chainId: null,
-    loadingMetamask: false
+    loadingMetamask: false,
+    loadingAllowance: false
   }
 };
 

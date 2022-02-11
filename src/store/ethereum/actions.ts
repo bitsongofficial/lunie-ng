@@ -76,7 +76,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       commit('setLoadingMetamask', false)
     }
   },
-  async getBalance({ state, commit, dispatch }) {
+  async getBalance({ state, commit, dispatch }, allowance = true) {
     try {
       const contract = new Contract(
         process.env.VUE_APP_BTSG_CONTRACT,
@@ -88,7 +88,9 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
 
       commit('setBalance', balance);
 
-      dispatch('getAllowance').catch(error => console.error(error));
+      if (allowance) {
+        dispatch('getAllowance').catch(error => console.error(error));
+      }
     } catch (err) {
       console.error(err);
 
@@ -108,6 +110,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
   },
   async getAllowance({ state, commit }) {
     try {
+      commit('setLoadingAllowance', true);
       const contract = new Contract(
         process.env.VUE_APP_BTSG_CONTRACT,
         Abi.allowance,
@@ -136,6 +139,8 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       }
 
       throw err;
+    } finally {
+      commit('setLoadingAllowance', false);
     }
   },
   async setApprove({ commit, dispatch, state }) {
@@ -173,7 +178,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
           'notifications/add',
           {
             type: 'danger',
-            message: 'Eth get allowance failed:' + err.message,
+            message: 'Approve failed:' + err.message,
           },
           { root: true }
         );
@@ -220,7 +225,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
           'notifications/add',
           {
             type: 'danger',
-            message: 'Eth get allowance failed:' + err.message,
+            message: 'Deposit failed:' + err.message,
           },
           { root: true }
         );
