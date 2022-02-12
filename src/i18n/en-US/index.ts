@@ -150,7 +150,7 @@ export default {
     approveDescription: 'This operation might take several minutes.',
     depositEthereumTitle: 'Your transaction has been broadcasted, no further action is required on your side.',
     depositEthereumDescription: 'Please wait for the networks to approve your tx.',
-    cassiniTitle: 'You successfully migrated your erc-20 BTSG to Native BTSG!'
+    cassiniTitle: 'You successfully migrated your ERC-20 BTSG to Native BTSG!'
   },
   portfolio: {
     balanceTitle: 'Your Balances',
