@@ -166,8 +166,6 @@
                     no-error-icon
                     hide-bottom-space
                     reverse-fill-mask
-                    :disable="!transferRequest.from || !transferRequest.to"
-                    :readonly="transferRequest.from && transferRequest.from.id === 'ethereum'"
                     class="quantity-input full-width large"
                     :rules="transferRequest.from && transferRequest.from.id !== 'ethereum' ? [
                       val => !!val || $t('errors.required'),
