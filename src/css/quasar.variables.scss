@@ -20,10 +20,12 @@ $accent-2: #7C4496;
 $accent-3: #898997;
 $accent-4: #9797A9;
 $accent-5: #9494B9;
+$accent-6: #BA67B2;
 $alternative: #313150;
 $alternative-2: #23223B;
 $alternative-3: #303046;
 $alternative-4: #27273E;
+$alternative-5: #3D3C5E;
 
 $white: #fff;
 $transparent-white: transparentize($white, 0.85);
@@ -46,8 +48,11 @@ $alternative-3-linear-gradient: linear-gradient(0deg, $alternative-3, $alternati
 $gray: #CACACA;
 $gray2: #706E7C;
 $gray3: #93939F;
+$gray4: #EAEAEB;
 $transparent-gray: transparentize($gray, 0.85);
 $transparent-gray2: transparentize($gray2, 0.85);
+$half-transparent-gray4: transparentize($gray4, 0.5);
+$transparent-gray4: transparentize($gray4, 0.7);
 
 $positive: #11B521;
 $negative: #96446B;
@@ -76,6 +81,7 @@ $container-center: 508px;
 $secondary-box-shadow: 0px 0px 20px 20px transparentize($secondary, 0.5);
 $full-secondary-box-shadow: 0px 0px 20px $secondary;
 $black-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
+$black-box-shadow2: 0px 0px 20px 5px rgba(0, 0, 0, 0.1);
 
 $breakpoint-xs: 599px !default;
 $breakpoint-sm: 1023px !default;

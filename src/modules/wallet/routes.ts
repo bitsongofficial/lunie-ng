@@ -32,6 +32,14 @@ export default [
         },
       },
       {
+        path: 'bridge',
+        name: 'bridge',
+        component: () => import('./views/Bridge.vue'),
+        meta: {
+          title: 'Bridge'
+        },
+      },
+      {
         path: 'validators',
         name: 'validators',
         component: () => import('./views/Validators.vue'),
@@ -57,6 +65,28 @@ export default [
         meta: {
           title: 'Proposals'
         },
+      },
+      {
+        path: 'proposals/submit',
+        name: 'proposals-submit',
+        component: () => import('./views/SubmitProposal.vue'),
+        meta: {
+          title: 'Submit Proposal',
+          parent: '/proposals',
+          back: true,
+        },
+        props: true
+      },
+      {
+        path: 'proposals/submit/:id',
+        name: 'proposals-submit-id',
+        component: () => import('./views/SubmitProposal.vue'),
+        meta: {
+          title: 'Submit Proposal',
+          parent: '/proposals',
+          back: true,
+        },
+        props: true
       },
       {
         path: 'proposals/:id',

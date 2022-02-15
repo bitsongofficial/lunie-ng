@@ -1,24 +1,35 @@
-import { Option } from 'src/models';
+import { Option, ProposalSubmitType } from 'src/models';
 
 export const proposalsTypeOptions: Option[] = [
   {
-    label: 'All',
+    label: 'general.all',
     value: undefined,
   },
   {
-    label: 'Deposit',
+    label: 'general.deposit',
     value: 'DEPOSIT',
   },
   {
-    label: 'Voting',
+    label: 'general.voting',
     value: 'VOTING',
   },
   {
-    label: 'Passed',
+    label: 'general.passed',
     value: 'PASSED',
   },
   {
-    label: 'Rejected',
+    label: 'general.rejected',
     value: 'REJECTED',
+  },
+  {
+    label: 'general.draft',
+    value: 'DRAFT',
+  },
+];
+
+export const proposalsSubmitTypeOptions: Option[] = [
+  {
+    label: 'general.textProposal',
+    value: ProposalSubmitType.TEXT,
   },
 ];

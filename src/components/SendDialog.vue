@@ -1,8 +1,8 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="body column items-center">
+    <q-card class="body">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">Send</h2>
+        <h2 class="title text-body-large text-white q-my-none" v-if="!error && ! success">{{ $t('actions.send') }}</h2>
 
         <q-btn
           unelevated
@@ -12,15 +12,15 @@
           padding="2px"
           @click="close"
         >
-          <label class="text-body4 text-uppercase no-pointer-events">close</label>
+          <label class="text-body4 text-uppercase no-pointer-events">{{ $t('actions.close') }}</label>
           <q-icon class="close-icon" name="svguse:icons.svg#close|0 0 12 12" size="10px" />
         </q-btn>
       </div>
 
       <template v-if="!error">
-        <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
+        <q-form class="col column items-center fit no-wrap" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Send To</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t('general.sendTo') }}</label>
 
             <q-input
               v-model="to"
@@ -32,7 +32,7 @@
               no-error-icon
               hide-bottom-space
               class="full-width large"
-              :rules="[val => !!val || 'Field is required', val => isValidAddress(val) || 'Invalid address']"
+              :rules="[val => !!val || $t('errors.required'), val => isValidAddress(val) || $t('actions.invalidAddress')]"
             >
               <template v-slot:append>
                 <q-icon name="svguse:icons.svg#anchor" size="16px" color="gray3" />
@@ -41,7 +41,7 @@
           </div>
 
           <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Amount</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t('general.amount') }}</label>
 
             <q-input
               v-model="amount"
@@ -54,22 +54,27 @@
               hide-bottom-space
               class="quantity-input full-width large"
               :rules="[
-                val => !!val || 'Required field',
-                val => !isNaN(val) || 'Amount must be a decimal value',
-                val => gtnZero(val) || 'Amount must be a greater then zero',
-                val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
-                val => !isNegative(val) || 'Amount must be greater then zero'
+                val => !!val || $t('errors.required'),
+                val => !isNaN(val) || $t('errors.nan'),
+                val => gtnZero(val) || $t('errors.gtnZero'),
+                val => compareBalance(val, availableCoins) || $t('errors.balanceMissing'),
+                val => !isNegative(val) || $t('errors.negative')
               ]"
             >
               <template v-slot:append>
                 <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
-                  MAX
+                  {{ $t('actions.max') }}
                 </q-btn>
                 <label class="text-body2 text-primary" v-if="!denom">{{ network.stakingDenom }}</label>
+                <label class="text-body2 text-primary" v-else-if="symbol">{{ symbol }}</label>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ denom ? availableCoins.toFixed() : availableCoins.toFormat() }} <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">
+              {{ $t('general.availableCoins', { amount: denom ? availableCoins.toFixed() : availableCoins.toFormat() }) }}
+              <span class="text-uppercase" v-if="!denom">{{ network.stakingDenom }}</span>
+              <span class="text-uppercase" v-else-if="symbol">{{ symbol }}</span>
+            </p>
           </div>
 
           <div class="field-block column full-width justify-start items-start">
@@ -83,7 +88,7 @@
               text-color="accent"
               toggle-text-color="white"
               padding="0 0 0 11px"
-            >{{ !showAdvanced ? 'Show Advanced' : 'Hide Advanced' }}</q-btn>
+            >{{ !showAdvanced ? $t('actions.showAdvanced') : $t('actions.hideAdvanced') }}</q-btn>
           </div>
 
           <transition
@@ -93,7 +98,7 @@
             appear
           >
             <div class="field-block column full-width" v-if="showAdvanced">
-              <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">Note</label>
+              <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t('general.note') }}</label>
 
               <q-input
                 v-model="memo"
@@ -118,11 +123,11 @@
               padding="2px"
               @click="close"
             >
-              <label class="text-h5 text-capitalize no-pointer-events">cancel</label>
+              <label class="text-h5 text-capitalize no-pointer-events">{{ $t('actions.cancel') }}</label>
             </q-btn>
 
             <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
-              send
+              {{ $t('actions.send') }}
             </q-btn>
           </div>
         </q-form>
@@ -130,12 +135,12 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Success!</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t('success.title') }}</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">You have successfully send your {{ !denom ? network.stakingDenom : 'coin' }}s.</p>
+          <p class="text-h4 text-half-transparent-white text-center">{{ $t('success.send', { symbol: symbol ? symbol : network.stakingDenom }) }}</p>
 
           <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
-            See your transaction
+            {{ $t('actions.transactions') }}
           </q-btn>
         </div>
       </template>
@@ -143,7 +148,7 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t('errors.title') }}</h3>
 
         <p class="text-h4 text-half-transparent-white text-center word-break-break-word">{{ error }}</p>
       </div>
@@ -164,6 +169,9 @@ export default defineComponent({
   name: 'SendDialog',
   props: {
     denom: {
+      type: String,
+    },
+    symbol: {
       type: String,
     }
   },
@@ -263,24 +271,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title {
-  padding-left: 9px;
-}
-
 .dialog-header {
   margin-bottom: 41px;
 }
 
 .body {
   width: 100%;
-  min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $alternative-4;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
 }
 
+.close {
+  opacity: 0.4;
+}
 .close-icon {
   margin-left: 15px;
 }

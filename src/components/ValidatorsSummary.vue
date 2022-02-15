@@ -4,13 +4,12 @@
       'q-gutter-y-md': quasar.screen.lt.md,
       'items-center': !quasar.screen.lt.md
     }">
-      <p class="description text-subtitle2 text-half-transparent-white col-12 col-md-6">
-        No validators in your portfolio.<br/>
-        Head over the validator list to start staking.
+      <p class="description text-subtitle2 text-half-transparent-white col-12 col-md-6 white-space-break-spaces">
+        {{ $t('portfolio.emptyValidators') }}
       </p>
 
       <q-btn to="/validators" class="btn-medium text-h6 font-weight-medium col-12 col-md-auto" rounded unelevated color="white" text-color="secondary" padding="12px 28px 10px 29px">
-        VALIDATOR LIST <q-icon class="validators-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="secondary" />
+        {{ $t('portfolio.validatorList') }} <q-icon class="validators-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="12px" color="secondary" />
       </q-btn>
     </div>
   </div>

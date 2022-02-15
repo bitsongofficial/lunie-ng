@@ -1,6 +1,6 @@
 <template>
   <q-chip class="status text-uppercase text-weight-medium q-mx-none q-my-none text-body3" text-color="white" :color="color">
-    {{ status }}
+    {{ $t(`general.${status.toLowerCase()}`) }}
   </q-chip>
 </template>
 

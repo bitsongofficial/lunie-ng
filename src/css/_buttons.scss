@@ -5,6 +5,7 @@
 .btn-medium {
   min-height: 46px !important;
 }
+
 .btn-medium-large-small {
   min-height: 40px !important;
 }
@@ -21,6 +22,10 @@
   min-height: 32px !important;
 }
 
+.btn-medium-extra-small {
+  min-height: 26px !important;
+}
+
 .btn-super-extra-small {
   min-height: 18px !important;
 }
@@ -31,4 +36,8 @@
   & > .q-focus-helper {
     display: none;
   }
+}
+
+.q-btn--outline:before {
+  border-width: 2px;
 }

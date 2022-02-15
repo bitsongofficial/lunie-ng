@@ -8,7 +8,7 @@
         'row items-center': !quasar.screen.lt.md,
       }">
         <h2 class="section-title text-body-large text-white col-12 col-md-auto">
-          Validators
+          {{ $t('menu.validators') }}
         </h2>
 
         <toggle-btn class="col-12 col-md-auto" v-model="type" :options="validatorTypeOptions" />
@@ -22,7 +22,7 @@
           round
           standout
           v-model="search"
-          placeholder="Search validator"
+          :placeholder="$t('validators.search')"
           no-error-icon
           hide-bottom-space
           class="search-box large text-h5 q-ml-auto"
@@ -109,8 +109,7 @@ export default defineComponent({
   margin: 0 auto 16px;
 
   @media screen and (min-width: $breakpoint-md-min) {
-    margin: 0 48px 0 0;
-    padding-left: 32px;
+    margin: 0 32px 0 0;
   }
 }
 

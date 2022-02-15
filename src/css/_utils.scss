@@ -23,6 +23,10 @@
   color: $half-transparent-white !important;
 }
 
+.text-quart-transparent-white {
+  color: $quart-transparent-white !important;
+}
+
 .bg-quart-transparent-white {
   background: $quart-transparent-white !important;
 }
@@ -91,8 +95,28 @@
   color: $gray3 !important;
 }
 
+.text-gray4 {
+  color: $gray4 !important;
+}
+
 .text-alternative-4 {
   color: $alternative-4 !important;
+}
+
+.text-accent-6 {
+  color: $accent-6 !important;
+}
+
+.text-half-transparent-gray4 {
+  color: $half-transparent-gray4 !important;
+}
+
+.text-transparent-gray4 {
+  color: $transparent-gray4 !important;
+}
+
+.bg-accent-6 {
+  background: $accent-6 !important;
 }
 
 .text-transparent-accent {
@@ -109,6 +133,10 @@
 
 .bg-transparent-accent {
   background: $transparent-accent !important;
+}
+
+.bg-transparent-gray2 {
+  background: $transparent-gray2 !important;
 }
 
 .bg-gradient {
@@ -156,4 +184,14 @@
 
 .text-underline {
   text-decoration: underline;
+}
+
+.q-col-gutter-custom {
+  margin-top: -46px;
+  margin-left: -28px;
+}
+
+.q-col-gutter-custom > * {
+  padding-top: 46px;
+  padding-left: 28px;
 }

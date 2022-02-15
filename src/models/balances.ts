@@ -5,10 +5,15 @@ export interface Balance {
   id: string;
   type: string;
   total: string | number | BigNumber;
+  totalFiat?: string;
+  availableFiat?: string;
   denom: string;
+  symbol?: string;
   available: string | number | BigNumber;
   staked: number;
   sourceChain: string | undefined;
+  image?: string;
+  name: string;
 }
 
 export interface Pagination {

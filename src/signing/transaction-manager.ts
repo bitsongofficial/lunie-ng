@@ -7,7 +7,7 @@ import {
   assertIsBroadcastTxSuccess,
 } from '@cosmjs/stargate';
 import { getSigner } from './signer';
-import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx } from './messages';
+import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx, SubmitProposalTx } from './messages';
 import { getCoinLookup } from 'src/common/network';
 import Store from 'src/store';
 
@@ -103,6 +103,14 @@ export const createSignBroadcast = async ({
     case MessageTypes.CLAIM_REWARDS:
       const rewards = ClaimRewardsTx(senderAddress, message);
       messages = [...rewards];
+      break;
+    case MessageTypes.SUBMIT_PROPOSAL:
+      const proposal = SubmitProposalTx(senderAddress, message, Store.state.authentication.network);
+
+      if (proposal) {
+        messages.push(proposal);
+      }
+
       break;
   }
 

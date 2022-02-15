@@ -7,25 +7,25 @@ export const getMappedVotes = (details: DetailedVote) => {
   const data: ChartData[] = [];
 
   data.push({
-    label: 'Yes',
+    label: 'general.yes',
     color: 'white',
     value: new BigNumber(details.votingPercentageYes).multipliedBy(100).toNumber()
   });
 
   data.push({
-    label: 'No',
+    label: 'general.no',
     color: 'primary',
     value: new BigNumber(details.votingPercentageNo).multipliedBy(100).toNumber()
   });
 
   data.push({
-    label: 'No with veto',
+    label: 'general.noWithVeto',
     color: 'accent-2',
     value: new BigNumber(details.votingPercentageNoWithVeto).multipliedBy(100).toNumber()
   });
 
   data.push({
-    label: 'Abstain',
+    label: 'general.abstain',
     color: 'secondary',
     value: new BigNumber(details.votingPercentageAbstain).multipliedBy(100).toNumber()
   });

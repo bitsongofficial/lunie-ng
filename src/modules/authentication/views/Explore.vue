@@ -1,7 +1,7 @@
 <template>
   <div class="any-address-content column items-center">
     <div class="col-12">
-      <h1 class="title text-body-large text-white text-weight-medium q-mt-none text-center">Explore with any address</h1>
+      <h1 class="title text-body-large text-white text-weight-medium q-mt-none text-center">{{ $t('login.explore') }}</h1>
     </div>
 
     <q-form class="col-12 column" @submit="signIn">
@@ -12,8 +12,8 @@
         round
         standout
         v-model="address"
-        placeholder="Public address"
-        :rules="[val => !!val || 'Field is required', val => isValidAddress(val) || 'Invalid address']"
+        :placeholder="$t('general.publicAddress')"
+        :rules="[val => !!val || $t('errors.required'), val => isValidAddress(val) || $t('errors.invalidAddress')]"
         no-error-icon
         hide-bottom-space
         class="col-12"
@@ -25,11 +25,11 @@
 
       <div class="explore-wrapper row items-center space-between">
         <h6 class="error text-accent text-weight-medium text-left q-my-none col-12 col-md-6">
-          Use this software at your own risk. never enter your seed phrase into untrusted software.
+          {{ $t('general.disclaimer') }}
         </h6>
 
         <q-btn class="explore btn-medium text-body2 col-12 col-md-6 text-center items-center" type="submit" rounded unelevated color="accent-2" text-color="white" padding="16px 48px">
-          Explore
+          {{ $t('actions.explore') }}
         </q-btn>
       </div>
     </q-form>

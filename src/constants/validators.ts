@@ -2,11 +2,11 @@ import { Option } from 'src/models';
 
 export const validatorTypeOptions: Option[] = [
   {
-    label: 'Active',
+    label: 'general.active',
     value: 'active',
   },
   {
-    label: 'All',
+    label: 'general.all',
     value: 'all',
   },
 ];

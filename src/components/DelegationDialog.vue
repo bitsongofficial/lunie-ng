@@ -1,8 +1,8 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="body column items-center">
+    <q-card class="body">
       <div class="dialog-header row items-center justify-between full-width">
-        <h2 class="title text-body-large text-white q-my-none" v-if="title && !error && ! success">{{ title }}</h2>
+        <h2 class="title text-body-large text-white q-my-none text-capitalize" v-if="title && !error && ! success">{{ $t(title) }}</h2>
 
         <q-btn
           unelevated
@@ -12,15 +12,15 @@
           padding="2px"
           @click="close"
         >
-          <label class="text-body4 text-uppercase no-pointer-events">close</label>
+          <label class="text-body4 text-uppercase no-pointer-events">{{ $t('actions.close') }}</label>
           <q-icon class="close-icon" name="svguse:icons.svg#close|0 0 12 12" size="10px" />
         </q-btn>
       </div>
 
       <template v-if="!error">
-        <q-form class="col column items-center fit" @submit="onSubmit" v-if="!success">
+        <q-form class="col column items-center fit no-wrap" @submit="onSubmit" v-if="!success">
           <div class="field-block column full-width" v-if="type === 'UnstakeTx' || type === 'RestakeTx'">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ fromLabel }}</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t(fromLabel) }}</label>
 
             <q-select
               v-model="from"
@@ -36,7 +36,7 @@
               no-error-icon
               hide-bottom-space
               :options-cover="false"
-              :rules="[val => !!val || 'Required field']"
+              :rules="[val => !!val || $t('errors.required')]"
             >
               <template v-slot:selected-item="{ opt }">
                 <div class="row items-center cursor-pointer">
@@ -66,7 +66,7 @@
           </div>
 
           <div class="field-block column full-width" v-if="type === 'StakeTx' || type === 'RestakeTx'">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ toLabel }}</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t(toLabel) }}</label>
 
             <q-select
               v-model="to"
@@ -82,7 +82,7 @@
               no-error-icon
               hide-bottom-space
               :options-cover="false"
-              :rules="[val => !!val || 'Required field']"
+              :rules="[val => !!val || $t('errors.required')]"
             >
               <template v-slot:selected-item="{ opt }">
                 <div class="row items-center cursor-pointer">
@@ -112,7 +112,7 @@
           </div>
 
           <div class="field-block column full-width">
-            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ amountLabel }}</label>
+            <label class="field-label text-uppercase text-primary text-h6 text-weight-medium">{{ $t(amountLabel) }}</label>
 
             <q-input
               v-model="amount"
@@ -125,22 +125,22 @@
               hide-bottom-space
               class="quantity-input full-width large"
               :rules="[
-                val => !!val || 'Required field',
-                val => !isNaN(val) || 'Amount must be a decimal value',
-                val => gtnZero(val) || 'Amount must be a greater then zero',
-                val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
-                val => !isNegative(val) || 'Amount must be greater then zero'
+                val => !!val || $t('errors.required'),
+                val => !isNaN(val) || $t('errors.nan'),
+                val => gtnZero(val) || $t('errors.gtnZero'),
+                val => compareBalance(val, availableCoins) || $t('errors.balanceMissing'),
+                val => !isNegative(val) || $t('errors.negative')
               ]"
             >
               <template v-slot:append>
                 <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
-                  MAX
+                  {{ $t('actions.max') }}
                 </q-btn>
                 <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
               </template>
             </q-input>
 
-            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">Available: {{ availableCoins.toFormat() }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
+            <p class="text-body2 text-primary q-px-sm q-mt-sm q-mb-none">{{ $t('general.availableCoins', { amount: availableCoins.toFormat() }) }} <span class="text-uppercase">{{ network.stakingDenom }}</span></p>
           </div>
 
           <div class="btns full-width items-center justify-end q-mt-auto">
@@ -152,11 +152,11 @@
               padding="2px"
               @click="close"
             >
-              <label class="text-h5 text-capitalize no-pointer-events">{{ cancel }}</label>
+              <label class="text-h5 text-capitalize no-pointer-events">{{ $t(cancel) }}</label>
             </q-btn>
 
             <q-btn type="submit" class="submit btn-medium text-h5" rounded unelevated color="accent-2" text-color="white" padding="15px 20px 14px" :loading="loading">
-              {{ submit }}
+              {{ $t(submit) }}
             </q-btn>
           </div>
         </q-form>
@@ -164,12 +164,12 @@
         <div class="success col column fit" v-else>
           <q-icon class="success-icon" name="svguse:icons.svg#check|0 0 70 70" size="64px" color="positive" />
 
-          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ successTitle }}</h3>
+          <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t(successTitle) }}</h3>
 
-          <p class="text-h4 text-half-transparent-white text-center">{{ successSubtitle }}</p>
+          <p class="text-h4 text-half-transparent-white text-center">{{ $t(successSubtitle, { symbol: network.stakingDenom }) }}</p>
 
           <q-btn @click="close" type="a" target="_blank" :href="network.explorerURL + 'txs/' + hash" class="transaction-btn q-mx-auto btn-medium text-body2 text-untransform text-weight-medium" rounded unelevated color="accent-gradient" text-color="white" padding="15px 20px 14px">
-            See your transaction
+            {{ $t('actions.transactions') }}
           </q-btn>
         </div>
       </template>
@@ -177,7 +177,7 @@
       <div class="success col column fit" v-else>
         <q-icon class="success-icon" name="svguse:icons.svg#error-outlined|0 0 70 70" size="64px" color="negative" />
 
-        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">Error!</h3>
+        <h3 class="text-body-extra-large text-white text-weight-medium q-mt-none q-mb-sm text-center">{{ $t('errors.title') }}</h3>
 
         <p class="text-h4 text-half-transparent-white text-center word-break-break-word">{{ error }}</p>
       </div>
@@ -336,22 +336,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title {
-  padding-left: 9px;
-}
-
 .dialog-header {
   margin-bottom: 41px;
 }
 
 .body {
   width: 100%;
-  min-height: 446px;
   max-width: 508px;
   border-radius: 10px;
-  background: $alternative;
+  background: $alternative-4;
   padding: 33px 36px 28px;
   box-shadow: $secondary-box-shadow;
+}
+
+.close {
+  opacity: 0.4;
 }
 
 .close-icon {

@@ -17,7 +17,8 @@ import {
   getPool,
   getInflation,
   getCommunityPool,
-  getSupplyByDenom
+  getSupplyByDenom,
+  getDeposit
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
@@ -26,6 +27,7 @@ import { createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-ma
 import { getAPR } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
+import { getCoinGeckoDetails } from 'src/services/coin-gecko';
 
 const actions: ActionTree<DataStateInterface, StateInterface> = {
   resetSessionData({ commit }) {
@@ -37,6 +39,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       dispatch('getSupplyInfo').catch(err => console.error(err));
       await dispatch('getFirstBlock');
       await dispatch('getBlock');
+      await dispatch('getDepositParams');
       await dispatch('getValidators');
 
       await dispatch('refreshSession');
@@ -69,6 +72,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
       try {
         commit('setLoading', true);
+        await dispatch('getCoinGeckoDetails');
         await dispatch('getBalances', { address });
         await dispatch('getRewards', { address });
         await dispatch('getDelegations', address);
@@ -99,7 +103,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const supplyInfo = await getSupplyInfo();
       commit('setSupplyInfo', supplyInfo);
     } catch (err) {
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -108,7 +112,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
 
       throw err;
     } finally {
@@ -149,7 +153,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setInflation', inflation.inflation);
     } catch (err) {
       console.error(err);
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -158,7 +162,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
 
       throw err;
     } finally {
@@ -356,7 +360,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       const governanceOverview = await getGovernanceOverview(getters['topVoters']);
       commit('setGovernanceOverview', governanceOverview);
     } catch (err) {
-      if (err instanceof Error) {
+      /* if (err instanceof Error) {
         commit(
           'notifications/add',
           {
@@ -365,9 +369,26 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
           },
           { root: true }
         );
-      }
+      } */
     } finally {
       commit('setGovernanceOverviewLoaded', true);
+    }
+  },
+  async getDepositParams({ commit }) {
+    try {
+      const { deposit_params: depositParams } = await getDeposit();
+      commit('setDepositParams', depositParams);
+    } catch (err) {
+      /* if (err instanceof Error) {
+        commit(
+          'notifications/add',
+          {
+            type: 'danger',
+            message: 'Getting deposit params failed:' + err.message,
+          },
+          { root: true }
+        );
+      } */
     }
   },
   async getValidatorDelegations({ commit }, validator: Validator) {
@@ -418,6 +439,18 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
     const accountInfo = await getAccountInfo(address);
 
     return accountInfo;
+  },
+  async getCoinGeckoDetails({ rootState, commit }) {
+    try {
+      commit('setLoadingCoinDetails', true);
+      const responseCoinDetails = await getCoinGeckoDetails(rootState.authentication.network.coinGeckoId);
+
+      commit('setCoinDetails', responseCoinDetails.data);
+    } catch (error) {
+      throw error;
+    } finally {
+      commit('setLoadingCoinDetails', false);
+    }
   },
   async signTransaction({ commit, dispatch, rootState }, data: TransactionRequest) {
     try {

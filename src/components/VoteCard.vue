@@ -6,7 +6,7 @@
       <div class="row items-center col-12 col-md-auto" v-for="(data, index) in dataset" :key="index">
         <div :class="'vote-card-dot bg-' + data.color"></div>
 
-        <p class="vote-card-label text-subtitle2 text-white q-my-none">{{ data.label }}</p>
+        <p class="vote-card-label text-subtitle2 text-white q-my-none text-capitalize">{{ data.label }}</p>
 
         <p class="vote-card-legend-value text-subtitle2 text-white q-my-none">{{ data.value }} %</p>
       </div>

@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <h6 class="warning center-login-inner text-accent text-center">Use this software at your own risk. never enter your seed phrase into untrusted software. Beware of phishing scams and spoof sites. Have a nice day</h6>
+    <h6 class="warning center-login-inner text-accent text-center">{{ $t('general.disclaimerFull') }}</h6>
   </q-page>
 </template>
 

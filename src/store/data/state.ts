@@ -1,5 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { Balance, BlockReduced, Delegation, DepositParams, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import { CoinGeckoResponse } from 'src/models/coin-gecko';
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
@@ -33,6 +34,9 @@ export interface DataStateInterface {
   loadingApr: boolean;
   inflation: string | null;
   pool: Pool | null;
+  coinDetails: CoinGeckoResponse | null;
+  loadingCoinDetails: boolean;
+  depositParams: DepositParams | null;
 }
 
 function state (): DataStateInterface {
@@ -67,7 +71,10 @@ function state (): DataStateInterface {
     apr: null,
     loadingApr: false,
     inflation: null,
-    pool: null
+    pool: null,
+    coinDetails: null,
+    loadingCoinDetails: false,
+    depositParams: null
   }
 }
 

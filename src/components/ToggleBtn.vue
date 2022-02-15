@@ -4,7 +4,7 @@
       'active': modelValue === option.value,
       'animated': animated,
     }" :ref="el => setBtnRef(el, i)" @click="(payload) => onChange(payload, option.value)">
-      {{ option.label }}
+      {{ $t(option.label) }}
     </button>
 
     <div class="toggle-btn-segment" :class="{
