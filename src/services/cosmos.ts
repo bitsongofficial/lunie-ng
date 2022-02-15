@@ -256,7 +256,7 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
   try {
     const balancesResponse = await queryAutoPaginate<Coin>(`cosmos/bank/v1beta1/balances/${address}`);
 
-    const balances = balancesResponse ? balancesResponse : [];
+    const balances = balancesResponse ? balancesResponse.filter(el => !el.denom.includes('gamm/pool')) : [];
 
     const coins = await Promise.all(
       balances.map((balance) => {
