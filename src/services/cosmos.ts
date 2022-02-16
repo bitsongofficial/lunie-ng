@@ -309,8 +309,12 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
       } else {
         const response = await searchSymbolDetails(coin.denom);
         const symbol = response.data.symbol;
-        const responseName = await searchTokenDetails(symbol);
-        const token = responseName.data.find((el) => el.symbol === symbol);
+        let token;
+
+        if (symbol !== '') {
+          const responseName = await searchTokenDetails(symbol);
+          token = responseName.data.find((el) => el.symbol === symbol);
+        }
 
         mappedCoins.push(
           balanceReducer(coin, delegations, undelegations, token ? token.name : symbol, symbol),
