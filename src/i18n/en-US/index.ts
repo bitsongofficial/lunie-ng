@@ -85,7 +85,8 @@ export default {
     receiverAddress: 'receiver address',
     coingecko: 'Price Data by CoinGecko',
     nextRefresh: 'Next refresh in {time} seconds',
-    type: 'Type'
+    type: 'Type',
+    commission: 'Commission',
   },
   actions: {
     receive: 'Receive',
