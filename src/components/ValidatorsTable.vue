@@ -66,6 +66,11 @@
             {{ props.row.expectedReturns ? bigFigureOrPercent(props.row.expectedReturns) : 'N/A' }}
           </p>
         </q-td>
+        <q-td key="commission" class="text-subtitle2 text-white" :props="props">
+          <p class="text-subtitle2 q-my-none">
+            {{ props.row.commission ? percent(props.row.commission) : 'N/A' }}
+          </p>
+        </q-td>
         <q-td key="votingPower" class="text-subtitle2 text-white" :props="props">
           <p class="text-subtitle2 q-my-none">
             {{ bigFigureOrPercent(props.row.votingPower) }}
@@ -115,7 +120,7 @@ import { Validator } from 'src/models';
 import { LooseDictionary } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals } from 'src/common/numbers';
+import { bigFigureOrPercent, bigFigureOrShortDecimals, shortDecimals, percent } from 'src/common/numbers';
 import { fromNow } from 'src/common/date';
 import { useDelegatorActions } from 'src/hooks/useDelegatorActions';
 
@@ -184,6 +189,12 @@ export default defineComponent({
         field: 'rewards',
       },
       {
+        name: 'commission',
+        label: 'general.commission',
+        align: 'center',
+        field: 'commission',
+      },
+      {
         name: 'votingPower',
         label: 'general.votingPower',
         align: 'center',
@@ -218,7 +229,7 @@ export default defineComponent({
         return ['id', 'name', 'status', 'staked', 'rewards', 'votingPower', ...extra];
       }
 
-      return ['id', 'name', 'status', 'rewards', 'votingPower', ...extra];
+      return ['id', 'name', 'status', 'rewards', 'commission', 'votingPower', ...extra];
     });
 
     const rowClick = async (row: LooseDictionary) => {
@@ -274,6 +285,7 @@ export default defineComponent({
       bigFigureOrShortDecimals,
       shortDecimals,
       fromNow,
+      percent,
       ...useDelegatorActions(),
     }
   }
