@@ -133,7 +133,7 @@
               ]"
             >
               <template v-slot:append>
-                <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+                <q-btn @click="amount = getMaxAmount()" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
                   {{ $t('actions.max') }}
                 </q-btn>
                 <label class="text-body2 text-primary">{{ network.stakingDenom }}</label>
@@ -192,6 +192,7 @@ import { useStore } from 'src/store';
 import { defineComponent, ref, computed, PropType } from 'vue';
 import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
+import { useMaxAmount } from 'src/hooks/useMaxAmount';
 
 export default defineComponent({
   name: 'DelegationDialog',
@@ -329,7 +330,8 @@ export default defineComponent({
       isNaN,
       gtnZero,
       onDialogHide,
-      onSubmit
+      onSubmit,
+      ...useMaxAmount(availableCoins)
     }
   },
 })

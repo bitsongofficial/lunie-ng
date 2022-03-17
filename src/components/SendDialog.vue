@@ -62,7 +62,7 @@
               ]"
             >
               <template v-slot:append>
-                <q-btn @click="amount = availableCoins" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
+                <q-btn @click="amount = getMaxAmount()" class="max-btn btn-super-extra-small text-body3" rounded unelevated color="accent-2" text-color="white" padding="4px 7px 3px">
                   {{ $t('actions.max') }}
                 </q-btn>
                 <label class="text-body2 text-primary" v-if="!denom">{{ network.stakingDenom }}</label>
@@ -164,6 +164,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { BigNumber } from 'bignumber.js';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
+import { useMaxAmount } from 'src/hooks/useMaxAmount';
 
 export default defineComponent({
   name: 'SendDialog',
@@ -264,7 +265,8 @@ export default defineComponent({
       isNaN,
       gtnZero,
       onDialogHide,
-      onSubmit
+      onSubmit,
+      ...useMaxAmount(availableCoins)
     }
   },
 })
