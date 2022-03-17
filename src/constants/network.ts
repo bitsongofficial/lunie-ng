@@ -269,7 +269,7 @@ export const networks: NetworkConfig[] = [
     validatorConsensusaddressPrefix: 'cosmosvalcons', // needed to map validators from staking queries to the validator set
     HDPath: 'm/44\'/118\'/0\'/0/0',
     coinType: 118,
-    coinGeckoId: 'cosmos',
+    coinGeckoId: 'likecoin',
     lockUpPeriod: '3 days',
     fees: {
       default: {
