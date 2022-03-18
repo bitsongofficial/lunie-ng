@@ -243,7 +243,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { compareBalance, isNegative, isNaN, gtnZero } from 'src/common/numbers';
 import { isValidAddress } from 'src/common/address';
 import { useIbcTransfer, useEthereumTransfer } from 'src/hooks';
@@ -252,7 +252,9 @@ import { useRouter } from 'vue-router';
 
 import AlertBox from 'src/components/AlertBox.vue';
 import TransactionsTable from 'src/components/TransactionsTable.vue';
-import { SessionType } from 'src/models';
+import { NetworkConfig, SessionType } from 'src/models';
+import { useMaxAmount } from 'src/hooks/useMaxAmount';
+import { BigNumber } from 'bignumber.js';
 
 export default defineComponent({
   name: 'Bridge',
@@ -273,9 +275,19 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const enableForm = ref<boolean>(false);
+    const availableCoins = computed(() => {
+      return new BigNumber(totalBtsg.value);
+    });
+    const transferRequestFrom = computed(() => transferRequest.from as Partial<NetworkConfig>);
+
+    const { getMaxAmount } = useMaxAmount(availableCoins, transferRequestFrom);
 
     const maxClick = () => {
-      transferRequest.amount = totalBtsg.value;
+      const maxAmount = getMaxAmount();
+
+      if (maxAmount) {
+        transferRequest.amount = maxAmount;
+      }
     };
 
     store.watch((state) => state.authentication.network, async (currentNet) => {
