@@ -206,6 +206,47 @@ export const networks: NetworkConfig[] = [
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },
   {
+    id: 'desmos-mainnet',
+    name: 'Desmos',
+    description: 'Desmos Mainnet',
+    logo: 'logo.svg',
+    website: 'https://desmos.network',
+    apiURL: 'https://api.mainnet.desmos.network',
+    rpcURL: 'https://rpc.desmos.network:443',
+    explorerURL: 'https://www.mintscan.io/desmos/',
+    minBlockHeight: 2500000,
+    supplyURL: null,
+    stakingDenom: 'DSM',
+    coinLookup: [
+      {
+        viewDenom: 'DSM',
+        chainDenom: 'udsm',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'desmos',
+    validatorAddressPrefix: 'desmosvaloper',
+    validatorConsensusaddressPrefix: 'desmosvalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/852\'/0\'/0/0',
+    coinType: 852,
+    coinGeckoId: 'desmos',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'DSM',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'coins/dsm.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },
+  {
     id: 'chihuahua-1',
     name: 'Chihuahua',
     description: 'Chihuahua Mainnet',
