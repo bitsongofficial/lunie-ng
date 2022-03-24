@@ -246,6 +246,46 @@ export const networks: NetworkConfig[] = [
     icon: 'coins/huahua.png',
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   },{
+    id: 'cerberus-chain-1',
+    name: 'Cerberus',
+    description: 'Cerberus Mainnet',
+    logo: 'logo.svg',
+    website: 'https://cerberus.zone/',
+    apiURL: 'https://api.cerberus.zone:1317',
+    rpcURL: 'https://rpc.cerberus.zone:26657',
+    explorerURL: 'https://www.mintscan.io/cerberus/',
+    minBlockHeight: 1,
+    supplyURL: null,
+    stakingDenom: 'CRBRUS',
+    coinLookup: [
+      {
+        viewDenom: 'CRBRUS',
+        chainDenom: 'ucrbrus',
+        chainToViewConversionFactor: 1e-6,
+        icon: 'currencies/bitsong.png',
+      },
+    ],
+    addressPrefix: 'cerberus',
+    validatorAddressPrefix: 'cerberusvaloper',
+    validatorConsensusaddressPrefix: 'cerberusvalcons', // needed to map validators from staking queries to the validator set
+    HDPath: 'm/44\'/118\'/0\'/0/0',
+    coinType: 118,
+    coinGeckoId: 'cerberus-2',
+    lockUpPeriod: '3 days',
+    fees: {
+      default: {
+        gasEstimate: 350000,
+        feeOptions: [
+          {
+            denom: 'CRBRUS',
+            amount: 0.001,
+          },
+        ],
+      },
+    },
+    icon: 'coins/crbrus.png',
+    localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
+  },{
     id: 'likecoin-mainnet-2',
     name: 'LikeCoin',
     description: 'LikeCoin Mainnet',
