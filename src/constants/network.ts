@@ -1,3 +1,4 @@
+import { Dictionary } from 'lodash';
 import { NetworkConfig } from 'src/models';
 
 // Default network
@@ -326,3 +327,15 @@ export const networks: NetworkConfig[] = [
     localSigning: false, // this is only to be used as a developer tool - never deployed in production or for mainnet chains
   }
 ];
+
+export const DefaultGasPriceStep: Dictionary<number> = {
+  low: 0.01,
+  average: 0.025,
+  high: 0.04,
+};
+
+export enum FeeType {
+  LOW = 'low',
+  AVERAGE = 'average',
+  HIGH = 'high'
+}

@@ -96,6 +96,35 @@ export const useIbcTransfer = () => {
     }
   };
 
+  const updateToData = async () => {
+    try {
+      if (transferRequest.to && transferRequest.to.id) {
+        if (window.keplr && transferRequest.to.id !== 'ethereum') {
+          await window.keplr.enable(transferRequest.to.id);
+
+          const offlineSigner = window.keplr.getOfflineSignerOnlyAmino(transferRequest.to.id);
+          const [account] = await offlineSigner.getAccounts();
+          const toAddress = account.address;
+
+          transferRequest.toAddress = toAddress;
+        }
+      } else {
+        transferRequest.toAddress = '';
+      }
+    } catch (error) {
+      console.error(error);
+
+      if (error instanceof Error && window.keplr && error.message.includes('There is no chain info')) {
+        const suggestChain = suggestChains.find(el => el.chainId === transferRequest.from?.id);
+
+        if (suggestChain) {
+          await window.keplr.experimentalSuggestChain(suggestChain);
+          await updateToData();
+        }
+      }
+    }
+  };
+
   const submit = async () => {
     try {
       const res = await store.dispatch('transfer/transferIBC', transferRequest) as BroadcastTxResponse;
@@ -151,6 +180,20 @@ export const useIbcTransfer = () => {
     }
   );
 
+  const toWatcher = watch(
+    () => transferRequest.to,
+    async () => {
+      try {
+        await updateToData();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    {
+      immediate: true,
+    }
+  );
+
   const keplrWatch = watchEffect(async () => {
     if (window.keplr && transferRequest.from && transferRequest.from.id && transferRequest.from.id !== 'ethereum') {
       try {
@@ -163,6 +206,7 @@ export const useIbcTransfer = () => {
 
   onUnmounted(() => {
     fromWatcher();
+    toWatcher();
     keplrWatch();
   });
 
