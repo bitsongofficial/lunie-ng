@@ -10,5 +10,5 @@ export const searchSymbolDetails = (denom: string) => {
 };
 
 export const searchTokenDetails = (symbol: string) => {
-  return imperatorApi.get<ImperatorToken[]>(`tokens/v1/${symbol}`);
+  return imperatorApi.get<ImperatorToken[]>(`tokens/v2/${symbol}`);
 };
