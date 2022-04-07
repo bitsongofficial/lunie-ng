@@ -214,7 +214,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://api.mainnet.desmos.network',
     rpcURL: 'https://rpc.desmos.network:443',
     explorerURL: 'https://www.mintscan.io/desmos/',
-    minBlockHeight: 2500000,
+    minBlockHeight: 2997001,
     supplyURL: null,
     stakingDenom: 'DSM',
     coinLookup: [
