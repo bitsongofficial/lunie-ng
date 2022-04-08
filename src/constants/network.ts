@@ -212,7 +212,7 @@ export const networks: NetworkConfig[] = [
     logo: 'logo.svg',
     website: 'https://desmos.network',
     apiURL: 'https://api.mainnet.desmos.network',
-    rpcURL: 'https://rpc.desmos.network:443',
+    rpcURL: 'https://rpc.mainnet.desmos.network',
     explorerURL: 'https://www.mintscan.io/desmos/',
     minBlockHeight: 2997001,
     supplyURL: null,
