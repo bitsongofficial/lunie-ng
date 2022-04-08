@@ -65,7 +65,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc-juno.itastakers.com',
     explorerURL: 'https://www.mintscan.io/juno/',
     supplyURL: 'https://supply.junonetwork.io/',
-    minBlockHeight: 1412200,
+    minBlockHeight: 2578100,
     stakingDenom: 'JUNO',
     coinLookup: [
       {
