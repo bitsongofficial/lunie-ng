@@ -5,9 +5,10 @@ import {
   MsgBeginRedelegate,
 } from 'cosmjs-types/cosmos/staking/v1beta1/tx';
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
-import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
+import { MsgDeposit, MsgSubmitProposal, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
 import Long from 'long';
 import { NetworkConfig, TransactionRequest, SignMessageRequest } from 'src/models';
+import { TextProposal } from 'cosmjs-types/cosmos/gov/v1beta1/gov';
 
 // Bank
 export const SendTx = (senderAddress: string, { to, amounts }: TransactionRequest, network: NetworkConfig): SignMessageRequest => {
@@ -91,6 +92,32 @@ export const DepositTx = (senderAddress: string, { proposalId, amount }: Transac
         amount: [coin]
       }),
     };
+  }
+}
+
+// Gov
+export const SubmitProposalTx = (senderAddress: string, { deposit, title, description }: TransactionRequest, network: NetworkConfig): SignMessageRequest | undefined => {
+  if (deposit) {
+    const coin = Coin(deposit, network.coinLookup);
+
+    if (coin && title && description) {
+      const proposal = TextProposal.fromPartial({
+        title,
+        description
+      });
+
+      return {
+        typeUrl: '/cosmos.gov.v1beta1.MsgSubmitProposal',
+        value: MsgSubmitProposal.fromPartial({
+          content: {
+            typeUrl: '/cosmos.gov.v1beta1.TextProposal',
+            value: TextProposal.encode(proposal).finish()
+          },
+          initialDeposit: [coin],
+          proposer: senderAddress,
+        })
+      };
+    }
   }
 }
 

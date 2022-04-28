@@ -91,6 +91,17 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
 
     return balance;
   },
+  minDeposit({ depositParams }) {
+    if (depositParams) {
+      const deposit = [...depositParams.min_deposit].pop();
+      const amount = getStakingCoinViewAmount(deposit ? deposit.amount : '0');
+      const total = new BigNumber(amount);
+
+      return total.toString();
+    }
+
+    return '0';
+  },
   validatorsDictionary({ validators }): ValidatorMap {
     return keyBy(validators, 'operatorAddress');
   },

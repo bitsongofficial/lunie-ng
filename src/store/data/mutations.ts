@@ -1,9 +1,24 @@
 import { Coin } from '@cosmjs/stargate';
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import {
+  Balance,
+  BlockReduced,
+  Delegation,
+  GovernanceOverview,
+  Pool,
+  Proposal,
+  Reward,
+  SupplyResponse,
+  UnbondingDelegation,
+  Validator,
+  DepositParams,
+} from 'src/models';
 import { MutationTree } from 'vuex';
 import { DataStateInterface } from './state';
 
 const mutation: MutationTree<DataStateInterface> = {
+  setDepositParams(state, depositParams: DepositParams) {
+    state.depositParams = depositParams;
+  },
   setFirstBlock(state, firstBlock: BlockReduced) {
     state.firstBlock = firstBlock;
   },
@@ -33,7 +48,9 @@ const mutation: MutationTree<DataStateInterface> = {
   },
   setUpdatedValidators(state, updatedValidators: Validator[]) {
     state.validators = state.validators.map((validator) => {
-      const updatedValidator = updatedValidators.find(el => el.id === validator.id);
+      const updatedValidator = updatedValidators.find(
+        (el) => el.id === validator.id
+      );
 
       if (updatedValidator) {
         return updatedValidator;
@@ -114,8 +131,8 @@ const mutation: MutationTree<DataStateInterface> = {
     state.apr = null;
     state.balances = [];
     state.rewards = [];
-    state.delegations = []
-    state.undelegations = []
+    state.delegations = [];
+    state.undelegations = [];
     state.rewards = [];
     state.validators = [];
     state.proposals = [];
@@ -134,6 +151,6 @@ const mutation: MutationTree<DataStateInterface> = {
     state.loadingSupplyInfo = false;
     state.loadingApr = false;
   },
-}
+};
 
 export default mutation;

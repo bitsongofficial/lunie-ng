@@ -1,4 +1,4 @@
-import { Option } from 'src/models';
+import { Option, ProposalSubmitType } from 'src/models';
 
 export const proposalsTypeOptions: Option[] = [
   {
@@ -20,5 +20,12 @@ export const proposalsTypeOptions: Option[] = [
   {
     label: 'Rejected',
     value: 'REJECTED',
+  },
+];
+
+export const proposalsSubmitTypeOptions: Option[] = [
+  {
+    label: 'Text Proposal',
+    value: ProposalSubmitType.TEXT,
   },
 ];

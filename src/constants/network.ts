@@ -2,7 +2,7 @@ import { NetworkConfig } from 'src/models';
 
 // Default network
 export const network: NetworkConfig = {
-  id: 'bigbang-testnet-3',
+  id: 'bigbang-test-4',
   name: 'BitSong Testnet',
   description: 'BitSong Testnet',
   logo: 'logo.svg',

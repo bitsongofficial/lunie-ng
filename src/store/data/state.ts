@@ -1,5 +1,17 @@
 import { Coin } from '@cosmjs/stargate';
-import { Balance, BlockReduced, Delegation, GovernanceOverview, Pool, Proposal, Reward, SupplyResponse, UnbondingDelegation, Validator } from 'src/models';
+import {
+  Balance,
+  BlockReduced,
+  Delegation,
+  GovernanceOverview,
+  Pool,
+  Proposal,
+  Reward,
+  SupplyResponse,
+  UnbondingDelegation,
+  Validator,
+  DepositParams,
+} from 'src/models';
 
 export interface DataStateInterface {
   block: BlockReduced | undefined;
@@ -33,9 +45,10 @@ export interface DataStateInterface {
   loadingApr: boolean;
   inflation: string | null;
   pool: Pool | null;
+  depositParams: DepositParams | null;
 }
 
-function state (): DataStateInterface {
+function state(): DataStateInterface {
   return {
     block: undefined,
     firstBlock: undefined,
@@ -67,8 +80,9 @@ function state (): DataStateInterface {
     apr: null,
     loadingApr: false,
     inflation: null,
-    pool: null
-  }
+    pool: null,
+    depositParams: null,
+  };
 }
 
 export default state;

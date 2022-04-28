@@ -78,6 +78,17 @@ export default [
         },
       },
       {
+        path: 'proposals/submit',
+        name: 'proposals-submit',
+        component: () => import('./views/SubmitProposal.vue'),
+        meta: {
+          title: 'Submit Proposal',
+          parent: '/proposals',
+          back: true,
+        },
+        props: true
+      },
+      {
         path: 'proposals/:id',
         name: 'proposal',
         component: () => import('./views/Proposal.vue'),

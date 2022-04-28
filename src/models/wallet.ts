@@ -1,7 +1,7 @@
 import { IssueFantokenRequest } from './fantoken';
 import Transport from '@ledgerhq/hw-transport';
 import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1beta1/tx';
-import { MsgDeposit, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
+import { MsgDeposit, MsgSubmitProposal, MsgVote } from 'cosmjs-types/cosmos/gov/v1beta1/tx';
 import { Coin } from '@cosmjs/stargate';
 import { NetworkConfig } from './network';
 import { Validator } from './validators';
@@ -48,6 +48,9 @@ export interface TransactionRequest {
   froms?: string[];
   amounts?: Coin[];
   amount: Coin;
+  deposit?: Coin;
+  title?: string;
+  description?: string;
 }
 
 export interface TransactionBitsongRequest extends Partial<IssueFantokenRequest> {
@@ -110,5 +113,5 @@ export interface SignMessageRequest {
         amount: string;
         denom: string;
     } | undefined)[];
-  } | MsgWithdrawDelegatorReward | MsgVote | MsgDeposit;
+  } | MsgWithdrawDelegatorReward | MsgVote | MsgDeposit | MsgSubmitProposal;
 }
