@@ -5,10 +5,11 @@ import { StateInterface } from '../index';
 import { FantokenStateInterface } from './state';
 
 const actions: ActionTree<FantokenStateInterface, StateInterface> = {
-  async getFantokens({ commit }) {
+  async getFantokens({ commit, rootState }) {
     try {
+      const address = rootState.authentication.session ? rootState.authentication.session.address : '';
       // Query owner empty to get all coins
-      const fantokensRaw = await bitsong.getAllFanTokensByOwner('');
+      const fantokensRaw = await bitsong.getAllFanTokensByOwner(address);
       const burnedCoins = await getBurnedTokens();
       const fantokens: FanTokenWithStats[] = [];
 
