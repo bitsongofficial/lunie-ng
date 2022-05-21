@@ -65,7 +65,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc-juno.itastakers.com',
     explorerURL: 'https://www.mintscan.io/juno/',
     supplyURL: 'https://supply.junonetwork.io/',
-    minBlockHeight: 2578100,
+    minBlockHeight: 3062001,
     stakingDenom: 'JUNO',
     coinLookup: [
       {
@@ -115,7 +115,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc.osmosis.bas.network',
     explorerURL: 'https://www.mintscan.io/osmosis/',
     supplyURL: null,
-    minBlockHeight: 2784001,
+    minBlockHeight: 4421953,
     stakingDenom: 'OSMO',
     coinLookup: [
       {
@@ -214,7 +214,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://api.mainnet.desmos.network',
     rpcURL: 'https://rpc.mainnet.desmos.network',
     explorerURL: 'https://www.mintscan.io/desmos/',
-    minBlockHeight: 2997001,
+    minBlockHeight: 3570001,
     supplyURL: null,
     stakingDenom: 'DSM',
     coinLookup: [
