@@ -166,16 +166,12 @@ export const createSignWalletConnect = async ({
       break;
   }
 
-  const res = await walletConnect.sendCustomRequest({
+  const result = await walletConnect.sendCustomRequest({
     method: 'sign_tx',
     params: messages,
-  }) as Record<string, unknown>;
+  }) as { hash: string };
 
-  console.log(res);
-
-  return {
-    hash: 'ciao',
-  };
+  return result;
 }
 
 export const createBitsongSignBroadcast = async ({
