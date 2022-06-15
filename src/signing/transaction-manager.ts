@@ -10,6 +10,8 @@ import { SigningBitsongClient, Constants } from '@bitsongjs/sdk';
 
 import Store from 'src/store';
 import { DeliverTxResponse } from '@cosmjs/stargate';
+import { walletConnect } from 'src/services';
+import { MsgSend } from 'cosmjs-types/cosmos/bank/v1beta1/tx';
 
 export const getFees = (transactionType: string, feeDenom: string) => {
   const { gasEstimate, feeOptions } = getNetworkFee(transactionType)
@@ -138,6 +140,41 @@ export const createSignBroadcast = async ({
 
   return {
     hash: txResult.transactionHash,
+  };
+}
+
+export const createSignWalletConnect = async ({
+  messageType,
+  message,
+  senderAddress,
+}: SignBroadcastRequest) => {
+  const messages: SignMessageRequest[] = [];
+
+  switch(messageType) {
+    case MessageTypes.SEND:
+      const sendTx = SendTx(senderAddress, message, Store.state.authentication.network);
+      const send = sendTx.value as MsgSend
+
+      messages.push({
+        ...sendTx,
+        value: {
+          ...sendTx.value,
+          amount: send.amount[0],
+        }
+      });
+
+      break;
+  }
+
+  const res = await walletConnect.sendCustomRequest({
+    method: 'sign_tx',
+    params: messages,
+  }) as Record<string, unknown>;
+
+  console.log(res);
+
+  return {
+    hash: 'ciao',
   };
 }
 

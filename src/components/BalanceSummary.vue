@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')" @click="openSendDialog" class="send-btn btn-medium text-h6 col-12 col-md-3 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
         SEND <q-icon class="q-ml-auto rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
       </q-btn>
     </div>

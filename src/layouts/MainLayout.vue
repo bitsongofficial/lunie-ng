@@ -91,6 +91,7 @@ import { useRouter } from 'vue-router';
 
 import MenuLink from 'src/components/MenuLink.vue';
 import FaucetDialog from 'src/components/FaucetDialog.vue';
+import { SessionType } from 'src/models';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -123,7 +124,9 @@ export default defineComponent({
     });
 
     window.addEventListener('keplr_keystorechange', async () => {
-      await store.dispatch('authentication/init');
+      if (session.value && session.value.sessionType === SessionType.KEPLR) {
+        await store.dispatch('authentication/init');
+      }
     });
 
     onMounted(() => {

@@ -7,16 +7,8 @@
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" reverse />
       <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" reverse />
-      <item clickable disable leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" reverse>
-        <template v-slot:right>
-          <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
-            <label class="text-center full-width">
-              Soon
-            </label>
-          </q-chip>
-        </template>
-      </item>
-      <item clickable class="q-my-none" leftIcon="svguse:icons.svg#phone|0 0 18 25" disable title="Ledger Bitsong App" reverse>
+      <item clickable details v-ripple leftIcon="svguse:icons.svg#phone|0 0 18 25" @click="walletConnectSignIn" title="Ledger Bitsong App" reverse />
+      <item clickable disable class="q-my-none" leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" reverse>
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
             <label class="text-center full-width">
@@ -41,6 +33,7 @@ import { useStore } from 'src/store';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 import { SessionType } from 'src/models';
+import { walletConnect } from 'src/services';
 
 import Item from 'src/components/Item.vue';
 
@@ -62,6 +55,22 @@ export default defineComponent({
         await store.dispatch('authentication/signIn', undefined);
       } catch (error) {
         console.error(error);
+      }
+    }
+
+    const walletConnectSignIn = async () => {
+      try {
+        quasar.loading.show();
+
+        if (walletConnect.connected) {
+          await walletConnect.killSession();
+        }
+
+        await walletConnect.createSession();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        quasar.loading.hide();
       }
     }
 
@@ -95,6 +104,7 @@ export default defineComponent({
       keplrAvailable,
       session,
       keplrSignIn,
+      walletConnectSignIn,
       signOut
     }
   }

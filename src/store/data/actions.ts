@@ -23,8 +23,8 @@ import {
 } from 'src/services';
 import { keyBy } from 'lodash';
 import { updateValidatorImages } from 'src/common/keybase';
-import { AccountInfo, BlockReduced, TransactionRequest, Validator, TransactionBitsongRequestWithType } from 'src/models';
-import { createBitsongSignBroadcast, createSignBroadcast, pollTxInclusion } from 'src/signing/transaction-manager';
+import { AccountInfo, BlockReduced, TransactionRequest, Validator, TransactionBitsongRequestWithType, SessionType } from 'src/models';
+import { createBitsongSignBroadcast, createSignBroadcast, createSignWalletConnect, pollTxInclusion } from 'src/signing/transaction-manager';
 import { getAPR } from 'src/common/numbers';
 import { getCoinLookup } from 'src/common/network';
 import { getStakingCoinViewAmount } from 'src/common/cosmos-reducer';
@@ -461,28 +461,51 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
         const { type, memo } = data;
         const HDPath = rootState.authentication.network.HDPath;
 
-        const hashResult = await createSignBroadcast({
-          messageType: type,
-          message: data,
-          senderAddress: session.address,
-          accountInfo,
-          network: rootState.authentication.network,
-          signingType: session.sessionType,
-          password: data.password ?? '',
-          HDPath,
-          memo: memo ?? '',
-          feeDenom: rootState.authentication.network.stakingDenom,
-          chainId: block.chainId,
-          ledgerTransport: rootState.ledger.transport
-        })
+        let hashResult: {
+          hash: string;
+        } | undefined = undefined
 
-        const { hash } = hashResult;
+        if (session.sessionType === SessionType.KEPLR) {
+          hashResult = await createSignBroadcast({
+            messageType: type,
+            message: data,
+            senderAddress: session.address,
+            accountInfo,
+            network: rootState.authentication.network,
+            signingType: session.sessionType,
+            password: data.password ?? '',
+            HDPath,
+            memo: memo ?? '',
+            feeDenom: rootState.authentication.network.stakingDenom,
+            chainId: block.chainId,
+            ledgerTransport: rootState.ledger.transport
+          })
+        } else if (session.sessionType === SessionType.WALLET_CONNECT) {
+          hashResult = await createSignWalletConnect({
+            messageType: type,
+            message: data,
+            senderAddress: session.address,
+            accountInfo,
+            network: rootState.authentication.network,
+            signingType: session.sessionType,
+            password: data.password ?? '',
+            HDPath,
+            memo: memo ?? '',
+            feeDenom: rootState.authentication.network.stakingDenom,
+            chainId: block.chainId,
+            ledgerTransport: rootState.ledger.transport
+          })
+        }
 
-        await pollTxInclusion(hash);
+        if (hashResult) {
+          const { hash } = hashResult;
 
-        dispatch('refresh').catch(err => console.error(err));
+          await pollTxInclusion(hash);
 
-        return hash;
+          dispatch('refresh').catch(err => console.error(err));
+
+          return hash;
+        }
       }
     } catch (err) {
       throw err;
