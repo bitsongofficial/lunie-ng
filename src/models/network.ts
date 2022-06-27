@@ -4,6 +4,7 @@ export interface CoinLookUp {
   viewDenom: string;
   chainDenom: string;
   chainToViewConversionFactor: number;
+  name?: string;
   icon: string;
 }
 
