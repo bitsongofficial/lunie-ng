@@ -69,7 +69,6 @@
                   val => !!val || $t('errors.required'),
                   val => !isNaN(val) || $t('errors.nan'),
                   val => gtnZero(val) || $t('errors.gtnZero'),
-                  val => !minAmount(val, minDeposit) || $t('errors.minimumAmount', { amount: minDeposit, symbol: network.stakingDenom }),
                   val => compareBalance(val, availableCoins) || $t('errors.balanceMissing'),
                   val => !isNegative(val) || $t('errors.negative')
                 ]"

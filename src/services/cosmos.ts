@@ -307,17 +307,33 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
           balanceReducer(coin, delegations, undelegations, Store.state.authentication.network.name),
         );
       } else {
-        const response = await searchSymbolDetails(coin.denom);
-        const symbol = response.data.symbol;
+        const lookup = getCoinLookup(coin.denom, 'viewDenom');
+        let symbol = coin.denom;
         let token;
+        let name = 'unknown';
 
-        if (symbol !== '') {
-          const responseName = await searchTokenDetails(symbol);
-          token = responseName.data.find((el) => el.symbol === symbol);
+        if (lookup && lookup.name) {
+          name = lookup.name
+        } else {
+          try {
+            const response = await searchSymbolDetails(coin.denom);
+            symbol = response.data.symbol;
+
+            if (symbol !== '') {
+              const responseName = await searchTokenDetails(symbol);
+              token = responseName.data.find((el) => el.symbol === symbol);
+            }
+
+            if (token) {
+              name = token.name
+            }
+          } catch (error) {
+            console.error(error);
+          }
         }
 
         mappedCoins.push(
-          balanceReducer(coin, delegations, undelegations, token ? token.name : symbol, symbol),
+          balanceReducer(coin, delegations, undelegations, name, symbol),
         );
       }
     }
