@@ -318,7 +318,6 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
           try {
             const response = await searchSymbolDetails(coin.denom);
             symbol = response.data.symbol;
-            name = symbol;
 
             if (symbol !== '') {
               const responseName = await searchTokenDetails(symbol);
