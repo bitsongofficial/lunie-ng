@@ -2,16 +2,16 @@ import { NetworkConfig } from 'src/models';
 
 // Default network
 export const network: NetworkConfig = {
-  id: 'bigbang-test-4',
+  id: 'bitsong-2b',
   name: 'BitSong Testnet',
   description: 'BitSong Testnet',
   logo: 'logo.svg',
   website: 'https://bitsong.io',
-  apiURL: 'https://api.testnet.bitsong.network',
+  apiURL: 'https://api.fantest-1.bitsong.network',
   faucetURL: 'https://faucet.testnet.bitsong.network',
-  rpcURL: 'https://rpc.testnet.bitsong.network',
+  rpcURL: 'https://rpc.fantest-1.bitsong.network',
   explorerURL: 'https://www.mintscan.io/bitsong/',
-  minBlockHeight: 1,
+  minBlockHeight: 6436301,
   stakingDenom: 'BTSG',
   coinLookup: [
     {
