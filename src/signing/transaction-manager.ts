@@ -169,6 +169,8 @@ export const createSignWalletConnect = async ({
   const result = await walletConnect.sendCustomRequest({
     method: 'sign_tx',
     params: messages,
+  }, {
+    forcePushNotification: true,
   }) as { hash: string };
 
   return result;
