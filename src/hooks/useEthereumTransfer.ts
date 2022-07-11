@@ -58,7 +58,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
           },
         });
       } else {
-        await store.dispatch('ethereum/deposit', transferRequest.toAddress);
+        await store.dispatch('ethereum/deposit', { to: transferRequest.toAddress, amount: transferRequest.amount});
 
         scrollToTable();
 
