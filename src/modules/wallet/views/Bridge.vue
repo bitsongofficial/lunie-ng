@@ -179,7 +179,6 @@
                     [
                       val => !!val || $t('errors.required'),
                       val => !isNaN(val) || $t('errors.nan'),
-                      val => compareBalance(val, totalBtsg) || $t('errors.balanceMissing'),
                       val => gtnZero(val) || $t('errors.gtnZero'),
                     ] :
                     []
