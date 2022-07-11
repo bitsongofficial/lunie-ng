@@ -58,7 +58,6 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
           },
         });
       } else {
-        console.log(transferRequest);
         await store.dispatch('ethereum/deposit', { to: transferRequest.toAddress, amount: transferRequest.amount});
 
         scrollToTable();
