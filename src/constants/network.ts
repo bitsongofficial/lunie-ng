@@ -214,7 +214,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://api.mainnet.desmos.network',
     rpcURL: 'https://rpc.mainnet.desmos.network',
     explorerURL: 'https://www.mintscan.io/desmos/',
-    minBlockHeight: 3570001,
+    minBlockHeight: 4170501,
     supplyURL: null,
     stakingDenom: 'DSM',
     coinLookup: [
@@ -255,7 +255,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://api.chihuahua.wtf',
     rpcURL: 'https://rpc.chihuahua.wtf',
     explorerURL: 'https://www.mintscan.io/chihuahua/',
-    minBlockHeight: 1,
+    minBlockHeight: 3001798,
     supplyURL: null,
     stakingDenom: 'HUAHUA',
     coinLookup: [
@@ -295,7 +295,7 @@ export const networks: NetworkConfig[] = [
     apiURL: 'https://api.cerberus.zone:1317',
     rpcURL: 'https://rpc.cerberus.zone:26657',
     explorerURL: 'https://www.mintscan.io/cerberus/',
-    minBlockHeight: 1,
+    minBlockHeight: 1137001,
     supplyURL: null,
     stakingDenom: 'CRBRUS',
     coinLookup: [
