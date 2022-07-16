@@ -49,7 +49,7 @@ export const ibcChains: IBCChain[] = [
       },
     }
   },
-  {
+  /* {
     id: 'ethereum',
     btsgDenom: '',
     ibc: {
@@ -58,5 +58,5 @@ export const ibcChains: IBCChain[] = [
         ibcDenom: ''
       },
     }
-  },
+  }, */
 ];

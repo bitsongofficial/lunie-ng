@@ -12,16 +12,15 @@ export const useIbcTransfer = () => {
   const quasar = useQuasar();
   const store = useStore();
 
-  const allNetworks = computed(() => [...networks, ethereum]);
+  const allNetworks = computed(() => [...networks, /* ethereum */]);
   const btsgChain = allNetworks.value.find(el => el.id === 'bitsong-2b');
-  const ethereumChain = allNetworks.value.find(el => el.id === 'ethereum');
 
   const totalBtsg = ref<string>('0');
   const sending = computed(() => store.state.transfer.sending);
 
   const transferRequest = reactive<IBCTransferRequest>({
-    from: ethereumChain,
-    to: btsgChain,
+    from: btsgChain,
+    to: undefined,
     fromAddress: '',
     toAddress: '',
     amount: ''

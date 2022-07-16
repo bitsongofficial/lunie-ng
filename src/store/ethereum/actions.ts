@@ -187,7 +187,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
       commit('setApproveLoading', false);
     }
   },
-  async deposit({ commit, dispatch, state }, to: string) {
+  async deposit({ commit, dispatch, state }, { to, amount }: { to: string, amount: string }) {
     try {
       commit('setDepositLoading', true)
 
@@ -211,7 +211,7 @@ const actions: ActionTree<EthereumStateInterface, StateInterface> = {
         status: 'PENDING',
         time: Date.now(),
         to: process.env.VUE_APP_BRIDGE_CONTRACT,
-        amount: toErc20btsg(state.balance.toString()),
+        amount: toErc20btsg(amount.toString()),
         sender: state.address,
         type: TransactionType.DEPOSIT
       });

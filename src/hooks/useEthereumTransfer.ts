@@ -58,7 +58,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
           },
         });
       } else {
-        await store.dispatch('ethereum/deposit', transferRequest.toAddress);
+        await store.dispatch('ethereum/deposit', { to: transferRequest.toAddress, amount: transferRequest.amount});
 
         scrollToTable();
 
@@ -80,7 +80,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
 
   store.watch((state) => state.ethereum.balance, (balance) => {
     if (transferRequest.from && transferRequest.from.id === 'ethereum') {
-      transferRequest.amount = toErc20btsg(balance.toString());
+      // transferRequest.amount = toErc20btsg(balance.toString());
 
       if (store.state.ethereum.address) {
         transferRequest.fromAddress = store.state.ethereum.address;
@@ -96,7 +96,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
 
         if (from && from.id === 'ethereum') {
           if (ethereumAddress.value) {
-            transferRequest.amount = erc20Balance.value;
+            // transferRequest.amount = erc20Balance.value;
             transferRequest.fromAddress = ethereumAddress.value;
           } else {
             transferRequest.fromAddress = '';
