@@ -35,8 +35,6 @@ const getters: GetterTree<DataStateInterface, StateInterface> = {
   balances({ balances }, _getters, { authentication }) {
     const maincoins = balances.filter(el => !el.id.includes('ibc'));
 
-    console.log(maincoins);
-
     return sortBy(maincoins, (balance) => balance.denom === authentication.network.stakingDenom ? 0 : 1).map(
       balance => {
         if (balance.denom === authentication.network.stakingDenom) {
