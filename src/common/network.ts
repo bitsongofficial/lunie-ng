@@ -17,6 +17,7 @@ export const lunieCoinToKeplrCoin = (denom: string): AppCurrency | undefined => 
 
   if (coinLookup) {
     const coinDecimals = new BigNumber(coinLookup.chainToViewConversionFactor).toFixed();
+    const decimals = coinDecimals.split('.')
 
     return {
       // Coin denomination to be displayed to the user.
@@ -24,7 +25,7 @@ export const lunieCoinToKeplrCoin = (denom: string): AppCurrency | undefined => 
       // Actual denom (i.e. uatom, uscrt) used by the blockchain.
       coinMinimalDenom: coinLookup.chainDenom,
       // # of decimal points to convert minimal denomination to user-facing denomination.
-      coinDecimals: coinDecimals.split('.')[1].length,
+      coinDecimals: decimals.length > 1 ? coinDecimals.split('.')[1].length : 0,
       // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
       // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
       coinGeckoId: Store.state.authentication.network.coinGeckoId,

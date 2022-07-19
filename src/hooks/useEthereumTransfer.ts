@@ -78,7 +78,7 @@ export const useEthereumTransfer = (transferRequest: IBCTransferRequest) => {
     }
   };
 
-  store.watch((state) => state.ethereum.balance, (balance) => {
+  store.watch((state) => state.ethereum.balance, (/* balance */) => {
     if (transferRequest.from && transferRequest.from.id === 'ethereum') {
       // transferRequest.amount = toErc20btsg(balance.toString());
 
