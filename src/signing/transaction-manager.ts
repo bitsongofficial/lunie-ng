@@ -11,7 +11,6 @@ import { SigningBitsongClient, Constants } from '@bitsongjs/sdk';
 import Store from 'src/store';
 import { DeliverTxResponse } from '@cosmjs/stargate';
 import { walletConnect } from 'src/services';
-import { MsgSend } from 'cosmjs-types/cosmos/bank/v1beta1/tx';
 
 export const getFees = (transactionType: string, feeDenom: string) => {
   const { gasEstimate, feeOptions } = getNetworkFee(transactionType)
@@ -148,20 +147,47 @@ export const createSignWalletConnect = async ({
   message,
   senderAddress,
 }: SignBroadcastRequest) => {
-  const messages: SignMessageRequest[] = [];
+  let messages: SignMessageRequest[] = [];
 
   switch(messageType) {
     case MessageTypes.SEND:
-      const sendTx = SendTx(senderAddress, message, Store.state.authentication.network);
-      const send = sendTx.value as MsgSend
+      messages.push(SendTx(senderAddress, message, Store.state.authentication.network));
+      break;
+    case MessageTypes.STAKE:
+      messages.push(StakeTx(senderAddress, message, Store.state.authentication.network));
+      break;
+    case MessageTypes.UNSTAKE:
+      messages.push(UnstakeTx(senderAddress, message, Store.state.authentication.network));
+      break;
+    case MessageTypes.RESTAKE:
+      messages.push(RestakeTx(senderAddress, message, Store.state.authentication.network));
+      break;
+    case MessageTypes.VOTE:
+      const vote = VoteTx(senderAddress, message);
 
-      messages.push({
-        ...sendTx,
-        value: {
-          ...sendTx.value,
-          amount: send.amount[0],
-        }
-      });
+      if (vote) {
+        messages.push(vote);
+      }
+
+      break;
+    case MessageTypes.DEPOSIT:
+      const deposit = DepositTx(senderAddress, message, Store.state.authentication.network);
+
+      if (deposit) {
+        messages.push(deposit);
+      }
+
+      break;
+    case MessageTypes.CLAIM_REWARDS:
+      const rewards = ClaimRewardsTx(senderAddress, message);
+      messages = [...rewards];
+      break;
+    case MessageTypes.SUBMIT_PROPOSAL:
+      const proposal = SubmitProposalTx(senderAddress, message, Store.state.authentication.network);
+
+      if (proposal) {
+        messages.push(proposal);
+      }
 
       break;
   }
