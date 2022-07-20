@@ -311,6 +311,7 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
         let symbol = coin.denom;
         let token;
         let name = 'unknown';
+        const icon = lookup?.icon;
 
         if (lookup && lookup.name) {
           name = lookup.name
@@ -333,7 +334,7 @@ export const getBalances = async (address: string, validatorsDictionary: { [key:
         }
 
         mappedCoins.push(
-          balanceReducer(coin, delegations, undelegations, name, symbol),
+          balanceReducer(coin, delegations, undelegations, name, symbol, icon),
         );
       }
     }

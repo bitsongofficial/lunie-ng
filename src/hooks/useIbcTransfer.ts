@@ -1,7 +1,7 @@
 import { BroadcastTxResponse, SigningStargateClient } from '@cosmjs/stargate';
 import { useQuasar } from 'quasar';
 import { toDecimal } from 'src/common/numbers';
-import { networks, ibcChains, suggestChains, ethereum } from 'src/constants';
+import { networks, ibcChains, suggestChains, /* ethereum */ } from 'src/constants';
 import { IBCTransferRequest, NetworkConfig } from 'src/models';
 import { useStore } from 'src/store';
 import { reactive, ref, computed, watch, onUnmounted, watchEffect } from 'vue';
