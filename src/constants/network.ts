@@ -7,11 +7,11 @@ export const network: NetworkConfig = {
   description: 'BitSong Testnet',
   logo: 'logo.svg',
   website: 'https://bitsong.io',
-  apiURL: 'https://api.fantest-1.bitsong.network',
+  apiURL: 'http://host.docker.internal:1317',
   faucetURL: 'https://faucet.testnet.bitsong.network',
-  rpcURL: 'https://rpc.fantest-1.bitsong.network',
+  rpcURL: 'http://host.docker.internal:26657',
   explorerURL: 'https://www.mintscan.io/bitsong/',
-  minBlockHeight: 6436301,
+  minBlockHeight: 1,
   stakingDenom: 'BTSG',
   coinLookup: [
     {
