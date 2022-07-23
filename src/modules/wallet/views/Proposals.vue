@@ -5,7 +5,7 @@
         Proposals
       </h2>
 
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" to="/proposals/submit" class="create-btn btn-medium text-h6 q-ml-auto" rounded unelevated color="primary" text-color="dark" padding="12px 24px 10px 26px">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')" to="/proposals/submit" class="create-btn btn-medium text-h6 q-ml-auto" rounded unelevated color="primary" text-color="dark" padding="12px 24px 10px 26px">
         Create New <q-icon class="btn-icon q-ml-auto" name="svguse:icons.svg#add|0 0 12 12" size="12px" color="white" />
       </q-btn>
     </div>

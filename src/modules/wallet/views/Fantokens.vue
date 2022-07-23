@@ -6,7 +6,7 @@
           Fantoken Lab
         </h2>
 
-        <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" v-if="fantokenByOwner.length > 0" class="create-btn btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
+        <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')" v-if="fantokenByOwner.length > 0" class="create-btn btn-medium text-h6 text-weight-medium col-12 col-md-auto" rounded unelevated color="primary" text-color="dark" padding="12px 28px" to="/fantokens/issue">
           CREATE FANTOKEN <q-icon class="arrow-icon" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="dark" />
         </q-btn>
       </div>

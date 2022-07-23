@@ -18,7 +18,7 @@
           </q-btn>
         </q-toolbar-title>
 
-        <q-btn class="btn-medium" :disable="!session || (session && session.sessionType !== 'keplr')" rounded unelevated color="primary" text-color="dark" padding="0 40px 0 26px" @click="openGetBTSGDialog">
+        <q-btn class="btn-medium" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')" rounded unelevated color="primary" text-color="dark" padding="0 40px 0 26px" @click="openGetBTSGDialog">
           <q-icon class="btsg-coin-icon" name="svguse:icons.svg#coin|0 0 24 24" color="dark" size="24px" />
           <label class="text-body2 text-dark text-untransform no-pointer-events">Get BTSG</label>
         </q-btn>

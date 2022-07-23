@@ -8,7 +8,7 @@
     <q-skeleton type="text" width="160px" height="50px" animation-speed="700" dark square v-else></q-skeleton>
 
     <div class="row items-center justify-center full-width">
-      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr') || validatorReward.length === 0 || loading" class="btn-medium-small text-body4" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
+      <q-btn @click="openClaimDialog" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect') || validatorReward.length === 0 || loading" class="btn-medium-small text-body4" rounded unelevated color="primary" text-color="dark" padding="12px 28px">
         CLAIM
       </q-btn>
     </div>

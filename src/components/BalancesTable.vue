@@ -56,11 +56,11 @@
           </p>
         </q-td>
         <q-td key="actions" class="actions" :props="props">
-          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr')">
+          <q-btn flat unelevated padding="4px" @click.stop="openSendDialog(props.row)" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')">
             <q-icon class="rotate-270" name="svguse:icons.svg#arrow-right|0 0 14 14" size="14px" color="primary" />
           </q-btn>
 
-          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr')">
+          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')">
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">

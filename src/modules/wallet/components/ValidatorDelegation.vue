@@ -8,15 +8,15 @@
     <q-skeleton type="text" width="160px" height="50px" animation-speed="700" dark square v-else></q-skeleton>
 
     <div class="btns row items-center justify-evenly q-gutter-sm">
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="primary" text-color="dark" @click="openStakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect') || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="primary" text-color="dark" @click="openStakeDialog(validator)">
         delegate
       </q-btn>
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated outline color="primary" text-color="primary" @click="openUnstakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated outline color="primary" text-color="primary" @click="openUnstakeDialog(validator)">
         <label class="cursor-pointer text-white">
           undelegate
         </label>
       </q-btn>
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="dark-3" text-color="white" @click="openRestakeDialog(validator)">
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect') || !hasDelegations || loading" class="btn btn-medium-small text-body4 col col-md-auto" rounded unelevated color="dark-3" text-color="white" @click="openRestakeDialog(validator)">
         redelegate
       </q-btn>
     </div>

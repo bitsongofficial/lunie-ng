@@ -103,7 +103,7 @@
                 </q-tooltip>
               </div> -->
             </div>
-            <q-btn type="submit" :loading="loading" :disable="!session || (session && session.sessionType !== 'keplr')" class="issue-btn btn-large text-body2 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
+            <q-btn type="submit" :loading="loading" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')" class="issue-btn btn-large text-body2 text-weight-medium" rounded unelevated color="primary" text-color="dark" padding="12px 26px">
               ISSUE
             </q-btn>
           </div>
