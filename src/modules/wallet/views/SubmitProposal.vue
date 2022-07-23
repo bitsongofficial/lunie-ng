@@ -69,7 +69,6 @@
                   val => !!val || 'Field is required',
                   val => !isNaN(val) || 'Amount must be a decimal value',,
                   val => gtnZero(val) || 'Amount must be a greater then zero',
-                  val => !minAmount(val, minDeposit) || `inimum amount required ${minDeposit} ${network.stakingDenom}`,
                   val => compareBalance(val, availableCoins) || 'You don\'t have enough coins',
                   val => !isNegative(val) || 'Amount must be greater then zero'
                 ]"
