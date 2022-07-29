@@ -7,7 +7,7 @@
     <q-list>
       <item clickable details to="login/explore" v-ripple leftIcon="svguse:icons.svg#anchor" title="Explore with any address" reverse />
       <item clickable details :disable="!keplrAvailable" v-ripple leftIcon="svguse:icons.svg#chrome" @click="keplrSignIn" title="Keplr Browser Extension" reverse />
-      <item clickable details v-ripple leftIcon="svguse:icons.svg#phone|0 0 18 25" @click="walletConnectSignIn" title="Ledger Bitsong App" reverse />
+      <item clickable details v-ripple leftIcon="svguse:icons.svg#phone|0 0 18 25" @click="walletConnectSignIn" title="Bitsong Mobile App" reverse />
       <item clickable disable class="q-my-none" leftIcon="svguse:icons.svg#chrome" title="Bitsong Browser Extension" reverse>
         <template v-slot:right>
           <q-chip class="soon-chip text-weight-bold text-caption-2 text-uppercase" color="dark-4" text-color="white" size="sm">
