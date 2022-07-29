@@ -36,7 +36,7 @@
 
         <q-btn
           @click="openClaimDialog"
-          :disable="!session || (session && session.sessionType !== 'keplr') || rewards.length === 0"
+          :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect') || rewards.length === 0"
           class="btn-medium-large-small text-weight-medium text-body3"
           rounded
           unelevated

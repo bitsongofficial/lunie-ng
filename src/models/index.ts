@@ -21,3 +21,4 @@ export * from './supply';
 export * from './inflaction';
 export * from './faucet';
 export * from './fantoken';
+export * from './wallet-connect';

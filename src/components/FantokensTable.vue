@@ -65,7 +65,7 @@
           </p>
         </q-td>
         <q-td key="actions" class="actions" :props="props">
-          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr')">
+          <q-btn flat unelevated padding="2px" @click.stop="" :disable="!session || (session && session.sessionType !== 'keplr' && session.sessionType !== 'walletconnect')">
             <q-icon name="svguse:icons.svg#vertical-dots|0 0 4 16" size="16px" color="primary" />
 
             <q-menu class="menu-list" anchor="center left" self="center middle" :offset="[90, 0]">
