@@ -213,7 +213,7 @@ export const networks: NetworkConfig[] = [
     rpcURL: 'https://rpc.osmosis.bas.network',
     explorerURL: 'https://www.mintscan.io/osmosis/',
     supplyURL: null,
-    minBlockHeight: 4421953,
+    minBlockHeight: 4503543,
     stakingDenom: 'OSMO',
     coinLookup: [
       {
