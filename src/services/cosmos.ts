@@ -357,14 +357,6 @@ export const getDeposit = async () => {
   return response.data;
 }
 
-const getChainStartTime = () => {
-  return new Date(Store.state.data.firstBlock?.time ?? 0);
-}
-
-const dataExistsInThisChain = (timestamp: string | number) => {
-  return new Date(timestamp) > getChainStartTime();
-}
-
 const getVotes = async (proposal: ProposalRaw) => {
   const response = await queryAutoPaginate<Vote>(`/cosmos/gov/v1beta1/proposals/${proposal.proposal_id}/votes`);
 
@@ -378,14 +370,13 @@ const getDeposits = async (proposal: ProposalRaw) => {
 }
 
 export const getDetailedVotes = async (proposal: ProposalRaw, tallyParams: TallyParams, depositParams: DepositParams, validators: ValidatorMap): Promise<DetailedVote> => {
-  const dataAvailable = dataExistsInThisChain(proposal.submit_time);
   const votingComplete = [
     ProposalRawStatus.PROPOSAL_STATUS_PASSED,
     ProposalRawStatus.PROPOSAL_STATUS_REJECTED
   ].includes(proposal.status);
 
-  const votes = dataAvailable ? await getVotes(proposal) : [];
-  const deposits = dataAvailable ? await getDeposits(proposal) : [];
+  const votes = await getVotes(proposal);
+  const deposits = await getDeposits(proposal);
 
   let tally = proposal.final_tally_result as Tally;
 

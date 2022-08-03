@@ -17,7 +17,6 @@ const actions: ActionTree<KeplrStateInterface, StateInterface> = {
       dispatch('init', trys + 1).catch(error => console.error(error));
     }
     if (window.keplr && window.keplr.experimentalSuggestChain) {
-      await dispatch('data/getFirstBlock', undefined, { root: true });
       const block = await dispatch('data/getBlock', undefined, { root: true }) as BlockReduced;
 
       try {
