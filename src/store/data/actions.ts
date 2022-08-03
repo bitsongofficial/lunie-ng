@@ -37,7 +37,6 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
     try {
       commit('setLoading', true);
       dispatch('getSupplyInfo').catch(err => console.error(err));
-      await dispatch('getFirstBlock');
       await dispatch('getBlock');
       await dispatch('getDepositParams');
       await dispatch('getValidators');
@@ -169,7 +168,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
       commit('setLoadingAPR', false);
     }
   },
-  async getFirstBlock ({ commit, rootState }) {
+  /* async getFirstBlock ({ commit, rootState }) {
     try {
       const block = await getBlock(rootState.authentication.network.minBlockHeight);
       commit('setFirstBlock', block);
@@ -189,7 +188,7 @@ const actions: ActionTree<DataStateInterface, StateInterface> = {
 
       throw err;
     }
-  },
+  }, */
   async getBlock ({ commit }) {
     try {
       const block = await getBlock();
