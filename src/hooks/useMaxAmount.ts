@@ -6,12 +6,16 @@ import { computed, ComputedRef } from 'vue';
 import { useStore } from 'src/store';
 import { BigNumber } from 'bignumber.js';
 
-export const useMaxAmount = (availableCoins: ComputedRef<BigNumber>) => {
+export const useMaxAmount = (denom: string | undefined, availableCoins: ComputedRef<BigNumber>) => {
   const store = useStore();
   const network = computed(() => store.state.authentication.network);
   const feeData = getFees(MessageTypes.SEND, network.value.stakingDenom);
 
   const getMaxAmount = () => {
+    if (network.value.stakingDenom !== denom) {
+      return availableCoins.value.toString();
+    }
+
     if (feeData) {
       const coinLookup = getCoinLookup(feeData.fee[0].denom);
 

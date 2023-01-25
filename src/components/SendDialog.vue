@@ -167,6 +167,8 @@ export default defineComponent({
 
     const network = computed(() => store.state.authentication.network);
 
+    console.log(props.denom)
+
     const availableCoins = computed(() => {
       if (props.denom) {
         return new BigNumber(balance.value ? balance.value.available : '0').multipliedBy('1e-6');
@@ -215,6 +217,8 @@ export default defineComponent({
       }
     }
 
+    console.log(availableCoins.value.toString())
+
     return {
       hash,
       showAdvanced,
@@ -235,7 +239,7 @@ export default defineComponent({
       gtnZero,
       onDialogHide,
       onSubmit,
-      ...useMaxAmount(availableCoins)
+      ...useMaxAmount(props.denom, availableCoins)
     }
   },
 })
