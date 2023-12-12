@@ -5,29 +5,21 @@
         {{ $t('menu.proposals') }}
       </h2>
 
-      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" to="/proposals/submit" class="create-btn btn-medium text-h6 q-ml-auto" rounded unelevated color="accent-2" text-color="white" padding="12px 24px 10px 26px">
-        {{ $t('actions.createNew') }} <q-icon class="btn-icon q-ml-auto" name="svguse:icons.svg#add|0 0 12 12" size="12px" color="white" />
+      <q-btn :disable="!session || (session && session.sessionType !== 'keplr')" to="/proposals/submit"
+        class="create-btn btn-medium text-h6 q-ml-auto" rounded unelevated color="accent-2" text-color="white"
+        padding="12px 24px 10px 26px">
+        {{ $t('actions.createNew') }} <q-icon class="btn-icon q-ml-auto" name="svguse:icons.svg#add|0 0 12 12" size="12px"
+          color="white" />
       </q-btn>
     </div>
 
     <div class="toggle-btn-wrapper scroll">
-      <q-btn-toggle
-        v-model="type"
-        class="filter"
-        toggle-color="primary"
-        flat
-        unelevated
-        :ripple="false"
-        text-color="accent"
-        toggle-text-color="white"
-        padding="0"
-        :options="options"
-        stretch
-      />
+      <q-btn-toggle v-model="type" class="filter" toggle-color="primary" flat unelevated :ripple="false"
+        text-color="accent" toggle-text-color="white" padding="0" :options="options" stretch />
     </div>
 
     <q-list class="proposals-list">
-      <template v-if="!loading" >
+      <template v-if="!loading">
         <template v-if="proposals.length > 0 && type !== 'DRAFT'">
           <q-virtual-scroll :items="proposals">
             <template v-slot="{ item }">
@@ -77,7 +69,7 @@ export default defineComponent({
         return store.state.data.proposals.filter(el => el.status === type.value);
       }
 
-      return store.state.data.proposals;
+      return store.state.data.proposals.filter(el => el.status !== ProposalStatus.DEPOSIT && el.status !== ProposalStatus.REJECTED);
     });
 
     const drafts = computed(() => store.state.proposal.drafts);
