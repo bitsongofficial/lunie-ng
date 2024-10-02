@@ -150,7 +150,7 @@ export const delegationReducer = (delegation: DelegationWithBalance, validator: 
 }
 
 export const getValidatorStatus = (validator: ValidatorRaw) => {
-  if (validator.status.toString() === '3') {
+  if (validator.status.toString() === 'BOND_STATUS_BONDED') {
     return {
       status: ValidatorStatus.ACTIVE,
       status_detailed: 'active',
@@ -211,7 +211,7 @@ export const validatorReducer = (validator: ValidatorRaw, annualProvision: strin
     website: websiteURL,
     identity: validator.description.identity,
     name: validator.description.moniker,
-    votingPower: validator.status.toString() === '3' ? (delegatorShares.div(totalSharesBig)).toFixed(6) : 0,
+    votingPower: validator.status.toString() === 'BOND_STATUS_BONDED' ? (delegatorShares.div(totalSharesBig)).toFixed(6) : 0,
     startHeight: validator.signing_info
       ? validator.signing_info.start_height
       : undefined,
@@ -245,10 +245,17 @@ export const reduceFormattedRewards = (reward: Coin[], validator: Validator) => 
 }
 
 export const rewardReducer = (rewards: RewardWithAddress[], validatorsDictionary: ValidatorMap) => {
-  const formattedRewards = rewards.map((reward) => ({
-    reward: reward.reward,
-    validator: validatorsDictionary[reward.validator_address],
-  }));
+  console.log('[rewardReducer] validatorsDictionary', validatorsDictionary);
+
+  const formattedRewards = rewards.map((reward) => {
+    if (!validatorsDictionary[reward.validator_address]) {
+      console.log('Validator not found for reward', reward.validator_address);
+    }
+    return {
+      reward: reward.reward,
+      validator: validatorsDictionary[reward.validator_address],
+    }
+  });
 
   const multiDenomRewardsArray = formattedRewards.map(({ reward, validator }) => reduceFormattedRewards(reward, validator));
 

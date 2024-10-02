@@ -18,7 +18,10 @@ export enum ValidatorStatus {
 export interface Validator {
   id: string;
   operatorAddress: string;
-  consensusPubkey: string;
+  consensusPubkey: {
+    '@type': string;
+    key: string;
+  };
   jailed: boolean;
   details: string;
   website: string;
@@ -50,7 +53,10 @@ export interface TopVoterValidator {
 
 export interface ValidatorRaw {
   readonly operator_address: string;
-  readonly consensus_pubkey: string;
+  readonly consensus_pubkey: {
+    readonly '@type': string;
+    readonly key: string;
+  };
   readonly jailed: boolean;
   readonly status: BondStatus;
   readonly tokens: string;
@@ -77,8 +83,7 @@ export interface ValidatorRaw {
 }
 
 export interface ValidatorResponse {
-  height: string;
-  result: ValidatorRaw[];
+  validators: ValidatorRaw[];
 }
 
 export interface SignerInfo {

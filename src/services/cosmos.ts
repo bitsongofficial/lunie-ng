@@ -164,7 +164,7 @@ export const getRewards = async (delegatorAddress: string, validatorsDictionary:
 }
 
 export const getValidators = async (status: ValidatorStatusRequest) => {
-  const response = await api.get<ValidatorResponse>(`staking/validators?status=${status}`);
+  const response = await api.get<ValidatorResponse>(`cosmos/staking/v1beta1/validators?status=${status}&pagination.limit=500`);
 
   return response.data;
 }
@@ -207,16 +207,14 @@ export const getCommunityPool = async () => {
 
 export const loadValidators = async () => {
   const [
-    { result: bondedValidators },
-    { result: unbondingValidators },
-    { result: unbondedValidators },
-    { result: unspecifiedValidators },
+    { validators: bondedValidators },
+    { validators: unbondingValidators },
+    { validators: unbondedValidators },
     pool
   ] = await Promise.all([
     getValidators(ValidatorStatusRequest.BOND_STATUS_BONDED),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDING),
     getValidators(ValidatorStatusRequest.BOND_STATUS_UNBONDED),
-    getValidators(ValidatorStatusRequest.BOND_STATUS_UNSPECIFIED),
     getPool()
   ]);
 
@@ -233,8 +231,10 @@ export const loadValidators = async () => {
     new BigNumber(0)
   );
 
-  const allValidators = bondedValidators.concat(unbondingValidators, unbondedValidators, unspecifiedValidators)
-  return allValidators.map(validator => validatorReducer(validator, annualProvision, totalShares, pool))
+  const allValidators = bondedValidators.concat(unbondingValidators, unbondedValidators)
+  return allValidators.map(validator => validatorReducer(validator, annualProvision, totalShares, pool)).sort(
+    (a, b) => Number(b.tokens) - Number(a.tokens)
+  )
 }
 
 export const getBalances = async (address: string, validatorsDictionary: { [key: string]: Validator }) => {
