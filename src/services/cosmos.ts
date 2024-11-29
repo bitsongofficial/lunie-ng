@@ -182,7 +182,7 @@ export const getSupply = async () => {
 }
 
 export const getSupplyByDenom = async (denom: string) => {
-  const response = await api.get<BankSupplyDenomResponse>(`cosmos/bank/v1beta1/supply/${denom}`);
+  const response = await api.get<BankSupplyDenomResponse>(`cosmos/bank/v1beta1/supply/by_denom?denom=${denom}`);
 
   return response.data.amount;
 }
