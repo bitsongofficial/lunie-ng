@@ -1,7 +1,6 @@
 import { toUbtsg } from 'src/common/numbers';
 import { SigningStargateClient } from '@cosmjs/stargate';
 import { coin } from '@cosmjs/proto-signing';
-import Long from 'long';
 import { IBCTransferRequest } from 'src/models';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
@@ -38,8 +37,8 @@ const actions: ActionTree<TransferStateInterface, StateInterface> = {
             'transfer',
             ibc.ibc[payload.to.id].channel,
             {
-              revisionHeight: Long.fromNumber(1),
-              revisionNumber: Long.fromNumber(height + 100),
+              revisionHeight: BigInt(1),
+              revisionNumber: BigInt(height + 100),
             },
             Math.floor(Date.now() / 1000) + 600,
             {

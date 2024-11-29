@@ -1,4 +1,4 @@
-import { BroadcastTxResponse, SigningStargateClient } from '@cosmjs/stargate';
+import { DeliverTxResponse, SigningStargateClient } from '@cosmjs/stargate';
 import { useQuasar } from 'quasar';
 import { toDecimal } from 'src/common/numbers';
 import { networks, ibcChains, suggestChains, /* ethereum */ } from 'src/constants';
@@ -126,7 +126,7 @@ export const useIbcTransfer = () => {
 
   const submit = async () => {
     try {
-      const res = await store.dispatch('transfer/transferIBC', transferRequest) as BroadcastTxResponse;
+      const res = await store.dispatch('transfer/transferIBC', transferRequest) as DeliverTxResponse;
 
       await updateFromData();
 

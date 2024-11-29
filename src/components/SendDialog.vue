@@ -184,7 +184,7 @@ export default defineComponent({
     };
 
     const onSubmit = async () => {
-      let amt = "0"
+      let amt = '0'
       if (props.denom) {
         amt = new BigNumber(amount.value).multipliedBy(1000000).toFixed(0).toString();
       } else {

@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import { coins } from '@cosmjs/amino';
 import {
   SigningStargateClient,
-  assertIsBroadcastTxSuccess,
+  assertIsDeliverTxSuccess,
 } from '@cosmjs/stargate';
 import { getSigner } from './signer';
 import { SendTx, RestakeTx, StakeTx, UnstakeTx, VoteTx, DepositTx, ClaimRewardsTx, SubmitProposalTx } from './messages';
@@ -134,7 +134,7 @@ export const createSignBroadcast = async ({
     memo || ''
   );
 
-  assertIsBroadcastTxSuccess(txResult);
+  assertIsDeliverTxSuccess(txResult);
 
   return {
     hash: txResult.transactionHash,
