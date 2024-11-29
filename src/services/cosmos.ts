@@ -52,7 +52,7 @@ const GOLANG_NULL_TIME = '0001-01-01T00:00:00Z'; // time that gets serialized fr
 
 export const getBlock = async (blockHeight: number | undefined = undefined): Promise<BlockReduced> => {
   try {
-    const response = await api.get<BlockResponse>(`blocks/${blockHeight ?? 'latest'}`);
+    const response = await api.get<BlockResponse>(`cosmos/base/tendermint/v1beta1/blocks/${blockHeight ?? 'latest'}`);
 
     return blockReducer(response.data);
   } catch (error) {
