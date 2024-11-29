@@ -146,7 +146,7 @@ export const pollTxInclusion = async (txHash: string, iteration = 0): Promise<un
   let txFound = false;
 
   try {
-    await fetch(`${Store.state.authentication.network.apiURL}/txs/${txHash}`).then((res) => {
+    await fetch(`${Store.state.authentication.network.apiURL}/cosmos/tx/v1beta1/txs/${txHash}`).then((res) => {
       if (res.status === 200) {
         txFound = true
       }
